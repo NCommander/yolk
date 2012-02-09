@@ -136,6 +136,10 @@ package body Yolk.Configuration is
         (O     => Object,
          Value => Config.Get (Max_Connection));
 
+      AWS.Config.Set.Max_POST_Parameters
+        (O     => Object,
+         Value => Config.Get (Max_POST_Parameters));
+
       AWS.Config.Set.MIME_Types
         (O     => Object,
          Value => Config.Get (MIME_Types));

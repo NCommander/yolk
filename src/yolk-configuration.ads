@@ -86,6 +86,7 @@ package Yolk.Configuration is
                  Log_Extended_Fields, --  AWS
                  Max_Concurrent_Download, --  AWS
                  Max_Connection, --  AWS
+                 Max_POST_Parameters, --  AWS
                  MIME_Types, --  AWS
                  Receive_Timeout, --  AWS
                  Reuse_Address, --  AWS
@@ -212,6 +213,8 @@ package Yolk.Configuration is
                        => TUS ("25"),
                        Max_Connection
                        => TUS ("5"),
+                       Max_POST_Parameters
+                       => TUS ("100"),
                        MIME_Types
                        => TUS ("configuration/aws.mime"),
                        Receive_Timeout
@@ -277,7 +280,7 @@ package Yolk.Configuration is
    --  Config_File_Parser generic.
 
    package Config is new Config_File_Parser
-     (Key_Type => Keys,
+     (Key_Type            => Keys,
       Defaults_Array_Type => Defaults_Array,
       Defaults            => Default_Values);
 
