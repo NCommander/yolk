@@ -144,6 +144,10 @@ package body Yolk.Configuration is
         (O     => Object,
          Value => Config.Get (MIME_Types));
 
+      AWS.Config.Set.Protocol_Family
+        (O     => Object,
+         Value => Config.Get (Protocol_Family));
+
       AWS.Config.Set.Receive_Timeout
         (O     => Object,
          Value => Config.Get (Receive_Timeout));

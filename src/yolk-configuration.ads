@@ -88,6 +88,7 @@ package Yolk.Configuration is
                  Max_Connection, --  AWS
                  Max_POST_Parameters, --  AWS
                  MIME_Types, --  AWS
+                 Protocol_Family, --  AWS
                  Receive_Timeout, --  AWS
                  Reuse_Address, --  AWS
                  Security, --  AWS
@@ -217,6 +218,8 @@ package Yolk.Configuration is
                        => TUS ("100"),
                        MIME_Types
                        => TUS ("configuration/aws.mime"),
+                       Protocol_Family
+                       => TUS ("Family_Unspec"),
                        Receive_Timeout
                        => TUS ("30.0"),
                        Reuse_Address

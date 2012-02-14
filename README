@@ -46,10 +46,10 @@ Yolk is GPLv3, see COPYING3 and COPYING.RUNTIME.
 Yolk depends on 6 things out of the box. All of these are required:
 
     1. An Ada 2005 compiler[6]
-    2. AWS (required version >= 2.11.0w)
-    3. GNATcoll (required version >= SVN revision 183848)
-    4. Florist (required version >= florist-gpl-2011)
-    5. XML/Ada (required version >= 4.1)
+    2. AWS (version >= commit 2479b5fffa7381279366a968e7cc272cb4af2dd2)
+    3. GNATcoll (version >= SVN revision 183848)
+    4. Florist (version >= florist-gpl-2011)
+    5. XML/Ada (version >= 4.1)
     6. PostgreSQL (compile GNATcoll with PostgreSQL to try the Yolk demo)
 
 Yolk might work with other versions of the above software, but those are the
