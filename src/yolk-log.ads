@@ -28,7 +28,14 @@
 
 package Yolk.Log is
 
-   type Trace_Handles is (Error, Debug, Info,
+   type Trace_Handles is (Emergency, -- system is unusable
+                          Alert,     -- action must be taken immediately
+                          Critical,  -- critical conditions
+                          Error,     -- error conditions
+                          Warning,   -- warning conditions
+                          Notice,    -- normal, but significant, condition
+                          Info,      -- informational message
+                          Debug,     -- debug-level message
                           SQL, SQL_Cache, SQL_Error, SQL_Select);
    --  These six handles are available to your application. Not that the SQL
    --  handles are also used by GNATColl's database packages, if enabled.
