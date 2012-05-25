@@ -43,6 +43,8 @@ package Yolk.Configuration is
    type Keys is (Accept_Queue_Size, --  AWS
                  Admin_Password, --  AWS
                  Admin_URI, --  AWS
+                 Alert_Log_Activate,
+                 Alert_Syslog_Facility_Level,
                  AWS_Access_Log_Activate,
                  AWS_Access_Syslog_Facility_Level,
                  AWS_Error_Log_Activate,
@@ -58,6 +60,12 @@ package Yolk.Configuration is
                  Compressed_Max_Age,
                  Compress_Minimum_File_Size,
                  Context_Lifetime, --  AWS
+                 Critical_Log_Activate,
+                 Critical_Syslog_Facility_Level,
+                 Debug_Log_Activate,
+                 Debug_Syslog_Facility_Level,
+                 Emergency_Log_Activate,
+                 Emergency_Syslog_Facility_Level,
                  Error_Log_Activate,
                  Error_Syslog_Facility_Level,
                  Exchange_Certificate, --  AWS
@@ -88,6 +96,8 @@ package Yolk.Configuration is
                  Max_Connection, --  AWS
                  Max_POST_Parameters, --  AWS
                  MIME_Types, --  AWS
+                 Notice_Log_Activate,
+                 Notice_Syslog_Facility_Level,
                  Protocol_Family, --  AWS
                  Receive_Timeout, --  AWS
                  Reuse_Address, --  AWS
@@ -116,6 +126,8 @@ package Yolk.Configuration is
                  Transient_Lifetime, --  AWS
                  Upload_Directory, --  AWS
                  Upload_Size_Limit, --  AWS
+                 Warning_Log_Activate,
+                 Warning_Syslog_Facility_Level,
                  WWW_Root, --  AWS
                  Yolk_User);
 
@@ -124,6 +136,14 @@ package Yolk.Configuration is
    Default_Values : constant Defaults_Array :=
                       (Accept_Queue_Size
                        => TUS ("128"),
+                       Admin_Password
+                       => TUS ("0ac9c9d0c0b1ee058b65ae70c9aeb3a7"),
+                       Admin_URI
+                       => TUS ("/status"),
+                       Alert_Log_Activate
+                       => TUS ("True"),
+                       Alert_Syslog_Facility_Level
+                       => TUS ("user:alert"),
                        AWS_Access_Log_Activate
                        => TUS ("True"),
                        AWS_Access_Syslog_Facility_Level
@@ -131,11 +151,7 @@ package Yolk.Configuration is
                        AWS_Error_Log_Activate
                        => TUS ("True"),
                        AWS_Error_Syslog_Facility_Level
-                       => TUS ("user:info"),
-                       Admin_Password
-                       => TUS ("0ac9c9d0c0b1ee058b65ae70c9aeb3a7"),
-                       Admin_URI
-                       => TUS ("/status"),
+                       => TUS ("user:error"),
                        Case_Sensitive_Parameters
                        => TUS ("True"),
                        Certificate
@@ -158,10 +174,22 @@ package Yolk.Configuration is
                        => TUS ("200"),
                        Context_Lifetime
                        => TUS ("28800.0"),
+                       Critical_Log_Activate
+                       => TUS ("True"),
+                       Critical_Syslog_Facility_Level
+                       => TUS ("user:critical"),
+                       Debug_Log_Activate
+                       => TUS ("True"),
+                       Debug_Syslog_Facility_Level
+                       => TUS ("user:debug"),
+                       Emergency_Log_Activate
+                       => TUS ("True"),
+                       Emergency_Syslog_Facility_Level
+                       => TUS ("user:emergency"),
                        Error_Log_Activate
                        => TUS ("True"),
                        Error_Syslog_Facility_Level
-                       => TUS ("user:info"),
+                       => TUS ("user:error"),
                        Exchange_Certificate
                        => TUS ("False"),
                        Force_Client_Data_Timeout
@@ -218,6 +246,10 @@ package Yolk.Configuration is
                        => TUS ("100"),
                        MIME_Types
                        => TUS ("configuration/aws.mime"),
+                       Notice_Log_Activate
+                       => TUS ("True"),
+                       Notice_Syslog_Facility_Level
+                       => TUS ("user:notice"),
                        Protocol_Family
                        => TUS ("Family_Unspec"),
                        Receive_Timeout
@@ -257,7 +289,7 @@ package Yolk.Configuration is
                        SQL_Error_Log_Activate
                        => TUS ("True"),
                        SQL_Error_Syslog_Facility_Level
-                       => TUS ("user:info"),
+                       => TUS ("user:error"),
                        SQL_Select_Log_Activate
                        => TUS ("True"),
                        SQL_Select_Syslog_Facility_Level
@@ -274,6 +306,10 @@ package Yolk.Configuration is
                        => TUS ("uploads"),
                        Upload_Size_Limit
                        => TUS ("16#500_000#"),
+                       Warning_Log_Activate
+                       => TUS ("True"),
+                       Warning_Syslog_Facility_Level
+                       => TUS ("user:warning"),
                        WWW_Root
                        => TUS ("static_content"),
                        Yolk_User

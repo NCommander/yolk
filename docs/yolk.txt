@@ -1,6 +1,6 @@
 Yolk Manual
 
-Revised January 6th. 2012
+Revised May 25th. 2012
 
 
 
@@ -679,11 +679,11 @@ package Config is new Config_File_Parser
 
 As you can see, it is required that there's a configuration file 
 found in configuration/config.ini. This path is of course 
-relative to the application. There's a fully commented config.ini 
-file available in demo/exe/configuration/. This setup is required 
-if you're using Yolk, and the only way to avoid having config.ini 
-in the mentioned directory is if you manually change the path in 
-the source file before compiling Yolk.
+relative to the application. There's a fully commented 
+config.ini.dist file available in the extras/ directory. The only 
+way to avoid having config.ini in the configuration/ directory is 
+if you manually change the path in the source file before 
+compiling Yolk.
 
 I recommend taking a look at the Yolk demo application to see how 
 the Yolk.Configuration package is used.
@@ -1140,9 +1140,10 @@ This package serves two purposes:
 1. It contains the two callback procedures used to write AWS 
   logging data (access and error) to syslogd.
 
-2. It creates the SQL, Error and Info trace handles, and 
-  activates them according to the values defined in the 
-  configuration file.
+2. It creates the SQL, SQL_Cache, SQL_Error, SQL_Select, Alert, 
+  Critical, Debug, Emergency, Error, Info, Notice and Warning 
+  trace handles, and activates them according to the values 
+  defined in the configuration file.
 
 Out of the box, a Yolk application requires a running syslogd 
 daemon, as all log data is sent to syslogd. If for some reason 
@@ -1172,6 +1173,10 @@ Yolk.Log.Trace (Handle  => Error,
 If you haven't activated a trace handle, then calling Trace for 
 that handle does nothing, ie. you don't have to remove all your 
 Trace calls from the code if you don't use them.
+
+Note that on many systems the Emergency messages are written to 
+console, so be cautious about using this specific level, unless 
+you've made certain that you can get to the messages.
 
 12 Yolk.Not_Found
 
@@ -1204,8 +1209,8 @@ information.
 With Yolk.Process_Control you get the ability to control your 
 application using the SIGINT, SIGPWR and SIGTERM signals. You 
 also get a PID file placed next to your executable, which coupled 
-with the demo/tools/rc.yolk script gives you a rather nice and 
-simple way of starting and stopping your application.
+with the extras/rc.yolk script gives you a rather nice and simple 
+way of starting and stopping your application.
 
 13.1 Exceptions
 

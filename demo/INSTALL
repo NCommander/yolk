@@ -6,7 +6,8 @@ Building the Yolk demo is as simple as:
     $ make
 
 And that's all. You now have a fully functioning Yolk application in the exe/
-directory. Be sure to adjust the exe/configuration/* config files to match your
+directory. Be sure to copy the config.ini.dist file from extras/ to the demo
+exe/configuration/ directory and adjust both the config files to match your
 setup.
 
 You can build a debug version of the demo with:

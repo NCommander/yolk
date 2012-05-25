@@ -74,6 +74,22 @@ Yolk_User thomas
 #      Info
 #      Debug
 
+Alert_Log_Activate True
+# Boolean
+# Default: True
+# AWS configuration option: No
+#
+# When this is True, the Alert log trace data is sent to syslog.
+
+Alert_Syslog_Facility_Level user:alert
+# String
+# Default: user:alert
+# AWS configuration option: No
+#
+# Set the syslog facility and level for the application alert log stream. Use
+# the format:
+#   facility:level
+
 AWS_Access_Log_Activate True
 # Boolean
 # Default: True
@@ -83,16 +99,17 @@ AWS_Access_Log_Activate True
 #
 # All HTTP(S) traffic, successful and failed, is written to this log stream.
 #
+# NOTE:
 # Often a Yolk application will be running behind some sort of proxy, and this
 # proxy might log all requests. In such a case, it is a waste of resources to
-# also have AWS log all access requests. 
+# also have AWS log all access requests.
 
 AWS_Access_Syslog_Facility_Level user:info
 # String
 # Default: user:info
 # AWS configuration option: No
 #
-# Set the syslog facility and level for the AWS access log data. Use the 
+# Set the syslog facility and level for the AWS access log data. Use the
 # format:
 #   facility:level
 
@@ -102,33 +119,85 @@ AWS_Error_Log_Activate True
 # AWS configuration option: No
 #
 # Whether or not Yolk start the AWS component with error logging turned on.
+#
 # Errors logged to this stream relate to problems in the AWS component, such
 # as tasks dying or other AWS related problems. Unless you have very specific
-# regquirements, it is probably best to have this stream activated.
+# requirements, it is probably best to have this stream activated.
 
-AWS_Error_Syslog_Facility_Level user:info
+AWS_Error_Syslog_Facility_Level user:error
 # String
-# Default: user:info
+# Default: user:error
 # User by AWS: No
 #
 # Set the syslog facility and level for the AWS error log data. Use the format:
+#   facility:level
+
+Critical_Log_Activate True
+# Boolean
+# Default: True
+# AWS configuration option: No
+#
+# When this is True, the Critical log trace data is sent to syslog.
+
+Critical_Syslog_Facility_Level user:critical
+# String
+# Default: user:critical
+# AWS configuration option: No
+#
+# Set the syslog facility and level for the application critical log stream.
+# Use the format:
+#   facility:level
+
+Debug_Log_Activate True
+# Boolean
+# Default: True
+# AWS configuration option: No
+#
+# When this is True, the Debug log trace data is sent to syslog.
+
+Debug_Syslog_Facility_Level user:debug
+# String
+# Default: user:debug
+# AWS configuration option: No
+#
+# Set the syslog facility and level for the application debug log stream. Use
+# the format:
+#   facility:level
+
+Emergency_Log_Activate True
+# Boolean
+# Default: True
+# AWS configuration option: No
+#
+# When this is True, the Emergency log trace data is sent to syslog.
+
+Emergency_Syslog_Facility_Level user:emergency
+# String
+# Default: user:emergency
+# AWS configuration option: No
+#
+# Set the syslog facility and level for the application emergency log stream.
+# Use the format:
 #   facility:level
 
 Error_Log_Activate True
 # Boolean
 # Default: True
 # AWS configuration option: No
-# 
-# When this is True, the Error log trace data is sent to syslog. This is not
-# the same log data as the data from the AWS_Error_Log_Activate strean, instead
-# this is a log stream you can use for your application level errors. 
+#
+# When this is True, the Error log trace data is sent to syslog.
+#
+# NOTE:
+# This is not the same log data as the data from the AWS_Error_Log_Activate
+# stream, instead this is a log stream you can use for your application level
+# errors.
 
-Error_Syslog_Facility_Level user:info
+Error_Syslog_Facility_Level user:error
 # String
-# Default: user:info
+# Default: user:error
 # AWS configuration option: No
 #
-# Set the syslog facility and level for the application error log stream. Use 
+# Set the syslog facility and level for the application error log stream. Use
 # the format:
 #   facility:level
 
@@ -136,18 +205,32 @@ Info_Log_Activate True
 # Boolean
 # Default: True
 # AWS configuration option: No
-# 
-# When this is True, the Info log trace data is sent to syslog. This is an
-# application level log stream, similar to Error_Log_Activate, except log
-# messages are prepended with INFO instead of ERROR.
+#
+# When this is True, the Info log trace data is sent to syslog.
 
 Info_Syslog_Facility_Level user:info
 # String
 # Default: user:info
 # AWS configuration option: No
 #
-# Set the syslog facility and level for the application info log stream. Use the
-# format:
+# Set the syslog facility and level for the application info log stream. Use
+# the format:
+#   facility:level
+
+Notice_Log_Activate True
+# Boolean
+# Default: True
+# AWS configuration option: No
+#
+# When this is True, the Notice log trace data is sent to syslog.
+
+Notice_Syslog_Facility_Level user:notice
+# String
+# Default: user:notice
+# AWS configuration option: No
+#
+# Set the syslog facility and level for the application notice log stream. Use
+# the format:
 #   facility:level
 
 SQL_Log_Activate True
@@ -155,9 +238,8 @@ SQL_Log_Activate True
 # Default: True
 # AWS configuration option: No
 #
-# When this is True, all non SELECT SQL queries generated by GNATcoll are sent
-# to syslog. This is usually a fairly busy stream, so it should probably only be
-# set to True during development/debugging.
+# When this is True, all non Select SQL queries generated by GNATColl are sent
+# to syslog.
 
 SQL_Syslog_Facility_Level user:info
 # String
@@ -173,16 +255,15 @@ SQL_Cache_Log_Activate True
 # Default: True
 # AWS configuration option: No
 #
-# When this is True, all SQL queries generated by GNATcoll that involve the cache
-# are sent to syslog. Depending on your application, this can be a very busy 
-# stream, so it should probably only be set to True during development/debugging.
+# When this is True, all SQL queries generated by GNATColl that involve caching
+# data are sent to syslog.
 
 SQL_Cache_Syslog_Facility_Level user:info
 # String
 # Default: user:info
 # AWS configuration option: No
 #
-# Set the syslog facility and level for the application SQL Cache log stream. 
+# Set the syslog facility and level for the application SQL Cache log stream.
 # Use the format:
 #   facility:level
 
@@ -191,12 +272,12 @@ SQL_Error_Log_Activate True
 # Default: True
 # AWS configuration option: No
 #
-# When True, all database related errors (failed transactions, failed connections)
-# are sent to syslog. This should probably always be True.
+# When True, all database related errors (failed transactions / connections)
+# are sent to syslog.
 
-SQL_Error_Syslog_Facility_Level user:info
+SQL_Error_Syslog_Facility_Level user:error
 # String
-# Default: user:info
+# Default: user:error
 # AWS configuration option: No
 #
 # Set the syslog facility and level for the application SQL Error log stream.
@@ -208,17 +289,31 @@ SQL_Select_Log_Activate True
 # Default: True
 # AWS configuration option: No
 #
-# When True, all GNATcoll SQL SELECT queries are sent to syslog.
-# This is usually a very busy stream, so it should probably only be set to True
-# during development/debugging.
+# When True, all GNATColl SQL SELECT queries are sent to syslog.
 
 SQL_Select_Syslog_Facility_Level user:info
 # String
 # Default: user:info
 # AWS configuration option: No
 #
-# Set the syslog facility and level for the application SQL SELECT log stream.
+# Set the syslog facility and level for the application SQL Select log stream.
 # Use the format:
+#   facility:level
+
+Warning_Log_Activate True
+# Boolean
+# Default: True
+# AWS configuration option: No
+#
+# When this is True, the Warning log trace data is sent to syslog.
+
+Warning_Syslog_Facility_Level user:warning
+# String
+# Default: user:warning
+# AWS configuration option: No
+#
+# Set the syslog facility and level for the application warning log stream. Use
+# the format:
 #   facility:level
 
 Log_Extended_Fields
@@ -231,7 +326,7 @@ Log_Extended_Fields
 #
 #    127.0.0.1 - - [25/Apr/1998:15:37:29 +0200] "GET / HTTP/1.0" 200 1363
 #
-# If the extended fields list is not empty, the log format would have user 
+# If the extended fields list is not empty, the log format would have user
 # defined fields set:
 #
 #    #Version: 1.0
@@ -472,7 +567,7 @@ Cleaner_Client_Data_Timeout 60.0
 # Default: 60.0 (1 minute)
 # AWS configuration option: Yes
 #
-# Number of seconds to wait for a client message body before timing out. If 
+# Number of seconds to wait for a client message body before timing out. If
 # your clients are expected to send large amounts of data, then set this higher.
 # If your clients are not supposed to send large amounts of data, then you can
 # safely keep or lower this a bit.
@@ -645,7 +740,7 @@ Max_Connection 5
 # The maximum number of simultaneous connections to the server. This is effectively
 # the amount of threads in the server.
 #
-# One thread is used for each connection, so a value of 5 basically means max 5 
+# One thread is used for each connection, so a value of 5 basically means max 5
 # concurrent requests.
 
 Max_POST_Parameters 100

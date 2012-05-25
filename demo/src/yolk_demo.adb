@@ -191,6 +191,27 @@ begin
           AWS.Config.Server_Port (Web_Server_Config)'Img);
    --  We're alive! Log this fact to the Info trace.
 
+   Trace (Handle  => Alert,
+          Message => "Test Alert log message from Yolk Demo");
+
+   Trace (Handle  => Critical,
+          Message => "Test Critical log message from Yolk Demo");
+
+   Trace (Handle  => Debug,
+          Message => "Test Debug log message from Yolk Demo");
+
+   Trace (Handle  => Emergency,
+          Message => "Test Emergency log message from Yolk Demo");
+
+   Trace (Handle  => Error,
+          Message => "Test Error log message from Yolk Demo");
+
+   Trace (Handle  => Notice,
+          Message => "Test Notice log message from Yolk Demo");
+
+   Trace (Handle  => Warning,
+          Message => "Test Warning log message from Yolk Demo");
+
    Wait;
    --  This is the main "loop". We will wait here as long as the
    --  Yolk.Process_Control.Controller.Check entry barrier is False.

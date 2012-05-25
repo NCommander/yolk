@@ -14,6 +14,9 @@ demo/build_production/*
 demo/exe/yolk_demo
 demo/exe/*.pid
 
+# Do not track the default config.ini file in demo/exe/configuration
+demo/exe/configuration/config.ini
+
 # Do not track demo session data
 demo/exe/session/*
 
