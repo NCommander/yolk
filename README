@@ -45,11 +45,11 @@ Yolk is GPLv3, see COPYING3 and COPYING.RUNTIME.
 
 Yolk depends on 6 things out of the box. All of these are required:
 
-    1. An Ada 2005 compiler[6]
-    2. AWS (version >= commit 2479b5fffa7381279366a968e7cc272cb4af2dd2)
-    3. GNATcoll (version >= SVN revision 183848)
-    4. Florist (version >= florist-gpl-2011)
-    5. XML/Ada (version >= 4.1)
+    1. An Ada 2012 compiler[6]
+    2. AWS (version >= 2012, commit 3481b41b893eeb6c51e21a69f1a14db05306a4ff)
+    3. GNATcoll (version >= 2012, SVN revision 191286)
+    4. Florist (version >= florist-gpl-2012)
+    5. XML/Ada (version >= 4.3)
     6. PostgreSQL (compile GNATcoll with PostgreSQL to try the Yolk demo)
 
 Yolk might work with other versions of the above software, but those are the
@@ -79,6 +79,9 @@ My usual modus operandi for setting up these 6 things goes something like this:
             if [ -f ~/.bashrc ]; then
                 . ~/.bashrc;
             fi
+
+        Add /usr/gnat/lib/gnat to your GPR_PROJECT_PATH and ADA_PROJECT_PATH
+        environment variables.
 
         Of course depending on your system. Mine is Slackware. The important
         thing is to make sure /usr/gnat/bin is added to your PATH even after
@@ -132,8 +135,7 @@ My usual modus operandi for setting up these 6 things goes something like this:
             SOCKET=openssl
             LDAP=false
             DEBUG=false
-            CJOBS=2
-            DEMOS=false
+            PROCESSORS=2
             TARGET=native
 
         Finally run
@@ -141,11 +143,6 @@ My usual modus operandi for setting up these 6 things goes something like this:
             $ make build
             $ make build_doc
             $ make install
-
-    5.  Add /usr/gnat/bin to your PATH environment variable.
-
-    6.  Add /usr/gnat/lib/gnat to your GPR_PROJECT_PATH and ADA_PROJECT_PATH
-        environment variables.
 
 Don't take the above for gospel. You should _always_ read all the accompanying
 documentation for the software you're trying to install.
@@ -176,7 +173,7 @@ probably use those instead.
 
 [2]
     GNAT Component Collection
-    http://libre.adacore.com/libre/tools/gnat-component-collection/
+    http://libre.adacore.com/libre/tools/gnat-component-collection/AA
     SVN: svn co http://svn.eu.adacore.com/anonsvn/Dev/trunk/gps/gnatlib/
 
 [3]
@@ -187,7 +184,7 @@ probably use those instead.
 
 [4]
     XML/Ada
-    http://libre.adacore.com/libre/tools/xmlada/
+    http://libre.adacore.com/tools/xmlada/
     SVN: svn co http://svn.eu.adacore.com/anonsvn/Dev/trunk/xmlada/
 
 [5]
