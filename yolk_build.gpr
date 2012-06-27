@@ -61,7 +61,7 @@ library project Yolk_Build is
                    "-gnaty3abcdefhiklmnoprstux",
                    "-Wall",
                    "-O2",
-                   "-gnat05");
+                   "-gnat2012");
          when "Debug" =>
             for Default_Switches ("Ada")
               use ("-gnatwa",
@@ -70,7 +70,7 @@ library project Yolk_Build is
                    "-gnaty3abcdefhiklmnoprstux",
                    "-Wall",
                    "-O1",
-                   "-gnat05",
+                   "-gnat2012",
                    "-g");
 
       end case;
