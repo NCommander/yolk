@@ -140,6 +140,9 @@ package body Yolk.Configuration is
         (O     => Object,
          Value => Config.Get (Max_POST_Parameters));
 
+      AWS.Config.Set.Max_WebSocket_Handler
+        (Value => Config.Get (Max_WebSocket_Handler));
+
       AWS.Config.Set.MIME_Types
         (O     => Object,
          Value => Config.Get (MIME_Types));
@@ -211,6 +214,12 @@ package body Yolk.Configuration is
       AWS.Config.Set.Upload_Size_Limit
         (O     => Object,
          Value => Config.Get (Upload_Size_Limit));
+
+      AWS.Config.Set.WebSocket_Message_Queue_Size
+        (Value => Config.Get (WebSocket_Message_Queue_Size));
+
+      AWS.Config.Set.WebSocket_Origin
+        (Value => Config.Get (WebSocket_Origin));
 
       AWS.Config.Set.WWW_Root
         (O     => Object,

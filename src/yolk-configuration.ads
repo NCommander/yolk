@@ -95,6 +95,7 @@ package Yolk.Configuration is
                  Max_Concurrent_Download, --  AWS
                  Max_Connection, --  AWS
                  Max_POST_Parameters, --  AWS
+                 Max_WebSocket_Handler, --  AWS
                  MIME_Types, --  AWS
                  Notice_Log_Activate,
                  Notice_Syslog_Facility_Level,
@@ -128,6 +129,8 @@ package Yolk.Configuration is
                  Upload_Size_Limit, --  AWS
                  Warning_Log_Activate,
                  Warning_Syslog_Facility_Level,
+                 WebSocket_Message_Queue_Size, --  AWS
+                 WebSocket_Origin, --  AWS
                  WWW_Root, --  AWS
                  Yolk_User);
 
@@ -244,6 +247,8 @@ package Yolk.Configuration is
                        => TUS ("5"),
                        Max_POST_Parameters
                        => TUS ("100"),
+                       Max_WebSocket_Handler
+                       => TUS ("2"),
                        MIME_Types
                        => TUS ("configuration/aws.mime"),
                        Notice_Log_Activate
@@ -310,6 +315,10 @@ package Yolk.Configuration is
                        => TUS ("True"),
                        Warning_Syslog_Facility_Level
                        => TUS ("user:warning"),
+                       WebSocket_Message_Queue_Size
+                       => TUS ("10"),
+                       WebSocket_Origin
+                       => TUS (""),
                        WWW_Root
                        => TUS ("static_content"),
                        Yolk_User

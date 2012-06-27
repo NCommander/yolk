@@ -751,6 +751,13 @@ Max_POST_Parameters 100
 # The maximum amount of POST parameters the server will accept from any one
 # connection.
 
+Max_WebSocket_Handler 2
+# Positive
+# Default: 2
+# AWS configuration option: Yes
+#
+# The maximum number of messages to handle simultaneously.
+
 MIME_Types configuration/aws.mime
 # String
 # Default: configuration/aws.mime
@@ -857,6 +864,25 @@ Upload_Size_Limit 16#500_000#
 # AWS configuration option: Yes
 #
 # The maximum accepted size for uploaded files in bytes.
+
+WebSocket_Message_Queue_Size 10
+# Positive.
+# Default: 10
+# AWS configuration option: Yes
+#
+# This is the size of the queue containing incoming messages waiting to be
+# handled by one of the WebSocket tasks. See Max_WebSocket_Handler.
+
+WebSocket_Origin
+# String.
+# Default: [no value]
+# AWS configuration option: Yes
+#
+# This is a regular expression which can be used to handle WebSockets
+# originating from a specific domain. By default AWS handles WebSockets from
+# any origin. If for example you only want to handle WebSocket connections from
+# .fr domains you can use something like this:
+#       .*.fr
 
 WWW_Root static_content
 # String.
