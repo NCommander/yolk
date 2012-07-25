@@ -1,0 +1,81 @@
+@@-----------------------------------------------------------------------------
+@@--                                                                         --
+@@--                               Yolk                                      --
+@@--                                                                         --
+@@--                Copyright (C) 2000-2012, Thomas Løcke                    --
+@@--                                                                         --
+@@-- This is free software;  you can redistribute it and/or modify it        --
+@@-- under terms of the  GNU General Public License  as published by the     --
+@@-- Free Software  Foundation;  either version 3,  or (at your  option) any --
+@@-- later version. This library is distributed in the hope that it will be  --
+@@-- useful, but WITHOUT ANY WARRANTY;  without even the implied warranty of --
+@@-- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.                    --
+@@-- You should have received a copy of the GNU General Public License and   --
+@@-- a copy of the GCC Runtime Library Exception along with this program;    --
+@@-- see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see   --
+@@-- <http://www.gnu.org/licenses/>.                                         --
+@@--                                                                         --
+@@-----------------------------------------------------------------------------
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <script language="javascript" type="text/javascript">
+          var wsUri = "ws://ada:4242/websocket";
+          var output;
+
+          function init(){
+            output = document.getElementById("output");
+            testWebSocket();
+          }
+
+          function testWebSocket(){
+            websocket = new WebSocket(wsUri);
+            websocket.onopen = function(evt) { onOpen(evt) };
+            websocket.onclose = function(evt) { onClose(evt) };
+            websocket.onmessage = function(evt) { onMessage(evt) };
+            websocket.onerror = function(evt) { onError(evt) };
+          }
+
+          function onOpen(evt){
+            writeToScreen("CONNECTED");
+            doSend("WebSocket rocks");
+          }
+
+          function onClose(evt){
+            writeToScreen("DISCONNECTED");
+          }
+
+          function onMessage(evt){
+            writeToScreen('<span style="color: blue;">RESPONSE: ' + evt.data+'</span>');
+          }
+
+          function onError(evt){
+            writeToScreen('<span style="color: red;">ERROR:</span> ' + evt.data);
+            websocket.close();
+          }
+
+          function doSend(message){
+            writeToScreen("SENT: " + message);
+            websocket.send(message);
+          }
+
+          function writeToScreen(message){
+            var pre = document.createElement("p");
+            pre.style.wordWrap = "break-word";
+            pre.innerHTML = message;
+            output.appendChild(pre);
+          }
+
+          window.addEventListener("load", init, false);
+        </script>
+        <link rel="icon" href="/images/favicon.ico" type="image/x-icon"/>
+        <title>
+            Yolk WebSocket Demo
+        </title>
+    </head>
+<body>
+    <h3>Yolk WebSocket Demo</h3>
+    <div id="output"></div>
+</body>
+</html>
