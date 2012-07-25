@@ -22,6 +22,7 @@
 -------------------------------------------------------------------------------
 
 with AWS.Dispatchers.Callback;
+with AWS.Net.WebSocket.Registry;
 with My_Configuration;
 with View.DB_Test;
 with View.Dir;
@@ -30,6 +31,8 @@ with Yolk.Handlers;
 with View.Index;
 with View.Session_Test;
 with View.Syndication;
+with View.Websocket;
+with Websocket_Clock;
 with Yolk.Not_Found;
 
 package body My_Handlers is
@@ -101,8 +104,25 @@ package body My_Handlers is
          URI        => My.Config.Get (My.Handler_Syndication),
          Action     => Create (Callback => View.Syndication.Generate'Access));
 
+      AWS.Services.Dispatchers.URI.Register
+        (Dispatcher => RH,
+         URI        => My.Config.Get (My.Handler_Websocket),
+         Action     => Create (Callback => View.Websocket.Generate'Access));
+
       Handlers.Set (RH => RH);
       --  Set the generic content handlers defined in Yolk.Handlers.
    end Set;
+
+   ------------------------------
+   --  Set_WebSocket_Handlers  --
+   ------------------------------
+
+   procedure Set_WebSocket_Handlers
+   is
+   begin
+      AWS.Net.WebSocket.Registry.Register
+        (URI     => "/websocket",
+         Factory => Websocket_Clock.Create'Access);
+   end Set_WebSocket_Handlers;
 
 end My_Handlers;

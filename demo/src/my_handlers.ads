@@ -35,4 +35,7 @@ package My_Handlers is
    --  errors, images and similar, are registered in the core Yolk.Handlers
    --  package.
 
+   procedure Set_WebSocket_Handlers;
+   --  Setup dispatchers for WebSocket enabled URI's.
+
 end My_Handlers;

@@ -27,11 +27,13 @@ with Ada.Directories;
 with Ada.Exceptions;
 with AWS.Config;
 with AWS.MIME;
+with AWS.Net.WebSocket.Registry.Control;
 with AWS.Server;
 with AWS.Server.Log;
 with AWS.Services.Dispatchers.URI;
 with AWS.Session;
 with My_Handlers;
+with Task_Controller;
 with Yolk.Configuration;
 with Yolk.Log;
 with Yolk.Process_Control;
@@ -44,6 +46,7 @@ procedure Yolk_Demo is
 
    use Ada.Exceptions;
    use My_Handlers;
+   use Task_Controller;
    use Yolk.Configuration;
    use Yolk.Log;
    use Yolk.Process_Control;
@@ -89,6 +92,8 @@ procedure Yolk_Demo is
          --  load the old session data.
       end if;
 
+      AWS.Net.WebSocket.Registry.Control.Start;
+
       AWS.Server.Start (Web_Server => Web_Server,
                         Dispatcher => Resource_Handlers,
                         Config     => Web_Server_Config);
@@ -127,6 +132,8 @@ procedure Yolk_Demo is
          --  If sessions are enabled, then save the session data to the
          --  Session_Data_File.
       end if;
+
+      AWS.Net.WebSocket.Registry.Control.Shutdown;
 
       AWS.Server.Shutdown (Web_Server);
 
@@ -174,6 +181,9 @@ begin
    Set (RH => Resource_Handlers);
    --  Populate the Resource_Handlers object.
 
+   Set_WebSocket_Handlers;
+   --  Register URI's that are WebSocket enabled.
+
    AWS.Server.Set_Unexpected_Exception_Handler
      (Web_Server => Web_Server,
       Handler    => Yolk.Whoops.Unexpected_Exception_Handler'Access);
@@ -219,6 +229,9 @@ begin
    Stop_Server;
    --  Shutdown requested in Yolk.Process_Control.Controller, so we will
    --  attempt to shutdown the server.
+
+   Task_State := Down;
+   --  Signal all running tasks to go down.
 
 exception
    when Event : others =>
