@@ -20,62 +20,113 @@
 <html>
     <head>
         <meta charset="utf-8"/>
-        <script language="javascript" type="text/javascript">
-          var wsUri = "ws://ada:4242/websocket";
-          var output;
-
-          function init(){
-            output = document.getElementById("output");
-            testWebSocket();
-          }
-
-          function testWebSocket(){
-            websocket = new WebSocket(wsUri);
-            websocket.onopen = function(evt) { onOpen(evt) };
-            websocket.onclose = function(evt) { onClose(evt) };
-            websocket.onmessage = function(evt) { onMessage(evt) };
-            websocket.onerror = function(evt) { onError(evt) };
-          }
-
-          function onOpen(evt){
-            writeToScreen("CONNECTED");
-            doSend("WebSocket rocks");
-          }
-
-          function onClose(evt){
-            writeToScreen("DISCONNECTED");
-          }
-
-          function onMessage(evt){
-            writeToScreen('<span style="color: blue;">RESPONSE: ' + evt.data+'</span>');
-          }
-
-          function onError(evt){
-            writeToScreen('<span style="color: red;">ERROR:</span> ' + evt.data);
-            websocket.close();
-          }
-
-          function doSend(message){
-            writeToScreen("SENT: " + message);
-            websocket.send(message);
-          }
-
-          function writeToScreen(message){
-            var pre = document.createElement("p");
-            pre.style.wordWrap = "break-word";
-            pre.innerHTML = message;
-            output.appendChild(pre);
-          }
-
-          window.addEventListener("load", init, false);
-        </script>
+        <link rel="stylesheet" type="text/css" href="/css/index.css"/>
         <link rel="icon" href="/images/favicon.ico" type="image/x-icon"/>
         <title>
             Yolk WebSocket Demo
         </title>
+        <script language="javascript" type="text/javascript">
+            var wsUri = "ws://@_HOST_@@_URI_@";
+            var ws;
+            var clients_connected;
+            var output;
+            var random_string;
+            var timestamp;          
+
+            function init(){
+                clients_connected = document.getElementById("clients_connected");
+                output = document.getElementById("output");
+                random_string = document.getElementById("random_string");
+                timestamp = document.getElementById("timestamp");
+                
+                ws = new WebSocket(wsUri);
+                
+                ws.onopen = function(msg){onOpen(msg)};
+                ws.onclose = function(msg){onClose(msg)};
+                ws.onmessage = function(msg){onMessage(msg)};
+                ws.onerror = function(msg){onError(ms)};
+            }
+
+            function onOpen(msg){
+                ws.send('Connected');
+            }
+
+            function onClose(msg){
+                ws.send('Disconnected');
+            }
+
+            function onMessage(msg){
+                var chunks = msg.data.split("|",2);
+                var key = chunks[0];
+                var val = chunks[1];
+                
+                if(key == 'timestamp'){
+                    writeToElement(val, timestamp);
+                }else if(key == 'clients_connected'){
+                    writeToElement(val, clients_connected);
+                }else if (key == 'random_string'){
+                    writeToElement(val, random_string);
+                }else{
+                    writeToElement(key, output);
+                }
+            }
+
+            function onError(msg){
+                writeToElement('Error ' + msg.data, output);
+                ws.close();
+            }
+
+            function writeToElement(msg, elem){
+                elem.innerHTML = msg;
+            }
+            
+            function switchWebSocket(){
+                elem = document.getElementById("switch").childNodes[0];
+                
+                if(elem.nodeValue == 'Stop demo'){
+                    ws.close();
+                    writeToElement('Disconnected', output);
+                    elem.nodeValue = 'Start demo';
+                }else if(elem.nodeValue == 'Start demo'){
+                    init();
+                    elem.nodeValue = 'Stop demo';
+                }
+            }
+
+            window.addEventListener("load", init, false);
+        </script>
     </head>
 <body>
     <h3>Yolk WebSocket Demo</h3>
-    <div id="output"></div>
+    <p>
+        If your browser support WebSockets, you should see some action going on in the table below, preferably a timestamp that updates once each second, the
+        amount of connected clients and a random string. The Output row contains system messages.
+    </p>
+    <p>
+        Please note that in order for this WebSocket demo to work, you must use a modern browser, such as <a href="http://mozilla.com">Firefox</a> or 
+        <a href="http://https://www.google.com/chrome/">Google Chrome</a>.
+    </p>
+    <table>
+        <tr>
+            <td>Timestamp:</td>
+            <td id="timestamp">no data</td>
+        </tr>
+        <tr>
+            <td>Clients connected:</td>
+            <td id="clients_connected">no data</td>
+        </tr>
+        <tr>
+            <td>Random string:</td>
+            <td id="random_string">no data</td>
+        </tr>
+        <tr>
+            <td>Output:</td>
+            <td id="output">no data</td>
+        </tr>
+    </table>
+    <button id="switch" onclick="switchWebSocket();">Stop demo</button>
+    <p>
+        Go back to the <a href="/">main page</a>.
+    </p>
 </body>
 </html>

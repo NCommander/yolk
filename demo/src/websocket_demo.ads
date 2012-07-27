@@ -2,7 +2,7 @@
 --                                                                           --
 --                                  Yolk                                     --
 --                                                                           --
---                            Websocket_Clock                                --
+--                             Websocket_Demo                                --
 --                                                                           --
 --                                  SPEC                                     --
 --                                                                           --
@@ -21,17 +21,18 @@
 --                                                                           --
 -------------------------------------------------------------------------------
 
---  The WebSocket Clock resource.
+--  The WebSocket_Demo resource.
 
 with AWS.Net.WebSocket;
 with AWS.Status;
 
-package Websocket_Clock is
+package Websocket_Demo is
 
    function Create
      (Socket  : in AWS.Net.Socket_Access;
       Request : in AWS.Status.Data)
       return AWS.Net.WebSocket.Object'Class;
-   --  TODO: Write comment
+   --  This function is called whenever a new WebSocket connection is made on
+   --  the /websocket resource.
 
-end Websocket_Clock;
+end Websocket_Demo;

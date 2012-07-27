@@ -92,11 +92,12 @@ procedure Yolk_Demo is
          --  load the old session data.
       end if;
 
-      AWS.Net.WebSocket.Registry.Control.Start;
-
       AWS.Server.Start (Web_Server => Web_Server,
                         Dispatcher => Resource_Handlers,
                         Config     => Web_Server_Config);
+
+      AWS.Net.WebSocket.Registry.Control.Start;
+      --  Start listening for incoming WebSocket messages.
 
       if Config.Get (AWS_Access_Log_Activate) then
          AWS.Server.Log.Start
@@ -134,6 +135,7 @@ procedure Yolk_Demo is
       end if;
 
       AWS.Net.WebSocket.Registry.Control.Shutdown;
+      --  Stop listening for incoming WebSocket messages.
 
       AWS.Server.Shutdown (Web_Server);
 

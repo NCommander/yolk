@@ -31,14 +31,15 @@ package body View.Websocket is
      (Request : in AWS.Status.Data)
       return AWS.Response.Data
    is
---        use Ada.Calendar;
---        use AWS.Session;
       use AWS.Templates;
 
-      T : Translate_Set;
+      T    : Translate_Set;
+      URI  : constant String := AWS.Status.URI (Request);
+      Host : constant String := AWS.Status.Host (Request);
+
    begin
-      Insert (T, Assoc ("YOLK_VERSION", Yolk.Version));
-      --  Insert (T, Assoc ("COPYRIGHT_YEAR", Year (Clock)));
+      Insert (T, Assoc ("URI", URI));
+      Insert (T, Assoc ("HOST", Host));
 
       return Build_Response
         (Status_Data => Request,

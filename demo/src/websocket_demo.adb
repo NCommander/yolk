@@ -2,7 +2,7 @@
 --                                                                           --
 --                                  Yolk                                     --
 --                                                                           --
---                            Websocket_Clock                                --
+--                             Websocket_Demo                                --
 --                                                                           --
 --                                  BODY                                     --
 --                                                                           --
@@ -23,38 +23,13 @@
 
 with Ada.Calendar;
 with Ada.Calendar.Formatting;
-with Ada.Text_IO;
+with Ada.Containers.Doubly_Linked_Lists;
 with AWS.Net.WebSocket.Registry;
---  with AWS.Net.WebSocket.Registry.Control;
+with AWS.Utils;
 with Task_Controller;
+with Yolk.Log;
 
-package body Websocket_Clock is
-
-   Created : Boolean := False;
-   --  A boolean that will be set to True when a websocket has been created
-
-   Rcp : constant AWS.Net.WebSocket.Registry.Recipient :=
-           AWS.Net.WebSocket.Registry.Create (URI => "/websocket");
-   --  Targets all clients (any Origin) whose URI is /websocket
-
-   task Clocker;
-   --  TODO: Write comment.
-
-   task body Clocker
-   is
-      use Task_Controller;
-   begin
-      loop
-         AWS.Net.WebSocket.Registry.Send
-           (To      => Rcp,
-            Message => Ada.Calendar.Formatting.Image
-              (Ada.Calendar.Clock, True));
-
-         delay 1.0;
-
-         exit when Task_State = Down;
-      end loop;
-   end Clocker;
+package body Websocket_Demo is
 
    type Object is new AWS.Net.WebSocket.Object with null record;
 
@@ -73,6 +48,63 @@ package body Websocket_Clock is
       Message : in     String);
    --  Open event received from the server
 
+   package Object_Container is new Ada.Containers.Doubly_Linked_Lists (Object);
+   use Object_Container;
+   Clients : List;
+   --  Every connected client is added to this list, which in turn is used by
+   --  the Clocker task to send unique messages to each individual connected
+   --  client.
+
+   Rcp : constant AWS.Net.WebSocket.Registry.Recipient :=
+           AWS.Net.WebSocket.Registry.Create (URI => "/websocket");
+   --  Targets all clients (any Origin) whose URI is /websocket
+
+   task Clocker;
+   --  The Clocker task is nothing but a simple loop that broadcasts a
+   --  timestamp, the amount of connected clients and a string with 10 random
+   --  characters.
+
+   ---------------
+   --  Clocker  --
+   ---------------
+
+   task body Clocker
+   is
+      use Task_Controller;
+      use Yolk.Log;
+   begin
+      Trace (Handle  => Info,
+             Message => "Websocket.Clocker task started");
+
+      loop
+         exit when Task_State = Down;
+
+         AWS.Net.WebSocket.Registry.Send
+           (To      => Rcp,
+            Message => "timestamp|" & Ada.Calendar.Formatting.Image
+              (Ada.Calendar.Clock, True));
+         --  Date broadcasted to all clients connected to /websocket
+
+         AWS.Net.WebSocket.Registry.Send
+           (To      => Rcp,
+            Message => "clients_connected|" & Clients.Length'Img);
+         --  Amount of clients connected broadcast to all clients connected to
+         --  /websocket
+
+         for Client of Clients loop
+            Client.Send
+              (Message => "random_string|" & AWS.Utils.Random_String (10));
+            --  Send a random string to a specific client connected to
+            --  /websocket
+         end loop;
+
+         delay 1.0;
+      end loop;
+
+      Trace (Handle  => Info,
+             Message => "Websocket.Clocker task stopped");
+   end Clocker;
+
    --------------
    --  Create  --
    --------------
@@ -80,11 +112,13 @@ package body Websocket_Clock is
    function Create
      (Socket  : AWS.Net.Socket_Access;
       Request : AWS.Status.Data)
-      return AWS.Net.WebSocket.Object'Class is
+      return AWS.Net.WebSocket.Object'Class
+   is
+      use Yolk.Log;
    begin
-      Created := True;
+      Trace (Handle  => Info,
+             Message => "WebSocket created.");
 
-      Ada.Text_IO.Put_Line ("Create");
       return Object'(AWS.Net.WebSocket.Object
                      (AWS.Net.WebSocket.Create (Socket, Request))
                      with null record);
@@ -98,10 +132,26 @@ package body Websocket_Clock is
      (Socket  : in out Object;
       Message : in     String)
    is
+      use AWS.Net.WebSocket;
+      use Yolk.Log;
+
+      C : Cursor := No_Element;
    begin
-      Ada.Text_IO.Put_Line
-        ("Received : Connection_Close "
-         & AWS.Net.WebSocket.Error_Type'Image (Socket.Error) & ", " & Message);
+      for Client in Clients.Iterate loop
+         if Element (Client) = Socket then
+            C := Client;
+            exit;
+         end if;
+      end loop;
+
+      if C /= No_Element then
+         Clients.Delete (C);
+      end if;
+
+      Trace (Handle  => Info,
+             Message => "WebSocket closed " &
+               Error_Type'Image (Socket.Error) &
+               ", " & Message);
    end On_Close;
 
    ------------------
@@ -112,17 +162,12 @@ package body Websocket_Clock is
      (Socket  : in out Object;
       Message : in     String)
    is
+      use Yolk.Log;
    begin
-      Ada.Text_IO.Put_Line ("Received : " & Message);
+      Socket.Send (Message);
 
-      Socket.Send (Message => "Some message");
-
-      for k in 1 .. 20 loop
-         Socket.Send
-           (Message => Ada.Calendar.Formatting.Image
-              (Ada.Calendar.Clock, True));
-         delay 1.0;
-      end loop;
+      Trace (Handle  => Info,
+             Message => "WebSocket message received: " & Message);
    end On_Message;
 
    ---------------
@@ -133,9 +178,12 @@ package body Websocket_Clock is
      (Socket  : in out Object;
       Message : in     String)
    is
-      pragma Unreferenced (Socket);
+      use Yolk.Log;
    begin
-      Ada.Text_IO.Put_Line ("On_Open: " & Message);
+      Clients.Append (Socket);
+
+      Trace (Handle  => Info,
+             Message => "WebSocket opened: " & Message);
    end On_Open;
 
-end Websocket_Clock;
+end Websocket_Demo;

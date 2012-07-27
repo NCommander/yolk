@@ -31,6 +31,7 @@ package View.Websocket is
    function Generate
      (Request : in AWS.Status.Data)
       return AWS.Response.Data;
-   --  Generate the content for the /websocket resource.
+   --  Generate the content for the /websocket resource. This in turn loads
+   --  some JS that starts up a WebSocket demo.
 
 end View.Websocket;

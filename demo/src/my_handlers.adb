@@ -32,7 +32,7 @@ with View.Index;
 with View.Session_Test;
 with View.Syndication;
 with View.Websocket;
-with Websocket_Clock;
+with Websocket_Demo;
 with Yolk.Not_Found;
 
 package body My_Handlers is
@@ -122,7 +122,7 @@ package body My_Handlers is
    begin
       AWS.Net.WebSocket.Registry.Register
         (URI     => "/websocket",
-         Factory => Websocket_Clock.Create'Access);
+         Factory => Websocket_Demo.Create'Access);
    end Set_WebSocket_Handlers;
 
 end My_Handlers;
