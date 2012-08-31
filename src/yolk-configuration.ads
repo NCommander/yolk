@@ -111,6 +111,7 @@ package Yolk.Configuration is
                  Session, --  AWS
                  Session_Cleanup_Interval, --  AWS
                  Session_Data_File,
+                 Session_Id_Length,
                  Session_Lifetime, --  AWS
                  Session_Name, --  AWS
                  SQL_Log_Activate,
@@ -279,6 +280,8 @@ package Yolk.Configuration is
                        => TUS ("300.0"),
                        Session_Data_File
                        => TUS ("session/session.data"),
+                       Session_Id_Length
+                       => TUS ("11"),
                        Session_Lifetime
                        => TUS ("1200.0"),
                        Session_Name

@@ -389,6 +389,13 @@ Session_Data_File session/session.data
 #   Sessions are kept in memory. This file is only used to save sessions between
 #   application restarts.
 
+Session_Id_Length 11
+# Positive.
+# Default: 11
+# AWS configuration option: Yes
+#
+# The length of the session id in characters.
+
 Session_Lifetime 1200.0
 # Duration
 # Default: 1200.0
