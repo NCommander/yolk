@@ -51,6 +51,7 @@ package Yolk.Configuration is
                  AWS_Error_Syslog_Facility_Level,
                  Case_Sensitive_Parameters, --  AWS
                  Certificate, --  AWS
+                 Certificate_Required, --  AWS
                  Check_URL_Validity, --  AWS
                  Cleaner_Client_Data_Timeout, --  AWS
                  Cleaner_Client_Header_Timeout, --  AWS
@@ -62,6 +63,7 @@ package Yolk.Configuration is
                  Context_Lifetime, --  AWS
                  Critical_Log_Activate,
                  Critical_Syslog_Facility_Level,
+                 CRL_File, --  AWS
                  Debug_Log_Activate,
                  Debug_Syslog_Facility_Level,
                  Emergency_Log_Activate,
@@ -111,7 +113,7 @@ package Yolk.Configuration is
                  Session, --  AWS
                  Session_Cleanup_Interval, --  AWS
                  Session_Data_File,
-                 Session_Id_Length,
+                 Session_Id_Length, --  AWS
                  Session_Lifetime, --  AWS
                  Session_Name, --  AWS
                  SQL_Log_Activate,
@@ -126,6 +128,7 @@ package Yolk.Configuration is
                  System_Templates_Path,
                  Transient_Cleanup_Interval, --  AWS
                  Transient_Lifetime, --  AWS
+                 Trusted_CA, --  AWS
                  Upload_Directory, --  AWS
                  Upload_Size_Limit, --  AWS
                  Warning_Log_Activate,
@@ -160,6 +163,8 @@ package Yolk.Configuration is
                        => TUS ("True"),
                        Certificate
                        => TUS ("certificates/aws.pem"),
+                       Certificate_Required
+                       => TUS ("False"),
                        Check_URL_Validity
                        => TUS ("True"),
                        Cleaner_Client_Data_Timeout
@@ -182,6 +187,8 @@ package Yolk.Configuration is
                        => TUS ("True"),
                        Critical_Syslog_Facility_Level
                        => TUS ("user:critical"),
+                       CRL_File
+                       => TUS (""),
                        Debug_Log_Activate
                        => TUS ("True"),
                        Debug_Syslog_Facility_Level
@@ -310,6 +317,8 @@ package Yolk.Configuration is
                        => TUS ("180.0"),
                        Transient_Lifetime
                        => TUS ("300.0"),
+                       Trusted_CA
+                       => TUS (""),
                        Upload_Directory
                        => TUS ("uploads"),
                        Upload_Size_Limit

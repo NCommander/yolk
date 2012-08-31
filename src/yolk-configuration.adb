@@ -58,6 +58,10 @@ package body Yolk.Configuration is
         (O        => Object,
          Filename => Config.Get (Certificate));
 
+      AWS.Config.Set.Certificate_Required
+        (O     => Object,
+         Value => Config.Get (Certificate_Required));
+
       AWS.Config.Set.Check_URL_Validity
         (O     => Object,
          Value => Config.Get (Check_URL_Validity));
@@ -80,6 +84,10 @@ package body Yolk.Configuration is
 
       AWS.Config.Set.Context_Lifetime
         (Value => Config.Get (Context_Lifetime));
+
+      AWS.Config.Set.CRL_File
+        (O        => Object,
+         Filename => Config.Get (CRL_File));
 
       AWS.Config.Set.Directory_Browser_Page
         (O     => Object,
@@ -209,6 +217,10 @@ package body Yolk.Configuration is
 
       AWS.Config.Set.Transient_Lifetime
         (Value => Config.Get (Transient_Lifetime));
+
+      AWS.Config.Set.Trusted_CA
+        (O        => Object,
+         Filename => Config.Get (Trusted_CA));
 
       AWS.Config.Set.Upload_Directory
         (O     => Object,

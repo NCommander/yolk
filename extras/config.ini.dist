@@ -377,7 +377,7 @@ Session_Cleanup_Interval 300.0
 # will remove all session data that have been obsoleted.
 
 Session_Data_File session/session.data
-# String.
+# String
 # Default: session/session.data
 # AWS configuration option: No
 #
@@ -390,7 +390,7 @@ Session_Data_File session/session.data
 #   application restarts.
 
 Session_Id_Length 11
-# Positive.
+# Positive
 # Default: 11
 # AWS configuration option: Yes
 #
@@ -455,7 +455,7 @@ Status_Page templates/system/aws_status.thtml
 ##################################
 
 System_Templates_Path templates/system
-# String.
+# String
 # Default: templates/system
 # AWS configuration option: No
 #
@@ -473,70 +473,70 @@ System_Templates_Path templates/system
 # All core resource handlers are specified in the Handlers package.
 
 Handler_CSS .*\.css$
-# String.
+# String
 # Default: .*\.css$
 # AWS configuration option: No
 #
 # The regular expression used to decide if a requested resource is a CSS file.
 
 Handler_GIF .*\.gif$
-# String.
+# String
 # Default: .*\.gif$
 # AWS configuration option: No
 #
 # The regular expression used to decide if a requested resource is a GIF file.
 
 Handler_HTML .*\.html$
-# String.
+# String
 # Default: .*\.html$
 # AWS configuration option: No
 #
 # The regular expression used to decide if a requested resource is an HTML file.
 
 Handler_ICO .*\.ico$
-# String.
+# String
 # Default: .*\.ico$
 # AWS configuration option: No
 #
 # The regular expression used to decide if a requested resource is an ICO file.
 
 Handler_JPG .*\.jpg$
-# String.
+# String
 # Default: .*\.jpg$
 # AWS configuration option: No
 #
 # The regular expression used to decide if a requested resource is a JPG file.
 
 Handler_JS .*\.js$
-# String.
+# String
 # Default: .*\.js$
 # AWS configuration option: No
 #
 # The regular expression used to decide if a requested resource is a JS file.
 
 Handler_PNG .*\.png$
-# String.
+# String
 # Default: .*\.png$
 # AWS configuration option: No
 #
 # The regular expression used to decide if a requested resource is a PNG file.
 
 Handler_SVG .*\.svg$
-# String.
+# String
 # Default: \.svg$
 # AWS configuration option: No
 #
 # The regular expression used to decide if a requested resource is an SVG file.
 
 Handler_XML .*\.xml$
-# String.
+# String
 # Default: .*\.xml$
 # AWS configuration option: No
 #
 # The regular expression used to decide if a requested resource is an XML file.
 
 Handler_XSL .*\.xsl$
-# String.
+# String
 # Default: .*\.xsl$
 # AWS configuration option: No
 #
@@ -873,7 +873,7 @@ Upload_Size_Limit 16#500_000#
 # The maximum accepted size for uploaded files in bytes.
 
 WebSocket_Message_Queue_Size 10
-# Positive.
+# Positive
 # Default: 10
 # AWS configuration option: Yes
 #
@@ -881,7 +881,7 @@ WebSocket_Message_Queue_Size 10
 # handled by one of the WebSocket tasks. See Max_WebSocket_Handler.
 
 WebSocket_Origin
-# String.
+# String
 # Default: [no value]
 # AWS configuration option: Yes
 #
@@ -892,7 +892,7 @@ WebSocket_Origin
 #       .*.fr
 
 WWW_Root static_content
-# String.
+# String
 # Default: static_content
 # Used by AWS:  Yes and No. This value is not used by AWS internally, but it is
 #               part of the default AWS configuration system.
@@ -920,6 +920,23 @@ Certificate certificates/aws.pem
 # applicable and ending at the highest level (root) CA certificate. If the
 # file contains only a singlecertificate, it can be followed by a private key.
 # In this case the Key parameter (see below) must empty.
+
+Certificate_Required False
+# Boolean
+# Default: False
+# AWS configuration option: Yes
+#
+# If True the server must abort the connection if the client does not provide a
+# valid certificate. If this option is True the Exchange_Certificate must also
+# be True.
+
+CRL_File
+# String
+# Default: [no value]
+# AWS configuration option: Yes
+#
+# A filename containing a CRL (Certificate Revocation List).
+# This makes it possible to control clients connecting to the server.
 
 Exchange_Certificate False
 # Boolean
@@ -964,3 +981,12 @@ Security_Mode SSLv23
 #
 # This parameter is obviously ignored if Security is False and/or AWS has been
 # compiled without SSL support.
+
+Trusted_CA
+# String
+# Default: [no value]
+# AWS configuration option: Yes
+#
+# This must point to the file containing the list of trusted Certificate
+# Authorities. The CA in this file will be used to verify the client
+# certificate validity.
