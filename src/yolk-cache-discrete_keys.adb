@@ -27,22 +27,42 @@
 -------------------------------------------------------------------------------
 
 with Ada.Calendar;
+with Ada.Containers.Hashed_Maps;
 
 package body Yolk.Cache.Discrete_Keys is
 
+   use Ada.Containers;
+
    type Element_Container is
       record
-         Added_Timestamp   : Ada.Calendar.Time;
-         Element           : Element_Type;
-         Has_Element       : Boolean := False;
+         Added_Timestamp : Ada.Calendar.Time;
+         Element         : Element_Type;
       end record;
 
-   type Element_Array_Type is array (Key_Type) of Element_Container;
+   function Equivalent_Keys
+     (Left  : in Key_Type;
+      Right : in Key_Type)
+      return Boolean;
+   --  Used by the Element_Map to determine equivalence between values.
+
+   function Key_Hash
+     (Key : in Key_Type)
+      return Hash_Type;
+   --  Used by Element_Map to hash keys.
+
+   package Element_Map is new Hashed_Maps
+     (Key_Type        => Key_Type,
+      Element_Type    => Element_Container,
+      Hash            => Key_Hash,
+      Equivalent_Keys => Equivalent_Keys);
 
    Null_Container : Element_Container;
    pragma Unmodified (Null_Container);
 
    protected P_Element_List is
+      procedure Cleanup;
+      --  ????
+
       procedure Clear;
       --  ????
 
@@ -53,6 +73,10 @@ package body Yolk.Cache.Discrete_Keys is
       function Is_Valid
         (Key : in Key_Type)
          return Boolean;
+      --  ????
+
+      function Length
+        return Natural;
       --  ????
 
       procedure Read
@@ -66,7 +90,7 @@ package body Yolk.Cache.Discrete_Keys is
          Value : in Element_Type);
       --  ????
    private
-      Element_List   : Element_Array_Type := (others => Null_Container);
+      Element_List : Element_Map.Map;
    end P_Element_List;
 
    ----------------------
@@ -74,6 +98,26 @@ package body Yolk.Cache.Discrete_Keys is
    ----------------------
 
    protected body P_Element_List is
+      ---------------
+      --  Cleanup  --
+      ---------------
+
+      procedure Cleanup
+      is
+         use Ada.Calendar;
+         use Element_Map;
+
+         Cursor : Element_Map.Cursor := Element_List.First;
+         Now    : constant Time := Clock;
+      begin
+         while Has_Element (Cursor) loop
+            if (Now - Element (Cursor).Added_Timestamp) >= Max_Element_Age then
+               Element_List.Delete (Position => Cursor);
+            end if;
+            Next (Cursor);
+         end loop;
+      end Cleanup;
+
       -------------
       --  Clear  --
       -------------
@@ -81,7 +125,7 @@ package body Yolk.Cache.Discrete_Keys is
       procedure Clear
       is
       begin
-         Element_List := (others => Null_Container);
+         Element_List.Clear;
       end Clear;
 
       -------------
@@ -92,7 +136,7 @@ package body Yolk.Cache.Discrete_Keys is
         (Key : in Key_Type)
       is
       begin
-         Element_List (Key) := Null_Container;
+         Element_List.Exclude (Key => Key);
       end Clear;
 
       ----------------
@@ -105,9 +149,21 @@ package body Yolk.Cache.Discrete_Keys is
       is
          use Ada.Calendar;
       begin
-         return (Element_List (Key).Has_Element) and then
-           (Clock - Element_List (Key).Added_Timestamp < Max_Element_Age);
+         return (Element_List.Contains (Key => Key)) and then
+           (Clock - Element_List.Element (Key => Key).Added_Timestamp <
+              Max_Element_Age);
       end Is_Valid;
+
+      --------------
+      --  Length  --
+      --------------
+
+      function Length
+        return Natural
+      is
+      begin
+         return Natural (Element_List.Length);
+      end Length;
 
       ------------
       --  Read  --
@@ -121,7 +177,13 @@ package body Yolk.Cache.Discrete_Keys is
          use Ada.Calendar;
       begin
          Valid := Is_Valid (Key => Key);
-         Value := Element_List (Key).Element;
+
+         if Valid then
+            Value := Element_List.Element (Key => Key).Element;
+         else
+            Clear (Key => Key);
+            Value := Null_Container.Element;
+         end if;
       end Read;
 
       -------------
@@ -133,11 +195,22 @@ package body Yolk.Cache.Discrete_Keys is
          Value : in Element_Type)
       is
       begin
-         Element_List (Key) := (Added_Timestamp => Ada.Calendar.Clock,
-                                Element         => Value,
-                                Has_Element     => True);
+         Element_List.Include
+           (Key      => Key,
+            New_Item => (Added_Timestamp => Ada.Calendar.Clock,
+                         Element         => Value));
       end Write;
    end P_Element_List;
+
+   ---------------
+   --  Cleanup  --
+   ---------------
+
+   procedure Cleanup
+   is
+   begin
+      P_Element_List.Cleanup;
+   end Cleanup;
 
    -------------
    --  Clear  --
@@ -160,6 +233,19 @@ package body Yolk.Cache.Discrete_Keys is
       P_Element_List.Clear (Key => Key);
    end Clear;
 
+   -----------------------
+   --  Equivalent_Keys  --
+   -----------------------
+
+   function Equivalent_Keys
+     (Left  : in Key_Type;
+      Right : in Key_Type)
+      return Boolean
+   is
+   begin
+      return Left = Right;
+   end Equivalent_Keys;
+
    ----------------
    --  Is_Valid  --
    ----------------
@@ -171,6 +257,29 @@ package body Yolk.Cache.Discrete_Keys is
    begin
       return P_Element_List.Is_Valid (Key => Key);
    end Is_Valid;
+
+   ----------------
+   --  Key_Hash  --
+   ----------------
+
+   function Key_Hash
+     (Key : in Key_Type)
+      return Hash_Type
+   is
+   begin
+      return Hash_Type (Key_Type'Pos (Key));
+   end Key_Hash;
+
+   --------------
+   --  Length  --
+   --------------
+
+   function Length
+     return Natural
+   is
+   begin
+      return P_Element_List.Length;
+   end Length;
 
    ------------
    --  Read  --

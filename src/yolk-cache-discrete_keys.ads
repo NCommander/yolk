@@ -27,12 +27,19 @@
 -------------------------------------------------------------------------------
 
 --  A simple and fairly dumb cache.
---  No checking is done whether the fetched element is valid. You have to check
---  for this manually.
 --  In order for an element to be valid, it must:
 --
 --    1. have been added to the cache using the Write procedure
 --    2. be younger than Max_Element_Age
+--
+--  WARNING!
+--    If your Key_Type is for example an Integer, then the cache _can_ grow to
+--    whatever the size of Integer is on your implementation. Obviously this
+--    can potentially use a lot of resources, so give some thought to Key_Type
+--    before you dump any old discrete type in there.
+--
+--  Note that whenever an invalid element is found by the Read procedure
+--  (Is_Valid = False), it is automatically deleted from the cache.
 
 generic
 
@@ -42,6 +49,13 @@ generic
    --  Elements that are older than Max_Element_Age are considered invalid.
 
 package Yolk.Cache.Discrete_Keys is
+
+   procedure Cleanup;
+   --  Clear all stale elements from the cache. Basically this iterates over
+   --  every single object in the cache and deletes it if it is older than
+   --  Max_Element_Age.
+   --  Obviously this is a very expensive call if the cache is large. Use with
+   --  care.
 
    procedure Clear;
    --  Clear the entire cache.
@@ -53,8 +67,13 @@ package Yolk.Cache.Discrete_Keys is
    function Is_Valid
      (Key : in Key_Type)
       return Boolean;
-   --  Return True if the element associated with Key is younger than
-   --  Max_Element_Age.
+   --  Return True if the element associated with Key exists and is younger
+   --  than Max_Element_Age.
+
+   function Length
+     return Natural;
+   --  Return the amount of elements currently in the cache. This counts both
+   --  valid and invalid elements.
 
    procedure Read
      (Key      : in  Key_Type;
