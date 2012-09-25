@@ -751,6 +751,19 @@ False
 Value
 \emph default
  is undefined.
+ Note that if 
+\emph on
+Is_Valid
+\emph default
+ is 
+\emph on
+False
+\emph default
+ then 
+\emph on
+Key
+\emph default
+ is removed from the cache, if it exists.
 \end_layout
 
 \begin_layout Subsection
@@ -903,6 +916,56 @@ My_Cache.Clear;
 And that's all it takes.
 \end_layout
 
+\begin_layout Subsection
+Cleanup - Getting rid of stale elements
+\end_layout
+
+\begin_layout Standard
+Calling Cleanup will delete all stale elements from the cache:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Box Frameless
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "100col%"
+special "none"
+height "1in"
+height_special "totalheight"
+status open
+
+\begin_layout Plain Layout
+\begin_inset listings
+lstparams "basicstyle={\small\sffamily},frame=tblr,language=Ada,showstringspaces=false,tabsize=3,xleftmargin=1em,xrightmargin=1em"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+My_Cache.Cleanup;
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that this is potentially a very expensive operation if the cache is
+ large, as the entire cache is iterated and every element tested for its
+ age.
+ Use with care.
+\end_layout
+
 \begin_layout Section
 Yolk.Cache.String_Keys
 \end_layout
@@ -917,12 +980,12 @@ Yolk.Cache.Discrete_Keys
 \emph on
 Discrete_Keys
 \emph default
- cache package requires that you define a type for the keys, this packages
- takes a regular 
+ cache package requires that you define a type for the keys, this package
+ use regular 
 \emph on
 String
 \emph default
- as key.
+ as keys.
 \end_layout
 
 \begin_layout Standard
@@ -945,15 +1008,11 @@ Clear
 \emph default
  procedures and functions, so in that sense the two packages are the same.
  The biggest difference lies in the available generic formal parameters
- and the addition of the 
+ and the functionality of the 
 \emph on
 Cleanup
 \emph default
- procedure and the 
-\emph on
-Length
-\emph default
- function.
+ procedure.
 \end_layout
 
 \begin_layout Subsection
@@ -1430,6 +1489,19 @@ False
 Value
 \emph default
  contains undefined garbage.
+ Note that if 
+\emph on
+Is_Valid
+\emph default
+ is 
+\emph on
+False
+\emph default
+ then 
+\emph on
+Key
+\emph default
+ is removed from the cache, if it exists.
 \end_layout
 
 \begin_layout Subsection
@@ -1748,7 +1820,6 @@ False
 Cleanup
 \emph default
  on a regular basis.
- 
 \end_layout
 
 \begin_layout Section

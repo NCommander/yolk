@@ -236,7 +236,9 @@ true), it must:
 
 2. be younger than Max_Element_Age
 
-If Is_Valid is False, then Value is undefined.
+If Is_Valid is False, then Value is undefined. Note that if 
+Is_Valid is False then Key is removed from the cache, if it 
+exists.
 
 4.5 Checking if a key is valid
 
@@ -275,19 +277,30 @@ My_Cache.Clear;
 
 And that's all it takes.
 
+4.7 Cleanup - Getting rid of stale elements
+
+Calling Cleanup will delete all stale elements from the cache:
+
+My_Cache.Cleanup;
+
+
+Note that this is potentially a very expensive operation if the 
+cache is large, as the entire cache is iterated and every element 
+tested for its age. Use with care.
+
 5 Yolk.Cache.String_Keys
 
 This package is almost similar to the Yolk.Cache.Discrete_Keys 
 package. The biggest difference is that where the Discrete_Keys 
 cache package requires that you define a type for the keys, this 
-packages takes a regular String as key.
+package use regular String as keys.
 
 The implications of this difference between the two cache 
 packages are subtle. Both have the same Read, Write, Is_Valid and 
 Clear procedures and functions, so in that sense the two packages 
 are the same. The biggest difference lies in the available 
-generic formal parameters and the addition of the Cleanup 
-procedure and the Length function.
+generic formal parameters and the functionality of the Cleanup 
+procedure.
 
 5.1 The generic formal parameters
 
@@ -410,7 +423,9 @@ true), it must:
 
 2. be younger than Max_Element_Age
 
-If Is_Valid is False, then Value contains undefined garbage.
+If Is_Valid is False, then Value contains undefined garbage. Note 
+that if Is_Valid is False then Key is removed from the cache, if 
+it exists.
 
 5.5 Checking if a key is valid
 
@@ -479,7 +494,7 @@ end if;
 
 If you've set Cleanup_On_Write to Boolean False and the String 
 keys are coming from outside sources, then you really should make 
-sure you call Cleanup on a regular basis. 
+sure you call Cleanup on a regular basis.
 
 6 Yolk.Config_File_Parser
 

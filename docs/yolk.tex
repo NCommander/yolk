@@ -264,6 +264,8 @@ is true), it must:
 \item be younger than \emph{Max\_Element\_Age}
 \end{enumerate}
 If \emph{Is\_Valid} is \emph{False}, then \emph{Value} is undefined.
+Note that if \emph{Is\_Valid} is \emph{False} then \emph{Key} is removed
+from the cache, if it exists.
 
 
 \subsection{Checking if a key is valid}
@@ -305,19 +307,35 @@ My_Cache.Clear;
 And that's all it takes.
 
 
+\subsection{Cleanup - Getting rid of stale elements}
+
+Calling Cleanup will delete all stale elements from the cache:
+
+\begin{minipage}[t]{1\columnwidth}%
+\begin{lstlisting}[basicstyle={\small\sffamily},frame=tblr,language=Ada,showstringspaces=false,tabsize=3,xleftmargin=1em,xrightmargin=1em]
+My_Cache.Cleanup;
+\end{lstlisting}
+%
+\end{minipage}
+
+Note that this is potentially a very expensive operation if the cache
+is large, as the entire cache is iterated and every element tested
+for its age. Use with care.
+
+
 \section{Yolk.Cache.String\_Keys}
 
 This package is almost similar to the \emph{Yolk.Cache.Discrete\_Keys}
 package. The biggest difference is that where the \emph{Discrete\_Keys}
-cache package requires that you define a type for the keys, this packages
-takes a regular \emph{String} as key.
+cache package requires that you define a type for the keys, this package
+use regular \emph{String} as keys.
 
 The implications of this difference between the two cache packages
 are subtle. Both have the same \emph{Read}, \emph{Write}, \emph{Is\_Valid}
 and \emph{Clear} procedures and functions, so in that sense the two
 packages are the same. The biggest difference lies in the available
-generic formal parameters and the addition of the \emph{Cleanup} procedure
-and the \emph{Length} function.
+generic formal parameters and the functionality of the \emph{Cleanup}
+procedure.
 
 
 \subsection{The generic formal parameters}
@@ -432,7 +450,8 @@ is true), it must:
 \item be younger than \emph{Max\_Element\_Age}
 \end{enumerate}
 If \emph{Is\_Valid} is \emph{False}, then \emph{Value} contains undefined
-garbage.
+garbage. Note that if \emph{Is\_Valid} is \emph{False} then \emph{Key}
+is removed from the cache, if it exists.
 
 
 \subsection{Checking if a key is valid}
@@ -509,7 +528,7 @@ end if;
 
 If you've set \emph{Cleanup\_On\_Write} to Boolean \emph{False} and
 the String keys are coming from outside sources, then you really should
-make sure you call \emph{Cleanup} on a regular basis. 
+make sure you call \emph{Cleanup} on a regular basis.
 
 
 \section{Yolk.Config\_File\_Parser}
