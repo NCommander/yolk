@@ -27,20 +27,21 @@
 -------------------------------------------------------------------------------
 
 --  A simple and fairly dumb cache.
---  No checking is done whether a returned element is valid. You have to check
---  for this manually.
 --  In order for an element to be valid, it must:
 --
 --    1. have been added to the cache using the Write procedure
 --    2. be younger than Max_Element_Age
 --
 --  WARNING!
---    As opposed to the Discrete_Keys cache, which size is known at all times,
---    the String_Keys cache carries the risk of growing until there are no
---    more resources available.
+--    As opposed to the Discrete_Keys cache, which maximum size is known at all
+--    times, the String_Keys cache carries the risk of growing until there are
+--    no more resources available.
 --    Either let the cache automatically clean itself (Cleanup_Size and
 --    Cleanup_On_Write) or do it manually by calling Cleanup/Clear whenever you
 --    decide it is necessary.
+--
+--  Note that whenever an invalid element is found by the Read procedure,
+--  (Is_Valid = False), it is automatically deleted from the cache.
 
 generic
 
@@ -90,8 +91,8 @@ package Yolk.Cache.String_Keys is
    function Is_Valid
      (Key : in String)
       return Boolean;
-   --  Return True if the element associated with Key is younger than
-   --  Max_Element_Age.
+   --  Return True if the element associated with Key exists and is younger
+   --  than Max_Element_Age.
 
    function Length
      return Natural;

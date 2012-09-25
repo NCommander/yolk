@@ -39,8 +39,8 @@ package body Yolk.Cache.String_Keys is
 
    type Element_Container is
       record
-         Added_Timestamp   : Ada.Calendar.Time;
-         Element           : Element_Type;
+         Added_Timestamp : Ada.Calendar.Time;
+         Element         : Element_Type;
       end record;
 
    Null_Container : Element_Container;
@@ -94,8 +94,8 @@ package body Yolk.Cache.String_Keys is
          Value : in Element_Type);
       --  ????
    private
-      Element_List   : Element_Map.Map;
-      Virgin         : Boolean := True;
+      Element_List : Element_Map.Map;
+      Virgin       : Boolean := True;
    end P_Element_List;
 
    ----------------------
@@ -112,8 +112,8 @@ package body Yolk.Cache.String_Keys is
          use Ada.Calendar;
          use Element_Map;
 
-         Cursor   : Element_Map.Cursor := Element_List.First;
-         Now      : constant Time := Clock;
+         Cursor : Element_Map.Cursor := Element_List.First;
+         Now    : constant Time := Clock;
       begin
          while Has_Element (Cursor) loop
             if (Now - Element (Cursor).Added_Timestamp) >= Max_Element_Age then
@@ -194,6 +194,7 @@ package body Yolk.Cache.String_Keys is
          if Valid then
             Value := Element_List.Element (Key => TUS (Key)).Element;
          else
+            Clear (Key => Key);
             Value := Null_Container.Element;
          end if;
       end Read;
