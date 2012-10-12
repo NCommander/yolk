@@ -53,9 +53,8 @@ package body My_Handlers is
       --  Unknown Resource (404) Dispatcher  --
       -----------------------------------------
 
-      AWS.Services.Dispatchers.URI.Register_Default_Callback
-        (Dispatcher => RH,
-         Action     => Create (Callback => Not_Found.Generate'Access));
+      RH.Register_Default_Callback
+        (Action => Create (Callback => Not_Found.Generate'Access));
       --  This dispatcher is called if the requested resource doesn't match any
       --  of the other dispatchers.
       --  It returns a generic 404 HTML page. The template for this 404 can be
@@ -74,42 +73,35 @@ package body My_Handlers is
       --    Order matters. The first handler that matches a resource handles
       --    the request.
 
-      AWS.Services.Dispatchers.URI.Register
-        (Dispatcher => RH,
-         URI        => My.Config.Get (My.Handler_DB_Test),
-         Action     => Create (Callback => View.DB_Test.Generate'Access));
+      RH.Register
+        (URI    => My.Config.Get (My.Handler_DB_Test),
+         Action => Create (Callback => View.DB_Test.Generate'Access));
 
-      AWS.Services.Dispatchers.URI.Register_Regexp
-        (Dispatcher => RH,
-         URI        => My.Config.Get (My.Handler_Dir),
-         Action     => Create (Callback => View.Dir.Generate'Access));
+      RH.Register_Regexp
+        (URI    => My.Config.Get (My.Handler_Dir),
+         Action => Create (Callback => View.Dir.Generate'Access));
 
-      AWS.Services.Dispatchers.URI.Register
-        (Dispatcher => RH,
-         URI        => My.Config.Get (My.Handler_Email),
-         Action     => Create (Callback => View.Email.Generate'Access));
+      RH.Register
+        (URI    => My.Config.Get (My.Handler_Email),
+         Action => Create (Callback => View.Email.Generate'Access));
 
-      AWS.Services.Dispatchers.URI.Register
-        (Dispatcher => RH,
-         URI        => My.Config.Get (My.Handler_Index),
-         Action     => Create (Callback => View.Index.Generate'Access));
+      RH.Register
+        (URI    => My.Config.Get (My.Handler_Index),
+         Action => Create (Callback => View.Index.Generate'Access));
 
-      AWS.Services.Dispatchers.URI.Register
-        (Dispatcher => RH,
-         URI        => My.Config.Get (My.Handler_Session_Test),
-         Action     => Create (Callback => View.Session_Test.Generate'Access));
+      RH.Register
+        (URI    => My.Config.Get (My.Handler_Session_Test),
+         Action => Create (Callback => View.Session_Test.Generate'Access));
 
-      AWS.Services.Dispatchers.URI.Register
-        (Dispatcher => RH,
-         URI        => My.Config.Get (My.Handler_Syndication),
-         Action     => Create (Callback => View.Syndication.Generate'Access));
+      RH.Register
+        (URI    => My.Config.Get (My.Handler_Syndication),
+         Action => Create (Callback => View.Syndication.Generate'Access));
 
-      AWS.Services.Dispatchers.URI.Register
-        (Dispatcher => RH,
-         URI        => My.Config.Get (My.Handler_Websocket),
-         Action     => Create (Callback => View.Websocket.Generate'Access));
+      RH.Register
+        (URI    => My.Config.Get (My.Handler_Websocket),
+         Action => Create (Callback => View.Websocket.Generate'Access));
 
-      Handlers.Set (RH => RH);
+      Handlers.Set (RH);
       --  Set the generic content handlers defined in Yolk.Handlers.
    end Set;
 
