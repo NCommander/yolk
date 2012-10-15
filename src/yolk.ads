@@ -24,33 +24,10 @@
 --                                                                           --
 -------------------------------------------------------------------------------
 
-with AWS.Config;
-with AWS.Server;
-with AWS.Services.Dispatchers.URI;
-
 package Yolk is
 
-   Version : constant String := "0.78";
+   pragma Pure;
 
-   type Server is tagged limited private;
-
-   function Create
-     (Load_Extra_MIME_Types    : in Boolean := True;
-      Register_URI_Dispatchers : in Boolean := True)
-      return Server;
-
-   procedure Start
-     (S                : in out Server;
-      Start_WebSockets : in Boolean := True);
-
-private
-
-   type Server is tagged limited
-      record
-         Got_Dispatchers   : Boolean := False;
-         URI_Handlers      : AWS.Services.Dispatchers.URI.Handler;
-         Web_Server        : AWS.Server.HTTP;
-         Web_Server_Config : AWS.Config.Object;
-      end record;
+   Version : constant String := "0.80";
 
 end Yolk;

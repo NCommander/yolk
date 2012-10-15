@@ -103,18 +103,14 @@ package body My_Handlers is
 
       Handlers.Set (RH);
       --  Set the generic content handlers defined in Yolk.Handlers.
-   end Set;
 
-   ------------------------------
-   --  Set_WebSocket_Handlers  --
-   ------------------------------
+      --------------------------
+      --  WebSocket handlers  --
+      --------------------------
 
-   procedure Set_WebSocket_Handlers
-   is
-   begin
       AWS.Net.WebSocket.Registry.Register
         (URI     => "/websocket",
          Factory => Websocket_Demo.Create'Access);
-   end Set_WebSocket_Handlers;
+   end Set;
 
 end My_Handlers;

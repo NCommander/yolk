@@ -35,4 +35,7 @@ package Websocket_Demo is
    --  This function is called whenever a new WebSocket connection is made on
    --  the /websocket resource.
 
+   procedure Die;
+   --  Kill the WebSocket_Demo Clocker task.
+
 end Websocket_Demo;

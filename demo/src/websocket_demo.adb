@@ -26,7 +26,6 @@ with Ada.Calendar.Formatting;
 with Ada.Containers.Doubly_Linked_Lists;
 with AWS.Net.WebSocket.Registry;
 with AWS.Utils;
-with Task_Controller;
 with Yolk.Log;
 
 package body Websocket_Demo is
@@ -59,7 +58,9 @@ package body Websocket_Demo is
            AWS.Net.WebSocket.Registry.Create (URI => "/websocket");
    --  Targets all clients (any Origin) whose URI is /websocket
 
-   task Clocker;
+   task Clocker is
+      entry Die;
+   end Clocker;
    --  The Clocker task is nothing but a simple loop that broadcasts a
    --  timestamp, the amount of connected clients and a string with 10 random
    --  characters.
@@ -70,39 +71,44 @@ package body Websocket_Demo is
 
    task body Clocker
    is
-      use Task_Controller;
       use Yolk.Log;
    begin
       Trace (Handle  => Info,
              Message => "Websocket.Clocker task started");
 
       loop
-         exit when Task_State = Down;
+         select
+            accept Die;
+            exit;
+         or
+            delay 1.0;
 
-         AWS.Net.WebSocket.Registry.Send
-           (To      => Rcp,
-            Message => "timestamp|" & Ada.Calendar.Formatting.Image
-              (Ada.Calendar.Clock, True));
-         --  Date broadcasted to all clients connected to /websocket
+            AWS.Net.WebSocket.Registry.Send
+              (To      => Rcp,
+               Message => "timestamp|" & Ada.Calendar.Formatting.Image
+                 (Ada.Calendar.Clock, True));
+            --  Date broadcasted to all clients connected to /websocket
 
-         AWS.Net.WebSocket.Registry.Send
-           (To      => Rcp,
-            Message => "clients_connected|" & Clients.Length'Img);
-         --  Amount of clients connected broadcast to all clients connected to
-         --  /websocket
+            AWS.Net.WebSocket.Registry.Send
+              (To      => Rcp,
+               Message => "clients_connected|" & Clients.Length'Img);
+            --  Amount of clients connected broadcast to all clients connected
+            --  to /websocket
 
-         for Client of Clients loop
-            Client.Send
-              (Message => "random_string|" & AWS.Utils.Random_String (10));
-            --  Send a random string to a specific client connected to
-            --  /websocket
-         end loop;
-
-         delay 1.0;
+            for Client of Clients loop
+               Client.Send
+                 (Message => "random_string|" & AWS.Utils.Random_String (10));
+               --  Send a random string to a specific client connected to
+               --  /websocket
+            end loop;
+         end select;
       end loop;
 
       Trace (Handle  => Info,
              Message => "Websocket.Clocker task stopped");
+   exception
+      when others =>
+         null;
    end Clocker;
 
    --------------
@@ -123,6 +129,16 @@ package body Websocket_Demo is
                      (AWS.Net.WebSocket.Create (Socket, Request))
                      with null record);
    end Create;
+
+   -----------
+   --  Die  --
+   -----------
+
+   procedure Die
+   is
+   begin
+      Clocker.Die;
+   end Die;
 
    ----------------
    --  On_Close  --
