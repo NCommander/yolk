@@ -28,6 +28,39 @@ with Yolk.Not_Found;
 
 package body View.Dir is
 
+   function Directory_Browse_Response
+     (Directory_Name : in String;
+      Request        : in AWS.Status.Data)
+      return AWS.Response.Data;
+   --  Generate the directory listing response.
+
+   ---------------------------------
+   --  Directory_Browse_Response  --
+   ---------------------------------
+
+   function Directory_Browse_Response
+     (Directory_Name : in String;
+      Request        : in AWS.Status.Data)
+      return AWS.Response.Data
+   is
+      use AWS.Templates;
+      use Yolk.Configuration;
+
+      T : Translate_Set;
+   begin
+      T := AWS.Services.Directory.Browse
+        (Directory_Name => Directory_Name,
+         Request        => Request);
+
+      Insert (T, Assoc ("YOLK_VERSION", Yolk.Version));
+
+      return Build_Response
+        (Status_Data   => Request,
+         Template_File =>
+           Config.Get (System_Templates_Path) & "/directory.tmpl",
+         Translations  => T);
+   end Directory_Browse_Response;
+
    ---------------
    --  Generate --
    ---------------
@@ -39,11 +72,11 @@ package body View.Dir is
       use Ada.Directories;
       use Yolk.Configuration;
 
-      URL               : constant String := AWS.Status.URI (Request);
-      Resource          : constant String (1 .. (URL'Length - 4))
+      URL              : constant String := AWS.Status.URI (Request);
+      Resource         : constant String (1 .. (URL'Length - 4))
         := URL (5 .. (URL'Length));
       --  Get rid of the /dir part of the URL
-      Parent_Directory  : constant String := Config.Get (WWW_Root);
+      Parent_Directory : constant String := Config.Get (WWW_Root);
    begin
       if not Exists (Parent_Directory & Resource) then
          return Not_Found.Generate (Request);
@@ -51,23 +84,9 @@ package body View.Dir is
 
       case Kind (Parent_Directory & Resource) is
          when Directory =>
-            declare
-               use AWS.Templates;
-
-               T : Translate_Set;
-            begin
-               T := AWS.Services.Directory.Browse
-                 (Directory_Name => Parent_Directory & Resource,
-                  Request        => Request);
-
-               Insert (T, Assoc ("YOLK_VERSION", Yolk.Version));
-
-               return Build_Response
-                 (Status_Data   => Request,
-                  Template_File =>
-                    Config.Get (System_Templates_Path) & "/directory.tmpl",
-                  Translations  => T);
-            end;
+            return Directory_Browse_Response
+              (Directory_Name => Parent_Directory & Resource,
+               Request        => Request);
          when Ordinary_File =>
             return AWS.Response.File
               (Content_Type  => AWS.Status.Content_Type (Request),
