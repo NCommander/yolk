@@ -205,6 +205,11 @@ private
    use Ada.Containers;
    use Ada.Strings.Unbounded;
 
+   function U
+     (S : in String)
+      return Unbounded_String
+      renames To_Unbounded_String;
+
    type Atom_Common is
       record
          Base_URI : Unbounded_String;

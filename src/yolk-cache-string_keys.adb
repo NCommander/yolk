@@ -30,12 +30,16 @@ with Ada.Calendar;
 with Ada.Containers.Hashed_Maps;
 with Ada.Strings.Unbounded;
 with Ada.Strings.Unbounded.Hash;
-with Yolk.Utilities;
 
 package body Yolk.Cache.String_Keys is
 
    use Ada.Containers;
    use Ada.Strings.Unbounded;
+
+   function U
+     (S : in String)
+      return Unbounded_String
+      renames To_Unbounded_String;
 
    type Element_Container is
       record
@@ -145,9 +149,8 @@ package body Yolk.Cache.String_Keys is
       procedure Clear
         (Key : in String)
       is
-         use Yolk.Utilities;
       begin
-         Element_List.Exclude (Key => TUS (Key));
+         Element_List.Exclude (Key => U (Key));
       end Clear;
 
       ----------------
@@ -159,10 +162,9 @@ package body Yolk.Cache.String_Keys is
          return Boolean
       is
          use Ada.Calendar;
-         use Yolk.Utilities;
       begin
-         return (Element_List.Contains (Key => TUS (Key))) and then
-           (Clock - Element_List.Element (Key => TUS (Key)).Added_Timestamp <
+         return (Element_List.Contains (Key => U (Key))) and then
+           (Clock - Element_List.Element (Key => U (Key)).Added_Timestamp <
               Max_Element_Age);
       end Is_Valid;
 
@@ -187,12 +189,11 @@ package body Yolk.Cache.String_Keys is
          Value : out Element_Type)
       is
          use Ada.Calendar;
-         use Yolk.Utilities;
       begin
          Valid := Is_Valid (Key => Key);
 
          if Valid then
-            Value := Element_List.Element (Key => TUS (Key)).Element;
+            Value := Element_List.Element (Key => U (Key)).Element;
          else
             Clear (Key => Key);
             Value := Null_Container.Element;
@@ -207,7 +208,6 @@ package body Yolk.Cache.String_Keys is
         (Key   : in String;
          Value : in Element_Type)
       is
-         use Yolk.Utilities;
       begin
          if Virgin then
             Element_List.Reserve_Capacity
@@ -222,7 +222,7 @@ package body Yolk.Cache.String_Keys is
          end if;
 
          Element_List.Include
-           (Key      => TUS (Key),
+           (Key      => U (Key),
             New_Item => (Added_Timestamp => Ada.Calendar.Clock,
                          Element         => Value));
       end Write;

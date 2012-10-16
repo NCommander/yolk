@@ -35,7 +35,6 @@ with DOM.Readers;
 with Input_Sources.Strings;
 with Sax.Readers;
 with Unicode.CES.Utf8;
-with Yolk.Utilities;
 
 package body Yolk.Syndication.DOM_Builder is
 
@@ -90,7 +89,6 @@ package body Yolk.Syndication.DOM_Builder is
       use DOM.Core.Documents;
       use DOM.Core.Elements;
       use DOM.Core.Nodes;
-      use Yolk.Utilities;
 
       A_Category     : Atom_Category;
       C              : Category_List.Cursor := List.First;
@@ -108,23 +106,23 @@ package body Yolk.Syndication.DOM_Builder is
 
          Set_Attribute (Elem  => Category_Node,
                         Name  => "term",
-                        Value => TS (A_Category.Term));
+                        Value => To_String (A_Category.Term));
 
          Attribute (Elem  => Category_Node,
                     Name  => "xml:base",
-                    Value => TS (A_Category.Common.Base_URI));
+                    Value => To_String (A_Category.Common.Base_URI));
 
          Attribute (Elem  => Category_Node,
                     Name  => "xml:lang",
-                    Value => TS (A_Category.Common.Language));
+                    Value => To_String (A_Category.Common.Language));
 
          Attribute (Elem  => Category_Node,
                     Name  => "label",
-                    Value => TS (A_Category.Label));
+                    Value => To_String (A_Category.Label));
 
          Attribute (Elem  => Category_Node,
                     Name  => "scheme",
-                    Value => TS (A_Category.Scheme));
+                    Value => To_String (A_Category.Scheme));
 
          Category_List.Next (C);
       end loop;
@@ -142,7 +140,6 @@ package body Yolk.Syndication.DOM_Builder is
       use DOM.Core;
       use DOM.Core.Documents;
       use DOM.Core.Nodes;
-      use Yolk.Utilities;
 
       Content_Node : Node;
    begin
@@ -150,7 +147,7 @@ package body Yolk.Syndication.DOM_Builder is
          when Text | Html | Xhtml =>
             Create_Text_Construct
               (Common    => Entry_Content.Common,
-               Data      => TS (Entry_Content.Content),
+               Data      => To_String (Entry_Content.Content),
                Doc       => Doc,
                Elem_Name => "content",
                Parent    => Parent,
@@ -163,26 +160,26 @@ package body Yolk.Syndication.DOM_Builder is
 
             Attribute (Elem  => Content_Node,
                        Name  => "xml:base",
-                       Value => TS (Entry_Content.Common.Base_URI));
+                       Value => To_String (Entry_Content.Common.Base_URI));
 
             Attribute (Elem  => Content_Node,
                        Name  => "xml:lang",
-                       Value => TS (Entry_Content.Common.Language));
+                       Value => To_String (Entry_Content.Common.Language));
 
             Attribute (Elem  => Content_Node,
                        Name  => "type",
-                       Value => TS (Entry_Content.Mime_Type));
+                       Value => To_String (Entry_Content.Mime_Type));
 
             if Entry_Content.Source /= Null_Unbounded_String then
                Attribute (Elem  => Content_Node,
                           Name  => "src",
-                          Value => TS (Entry_Content.Source));
+                          Value => To_String (Entry_Content.Source));
             else
                Content_Node := Append_Child
                  (N         => Content_Node,
                   New_Child => Create_Text_Node
                     (Doc  => Doc,
-                     Data => TS (Entry_Content.Content)));
+                     Data => To_String (Entry_Content.Content)));
             end if;
       end case;
    end Create_Content_Element;
@@ -199,7 +196,6 @@ package body Yolk.Syndication.DOM_Builder is
       use DOM.Core;
       use DOM.Core.Documents;
       use DOM.Core.Nodes;
-      use Yolk.Utilities;
 
       An_Entry   : Atom_Entry;
       C          : Entry_List.Cursor := Entries.First;
@@ -217,11 +213,11 @@ package body Yolk.Syndication.DOM_Builder is
 
          Attribute (Elem  => Entry_Node,
                     Name  => "xml:base",
-                    Value => TS (An_Entry.Common.Base_URI));
+                    Value => To_String (An_Entry.Common.Base_URI));
 
          Attribute (Elem  => Entry_Node,
                     Name  => "xml:lang",
-                    Value => TS (An_Entry.Common.Language));
+                    Value => To_String (An_Entry.Common.Language));
 
          --  entry:author elements
          Create_Person_Elements (Doc       => Doc,
@@ -250,7 +246,7 @@ package body Yolk.Syndication.DOM_Builder is
          --  entry:id element
          if An_Entry.Id.URI /= Null_Unbounded_String then
             Create_Generic_Element (Common    => An_Entry.Id.Common,
-                                    Data      => TS (An_Entry.Id.URI),
+                                    Data      => To_String (An_Entry.Id.URI),
                                     Doc       => Doc,
                                     Elem_Name => "id",
                                     Parent    => Entry_Node);
@@ -276,7 +272,7 @@ package body Yolk.Syndication.DOM_Builder is
          if An_Entry.Rights.Text_Content /= Null_Unbounded_String then
             Create_Text_Construct
               (Common    => An_Entry.Rights.Common,
-               Data      => TS (An_Entry.Rights.Text_Content),
+               Data      => To_String (An_Entry.Rights.Text_Content),
                Doc       => Doc,
                Elem_Name => "rights",
                Parent    => Entry_Node,
@@ -294,7 +290,7 @@ package body Yolk.Syndication.DOM_Builder is
          if An_Entry.Summary.Text_Content /= Null_Unbounded_String then
             Create_Text_Construct
               (Common    => An_Entry.Summary.Common,
-               Data      => TS (An_Entry.Summary.Text_Content),
+               Data      => To_String (An_Entry.Summary.Text_Content),
                Doc       => Doc,
                Elem_Name => "summary",
                Parent    => Entry_Node,
@@ -305,7 +301,7 @@ package body Yolk.Syndication.DOM_Builder is
          if An_Entry.Title.Text_Content /= Null_Unbounded_String then
             Create_Text_Construct
               (Common    => An_Entry.Title.Common,
-               Data      => TS (An_Entry.Title.Text_Content),
+               Data      => To_String (An_Entry.Title.Text_Content),
                Doc       => Doc,
                Elem_Name => "title",
                Parent    => Entry_Node,
@@ -339,7 +335,6 @@ package body Yolk.Syndication.DOM_Builder is
       use DOM.Core;
       use DOM.Core.Documents;
       use DOM.Core.Nodes;
-      use Yolk.Utilities;
 
       Source_Node : Node;
    begin
@@ -350,11 +345,11 @@ package body Yolk.Syndication.DOM_Builder is
 
       Attribute (Elem  => Source_Node,
                  Name  => "xml:base",
-                 Value => TS (Source.Common.Base_URI));
+                 Value => To_String (Source.Common.Base_URI));
 
       Attribute (Elem  => Source_Node,
                  Name  => "xml:lang",
-                 Value => TS (Source.Common.Language));
+                 Value => To_String (Source.Common.Language));
 
       Create_Person_Elements (Doc       => Doc,
                               Elem_Name => "author",
@@ -376,7 +371,7 @@ package body Yolk.Syndication.DOM_Builder is
 
       if Source.Icon.URI /= Null_Unbounded_String then
          Create_Generic_Element (Common    => Source.Icon.Common,
-                                 Data      => TS (Source.Icon.URI),
+                                 Data      => To_String (Source.Icon.URI),
                                  Doc       => Doc,
                                  Elem_Name => "icon",
                                  Parent    => Source_Node);
@@ -384,7 +379,7 @@ package body Yolk.Syndication.DOM_Builder is
 
       if Source.Id.URI /= Null_Unbounded_String then
          Create_Generic_Element (Common    => Source.Id.Common,
-                                 Data      => TS (Source.Id.URI),
+                                 Data      => To_String (Source.Id.URI),
                                  Doc       => Doc,
                                  Elem_Name => "id",
                                  Parent    => Source_Node);
@@ -395,7 +390,7 @@ package body Yolk.Syndication.DOM_Builder is
 
       if Source.Logo.URI /= Null_Unbounded_String then
          Create_Generic_Element (Common    => Source.Logo.Common,
-                                 Data      => TS (Source.Logo.URI),
+                                 Data      => To_String (Source.Logo.URI),
                                  Doc       => Doc,
                                  Elem_Name => "logo",
                                  Parent    => Source_Node);
@@ -404,7 +399,7 @@ package body Yolk.Syndication.DOM_Builder is
       if Source.Rights.Text_Content /= Null_Unbounded_String then
          Create_Text_Construct
            (Common    => Source.Rights.Common,
-            Data      => TS (Source.Rights.Text_Content),
+            Data      => To_String (Source.Rights.Text_Content),
             Doc       => Doc,
             Elem_Name => "rights",
             Parent    => Source_Node,
@@ -414,7 +409,7 @@ package body Yolk.Syndication.DOM_Builder is
       if Source.Subtitle.Text_Content /= Null_Unbounded_String then
          Create_Text_Construct
            (Common    => Source.Subtitle.Common,
-            Data      => TS (Source.Subtitle.Text_Content),
+            Data      => To_String (Source.Subtitle.Text_Content),
             Doc       => Doc,
             Elem_Name => "subtitle",
             Parent    => Source_Node,
@@ -424,7 +419,7 @@ package body Yolk.Syndication.DOM_Builder is
       if Source.Title.Text_Content /= Null_Unbounded_String then
          Create_Text_Construct
            (Common    => Source.Title.Common,
-            Data      => TS (Source.Title.Text_Content),
+            Data      => To_String (Source.Title.Text_Content),
             Doc       => Doc,
             Elem_Name => "title",
             Parent    => Source_Node,
@@ -467,7 +462,6 @@ package body Yolk.Syndication.DOM_Builder is
       use DOM.Core.Documents;
       use DOM.Core.Elements;
       use DOM.Core.Nodes;
-      use Yolk.Utilities;
 
       Feed_Node : Node;
    begin
@@ -483,11 +477,11 @@ package body Yolk.Syndication.DOM_Builder is
 
       Attribute (Elem  => Feed_Node,
                  Name  => "xml:base",
-                 Value => TS (Common.Base_URI));
+                 Value => To_String (Common.Base_URI));
 
       Attribute (Elem  => Feed_Node,
                  Name  => "xml:lang",
-                 Value => TS (Common.Language));
+                 Value => To_String (Common.Language));
 
       --  feed:author elements
       Create_Person_Elements (Doc       => Doc,
@@ -514,7 +508,7 @@ package body Yolk.Syndication.DOM_Builder is
       --  feed:icon element
       if Icon.URI /= Null_Unbounded_String then
          Create_Generic_Element (Common    => Icon.Common,
-                                 Data      => TS (Icon.URI),
+                                 Data      => To_String (Icon.URI),
                                  Doc       => Doc,
                                  Elem_Name => "icon",
                                  Parent    => Feed_Node);
@@ -523,7 +517,7 @@ package body Yolk.Syndication.DOM_Builder is
       --  feed:id element
       if Id.URI /= Null_Unbounded_String then
          Create_Generic_Element (Common    => Id.Common,
-                                 Data      => TS (Id.URI),
+                                 Data      => To_String (Id.URI),
                                  Doc       => Doc,
                                  Elem_Name => "id",
                                  Parent    => Feed_Node);
@@ -537,7 +531,7 @@ package body Yolk.Syndication.DOM_Builder is
       --  feed:logo
       if Logo.URI /= Null_Unbounded_String then
          Create_Generic_Element (Common    => Logo.Common,
-                                 Data      => TS (Logo.URI),
+                                 Data      => To_String (Logo.URI),
                                  Doc       => Doc,
                                  Elem_Name => "logo",
                                  Parent    => Feed_Node);
@@ -546,7 +540,7 @@ package body Yolk.Syndication.DOM_Builder is
       --  feed:rights
       if Rights.Text_Content /= Null_Unbounded_String then
          Create_Text_Construct (Common    => Rights.Common,
-                                Data      => TS (Rights.Text_Content),
+                                Data      => To_String (Rights.Text_Content),
                                 Doc       => Doc,
                                 Elem_Name => "rights",
                                 Parent    => Feed_Node,
@@ -556,7 +550,7 @@ package body Yolk.Syndication.DOM_Builder is
       --  feed:subtitle
       if Subtitle.Text_Content /= Null_Unbounded_String then
          Create_Text_Construct (Common    => Subtitle.Common,
-                                Data      => TS (Subtitle.Text_Content),
+                                Data      => To_String (Subtitle.Text_Content),
                                 Doc       => Doc,
                                 Elem_Name => "subtitle",
                                 Parent    => Feed_Node,
@@ -566,7 +560,7 @@ package body Yolk.Syndication.DOM_Builder is
       --  feed:title element
       if Title.Text_Content /= Null_Unbounded_String  then
          Create_Text_Construct (Common    => Title.Common,
-                                Data      => TS (Title.Text_Content),
+                                Data      => To_String (Title.Text_Content),
                                 Doc       => Doc,
                                 Elem_Name => "title",
                                 Parent    => Feed_Node,
@@ -601,7 +595,6 @@ package body Yolk.Syndication.DOM_Builder is
       use DOM.Core;
       use DOM.Core.Documents;
       use DOM.Core.Nodes;
-      use Yolk.Utilities;
 
       Generator_Node : Node;
    begin
@@ -613,25 +606,25 @@ package body Yolk.Syndication.DOM_Builder is
 
          Attribute (Elem  => Generator_Node,
                     Name  => "xml:base",
-                    Value => TS (A_Generator.Common.Base_URI));
+                    Value => To_String (A_Generator.Common.Base_URI));
 
          Attribute (Elem  => Generator_Node,
                     Name  => "xml:lang",
-                    Value => TS (A_Generator.Common.Language));
+                    Value => To_String (A_Generator.Common.Language));
 
          Attribute (Elem  => Generator_Node,
                     Name  => "uri",
-                    Value => TS (A_Generator.URI));
+                    Value => To_String (A_Generator.URI));
 
          Attribute (Elem  => Generator_Node,
                     Name  => "version",
-                    Value => TS (A_Generator.Version));
+                    Value => To_String (A_Generator.Version));
 
          Generator_Node := Append_Child
            (N         => Generator_Node,
             New_Child => Create_Text_Node
               (Doc  => Doc,
-               Data => TS (A_Generator.Agent)));
+               Data => To_String (A_Generator.Agent)));
       end if;
    end Create_Generator_Element;
 
@@ -649,7 +642,6 @@ package body Yolk.Syndication.DOM_Builder is
       use DOM.Core;
       use DOM.Core.Documents;
       use DOM.Core.Nodes;
-      use Yolk.Utilities;
 
       Elem_Node : Node;
    begin
@@ -660,11 +652,11 @@ package body Yolk.Syndication.DOM_Builder is
 
       Attribute (Elem  => Elem_Node,
                  Name  => "xml:base",
-                 Value => TS (Common.Base_URI));
+                 Value => To_String (Common.Base_URI));
 
       Attribute (Elem  => Elem_Node,
                  Name  => "xml:lang",
-                 Value => TS (Common.Language));
+                 Value => To_String (Common.Language));
 
       Elem_Node := Append_Child
         (N         => Elem_Node,
@@ -689,7 +681,6 @@ package body Yolk.Syndication.DOM_Builder is
       use DOM.Core.Documents;
       use DOM.Core.Elements;
       use DOM.Core.Nodes;
-      use Yolk.Utilities;
 
       A_Link      : Atom_Link;
       C           : Link_List.Cursor := List.First;
@@ -707,11 +698,11 @@ package body Yolk.Syndication.DOM_Builder is
 
          Attribute (Elem  => Link_Node,
                     Name  => "xml:base",
-                    Value => TS (A_Link.Common.Base_URI));
+                    Value => To_String (A_Link.Common.Base_URI));
 
          Attribute (Elem  => Link_Node,
                     Name  => "xml:lang",
-                    Value => TS (A_Link.Common.Language));
+                    Value => To_String (A_Link.Common.Language));
 
          case A_Link.Rel is
          when Alternate =>
@@ -738,11 +729,11 @@ package body Yolk.Syndication.DOM_Builder is
 
          Set_Attribute (Elem  => Link_Node,
                         Name  => "href",
-                        Value => TS (A_Link.Href));
+                        Value => To_String (A_Link.Href));
 
          Attribute (Elem  => Link_Node,
                     Name  => "hreflang",
-                    Value => TS (A_Link.Hreflang));
+                    Value => To_String (A_Link.Hreflang));
 
          if A_Link.Length > 0 then
             Set_Attribute
@@ -755,11 +746,11 @@ package body Yolk.Syndication.DOM_Builder is
 
          Attribute (Elem  => Link_Node,
                     Name  => "type",
-                    Value => TS (A_Link.Mime_Type));
+                    Value => To_String (A_Link.Mime_Type));
 
          Attribute (Elem  => Link_Node,
                     Name  => "title",
-                    Value => TS (A_Link.Title));
+                    Value => To_String (A_Link.Title));
 
          Link_List.Next (C);
       end loop;
@@ -820,7 +811,6 @@ package body Yolk.Syndication.DOM_Builder is
       use DOM.Core;
       use DOM.Core.Documents;
       use DOM.Core.Nodes;
-      use Yolk.Utilities;
 
       A_Person    : Atom_Person;
       Person_Node : Node;
@@ -839,11 +829,11 @@ package body Yolk.Syndication.DOM_Builder is
 
          Attribute (Elem  => Person_Node,
                     Name  => "xml:base",
-                    Value => TS (A_Person.Common.Base_URI));
+                    Value => To_String (A_Person.Common.Base_URI));
 
          Attribute (Elem  => Person_Node,
                     Name  => "xml:lang",
-                    Value => TS (A_Person.Common.Language));
+                    Value => To_String (A_Person.Common.Language));
 
          Elem_Node := Append_Child
            (N         => Person_Node,
@@ -852,7 +842,7 @@ package body Yolk.Syndication.DOM_Builder is
          Elem_Node := Append_Child
            (N         => Elem_Node,
             New_Child => Create_Text_Node (Doc  => Doc,
-                                           Data => TS (A_Person.Name)));
+                                           Data => To_String (A_Person.Name)));
 
          if A_Person.Email /= Null_Unbounded_String then
             Elem_Node := Append_Child
@@ -863,7 +853,7 @@ package body Yolk.Syndication.DOM_Builder is
               (N         => Elem_Node,
                New_Child => Create_Text_Node
                  (Doc  => Doc,
-                  Data => TS (A_Person.Email)));
+                  Data => To_String (A_Person.Email)));
          end if;
 
          if A_Person.URI /= Null_Unbounded_String then
@@ -875,7 +865,7 @@ package body Yolk.Syndication.DOM_Builder is
               (N         => Elem_Node,
                New_Child => Create_Text_Node
                  (Doc  => Doc,
-                  Data => TS (A_Person.URI)));
+                  Data => To_String (A_Person.URI)));
          end if;
 
          Person_List.Next (C);
@@ -898,7 +888,6 @@ package body Yolk.Syndication.DOM_Builder is
       use DOM.Core.Documents;
       use DOM.Core.Elements;
       use DOM.Core.Nodes;
-      use Yolk.Utilities;
 
       Elem_Node : Node;
    begin
@@ -909,11 +898,11 @@ package body Yolk.Syndication.DOM_Builder is
 
       Attribute (Elem  => Elem_Node,
                  Name  => "xml:base",
-                 Value => TS (Common.Base_URI));
+                 Value => To_String (Common.Base_URI));
 
       Attribute (Elem  => Elem_Node,
                  Name  => "xml:lang",
-                 Value => TS (Common.Language));
+                 Value => To_String (Common.Language));
 
       case Text_Kind is
       when Text =>

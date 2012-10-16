@@ -32,23 +32,13 @@ package Yolk.Utilities is
 
    use Ada.Strings.Unbounded;
 
-   function TS
-     (US : in Unbounded_String)
-      return String
-      renames To_String;
-
-   function TUS
-     (S : in String)
-      return Unbounded_String
-      renames To_Unbounded_String;
-
    function Is_Empty
      (S : in String)
       return Boolean;
    --  Trims S (left and right) and return True if empty.
 
    function Is_Empty
-     (US : in Unbounded_String)
+     (U : in Unbounded_String)
       return Boolean;
    --  Trims US (left and right) and return True if empty.
 

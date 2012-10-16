@@ -48,12 +48,12 @@ package body Yolk.Utilities is
    --------------
 
    function Is_Empty
-     (US : in Unbounded_String)
+     (U : in Unbounded_String)
       return Boolean
    is
       use Ada.Strings;
    begin
-      return Trim (US, Both) = "";
+      return Trim (U, Both) = "";
    end Is_Empty;
 
 end Yolk.Utilities;

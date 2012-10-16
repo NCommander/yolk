@@ -28,11 +28,8 @@
 
 with AWS.SMTP.Client;
 with GNATCOLL.Email.Utils;
-with Yolk.Utilities;
 
 package body Yolk.Email.Composer is
-
-   use Yolk.Utilities;
 
    -------------------------
    --  Add_Custom_Header  --
@@ -47,8 +44,8 @@ package body Yolk.Email.Composer is
       New_Header : Header_Data;
    begin
       New_Header.Charset := Charset;
-      New_Header.Name := TUS (Name);
-      New_Header.Value := TUS (Value);
+      New_Header.Name := U (Name);
+      New_Header.Value := U (Value);
 
       ES.Custom_Headers.Append (New_Header);
    end Add_Custom_Header;
@@ -65,7 +62,7 @@ package body Yolk.Email.Composer is
       New_Attachment : Attachment_Data;
    begin
       New_Attachment.Charset        := Charset;
-      New_Attachment.Path_To_File   := TUS (Path_To_File);
+      New_Attachment.Path_To_File   := U (Path_To_File);
       ES.Attachment_List.Append (New_Attachment);
 
       ES.Has_Attachment := True;
@@ -83,9 +80,9 @@ package body Yolk.Email.Composer is
    is
       New_From : Email_Data;
    begin
-      New_From.Address  := TUS (Address);
+      New_From.Address  := U (Address);
       New_From.Charset  := Charset;
-      New_From.Name     := TUS (Name);
+      New_From.Name     := U (Name);
       ES.From_List.Append (New_Item => New_From);
    end Add_From;
 
@@ -102,9 +99,9 @@ package body Yolk.Email.Composer is
    is
       New_Recipient : Email_Data;
    begin
-      New_Recipient.Address   := TUS (Address);
+      New_Recipient.Address   := U (Address);
       New_Recipient.Charset   := Charset;
-      New_Recipient.Name      := TUS (Name);
+      New_Recipient.Name      := U (Name);
 
       case Kind is
          when Bcc =>
@@ -128,9 +125,9 @@ package body Yolk.Email.Composer is
    is
       New_Reply_To : Email_Data;
    begin
-      New_Reply_To.Address := TUS (Address);
+      New_Reply_To.Address := U (Address);
       New_Reply_To.Charset := Charset;
-      New_Reply_To.Name    := TUS (Name);
+      New_Reply_To.Name    := U (Name);
       ES.Reply_To_List.Append (New_Item => New_Reply_To);
    end Add_Reply_To;
 
@@ -145,7 +142,7 @@ package body Yolk.Email.Composer is
    is
       New_SMTP : SMTP_Server;
    begin
-      New_SMTP.Host := TUS (Host);
+      New_SMTP.Host := U (Host);
       New_SMTP.Port := Port;
       ES.SMTP_List.Append (New_Item => New_SMTP);
    end Add_SMTP_Server;
@@ -203,17 +200,17 @@ package body Yolk.Email.Composer is
       begin
          if ES.Sender.Address /= Null_Unbounded_String then
             From := AWS.SMTP.E_Mail (Name    => "",
-                                     Address => TS (ES.Sender.Address));
+                                     Address => To_String (ES.Sender.Address));
          else
             From := AWS.SMTP.E_Mail
               (Name    => "",
-               Address => TS (ES.From_List.First_Element.Address));
+               Address => To_String (ES.From_List.First_Element.Address));
          end if;
 
          for i in ES.Bcc_List.First_Index .. ES.Bcc_List.Last_Index loop
             Recipients (To_Count) := AWS.SMTP.E_Mail
               (Name    => "",
-               Address => TS (ES.Bcc_List.Element (i).Address));
+               Address => To_String (ES.Bcc_List.Element (i).Address));
 
             To_Count := To_Count - 1;
          end loop;
@@ -221,7 +218,7 @@ package body Yolk.Email.Composer is
          for i in ES.Cc_List.First_Index .. ES.Cc_List.Last_Index loop
             Recipients (To_Count) := AWS.SMTP.E_Mail
               (Name    => "",
-               Address => TS (ES.Cc_List.Element (i).Address));
+               Address => To_String (ES.Cc_List.Element (i).Address));
 
             To_Count := To_Count - 1;
          end loop;
@@ -229,14 +226,14 @@ package body Yolk.Email.Composer is
          for i in ES.To_List.First_Index .. ES.To_List.Last_Index loop
             Recipients (To_Count) := AWS.SMTP.E_Mail
               (Name    => "",
-               Address => TS (ES.To_List.Element (i).Address));
+               Address => To_String (ES.To_List.Element (i).Address));
 
             To_Count := To_Count - 1;
          end loop;
 
          for i in ES.SMTP_List.First_Index .. ES.SMTP_List.Last_Index loop
             Server := AWS.SMTP.Client.Initialize
-              (Server_Name => TS (ES.SMTP_List.Element (i).Host),
+              (Server_Name => To_String (ES.SMTP_List.Element (i).Host),
                Port        => ES.SMTP_List.Element (i).Port);
 
             declare
@@ -244,7 +241,7 @@ package body Yolk.Email.Composer is
                AWS.SMTP.Client.Send (Server => Server,
                                      From   => From,
                                      To     => Recipients,
-                                     Source => TS (US),
+                                     Source => To_String (US),
                                      Status => Status);
 
             exception
@@ -377,9 +374,9 @@ package body Yolk.Email.Composer is
       Charset    : in     Character_Set := US_ASCII)
    is
    begin
-      ES.Sender.Address := TUS (Address);
+      ES.Sender.Address := U (Address);
       ES.Sender.Charset := Charset;
-      ES.Sender.Name    := TUS (Name);
+      ES.Sender.Name    := U (Name);
    end Set_Sender;
 
    -------------------
@@ -392,7 +389,7 @@ package body Yolk.Email.Composer is
       Charset   : in     Character_Set := US_ASCII)
    is
    begin
-      ES.Subject.Content := TUS (Subject);
+      ES.Subject.Content := U (Subject);
       ES.Subject.Charset := Charset;
    end Set_Subject;
 

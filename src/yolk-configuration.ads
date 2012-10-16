@@ -33,12 +33,15 @@
 with Ada.Strings.Unbounded;
 with AWS.Config;
 with Yolk.Config_File_Parser;
-with Yolk.Utilities;
 
 package Yolk.Configuration is
 
    use Ada.Strings.Unbounded;
-   use Yolk.Utilities;
+
+   function U
+     (S : in String)
+      return Unbounded_String
+      renames To_Unbounded_String;
 
    type Keys is (Accept_Queue_Size, --  AWS
                  Admin_Password, --  AWS
@@ -142,199 +145,199 @@ package Yolk.Configuration is
 
    Default_Values : constant Defaults_Array :=
                       (Accept_Queue_Size
-                       => TUS ("128"),
+                       => U ("128"),
                        Admin_Password
-                       => TUS ("0ac9c9d0c0b1ee058b65ae70c9aeb3a7"),
+                       => U ("0ac9c9d0c0b1ee058b65ae70c9aeb3a7"),
                        Admin_URI
-                       => TUS ("/status"),
+                       => U ("/staU"),
                        Alert_Log_Activate
-                       => TUS ("True"),
+                       => U ("True"),
                        Alert_Syslog_Facility_Level
-                       => TUS ("user:alert"),
+                       => U ("user:alert"),
                        AWS_Access_Log_Activate
-                       => TUS ("True"),
+                       => U ("True"),
                        AWS_Access_Syslog_Facility_Level
-                       => TUS ("user:info"),
+                       => U ("user:info"),
                        AWS_Error_Log_Activate
-                       => TUS ("True"),
+                       => U ("True"),
                        AWS_Error_Syslog_Facility_Level
-                       => TUS ("user:error"),
+                       => U ("user:error"),
                        Case_Sensitive_Parameters
-                       => TUS ("True"),
+                       => U ("True"),
                        Certificate
-                       => TUS ("certificates/aws.pem"),
+                       => U ("certificates/aws.pem"),
                        Certificate_Required
-                       => TUS ("False"),
+                       => U ("False"),
                        Check_URL_Validity
-                       => TUS ("True"),
+                       => U ("True"),
                        Cleaner_Client_Data_Timeout
-                       => TUS ("60.0"),
+                       => U ("60.0"),
                        Cleaner_Client_Header_Timeout
-                       => TUS ("7.0"),
+                       => U ("7.0"),
                        Cleaner_Server_Response_Timeout
-                       => TUS ("60.0"),
+                       => U ("60.0"),
                        Cleaner_Wait_For_Client_Timeout
-                       => TUS ("60.0"),
+                       => U ("60.0"),
                        Compressed_Cache_Directory
-                       => TUS ("static_content/compressed_cache"),
+                       => U ("static_content/compressed_cache"),
                        Compressed_Max_Age
-                       => TUS ("86400"),
+                       => U ("86400"),
                        Compress_Minimum_File_Size
-                       => TUS ("200"),
+                       => U ("200"),
                        Context_Lifetime
-                       => TUS ("28800.0"),
+                       => U ("28800.0"),
                        Critical_Log_Activate
-                       => TUS ("True"),
+                       => U ("True"),
                        Critical_Syslog_Facility_Level
-                       => TUS ("user:critical"),
+                       => U ("user:critical"),
                        CRL_File
-                       => TUS (""),
+                       => U (""),
                        Debug_Log_Activate
-                       => TUS ("True"),
+                       => U ("True"),
                        Debug_Syslog_Facility_Level
-                       => TUS ("user:debug"),
+                       => U ("user:debug"),
                        Emergency_Log_Activate
-                       => TUS ("True"),
+                       => U ("True"),
                        Emergency_Syslog_Facility_Level
-                       => TUS ("user:emergency"),
+                       => U ("user:emergency"),
                        Error_Log_Activate
-                       => TUS ("True"),
+                       => U ("True"),
                        Error_Syslog_Facility_Level
-                       => TUS ("user:error"),
+                       => U ("user:error"),
                        Exchange_Certificate
-                       => TUS ("False"),
+                       => U ("False"),
                        Force_Client_Data_Timeout
-                       => TUS ("30.0"),
+                       => U ("30.0"),
                        Force_Client_Header_Timeout
-                       => TUS ("2.0"),
+                       => U ("2.0"),
                        Force_Server_Response_Timeout
-                       => TUS ("30.0"),
+                       => U ("30.0"),
                        Force_Wait_For_Client_Timeout
-                       => TUS ("2.0"),
+                       => U ("2.0"),
                        Free_Slots_Keep_Alive_Limit
-                       => TUS ("1"),
+                       => U ("1"),
                        Handler_CSS
-                       => TUS (".*\.css$"),
+                       => U (".*\.css$"),
                        Handler_GIF
-                       => TUS (".*\.gif$"),
+                       => U (".*\.gif$"),
                        Handler_HTML
-                       => TUS (".*\.html$"),
+                       => U (".*\.html$"),
                        Handler_ICO
-                       => TUS (".*\.ico$"),
+                       => U (".*\.ico$"),
                        Handler_JPG
-                       => TUS (".*\.jpg$"),
+                       => U (".*\.jpg$"),
                        Handler_JS
-                       => TUS (".*\.js$"),
+                       => U (".*\.js$"),
                        Handler_PNG
-                       => TUS (".*\.png$"),
+                       => U (".*\.png$"),
                        Handler_SVG
-                       => TUS (".*\.svg$"),
+                       => U (".*\.svg$"),
                        Handler_XML
-                       => TUS (".*\.xml$"),
+                       => U (".*\.xml$"),
                        Handler_XSL
-                       => TUS (".*\.xsl$"),
+                       => U (".*\.xsl$"),
                        Hotplug_Port
-                       => TUS ("8888"),
+                       => U ("8888"),
                        Immediate_Flush
-                       => TUS ("False"),
+                       => U ("False"),
                        Info_Log_Activate
-                       => TUS ("True"),
+                       => U ("True"),
                        Info_Syslog_Facility_Level
-                       => TUS ("user:info"),
+                       => U ("user:info"),
                        Keep_Alive_Force_Limit
-                       => TUS ("0"),
+                       => U ("0"),
                        Key
-                       => TUS (""),
+                       => U (""),
                        Line_Stack_Size
-                       => TUS ("16#150_000#"),
+                       => U ("16#150_000#"),
                        Log_Extended_Fields
-                       => TUS (""),
+                       => U (""),
                        Max_Concurrent_Download
-                       => TUS ("25"),
+                       => U ("25"),
                        Max_Connection
-                       => TUS ("5"),
+                       => U ("5"),
                        Max_POST_Parameters
-                       => TUS ("100"),
+                       => U ("100"),
                        Max_WebSocket_Handler
-                       => TUS ("2"),
+                       => U ("2"),
                        MIME_Types
-                       => TUS ("configuration/aws.mime"),
+                       => U ("configuration/aws.mime"),
                        Notice_Log_Activate
-                       => TUS ("True"),
+                       => U ("True"),
                        Notice_Syslog_Facility_Level
-                       => TUS ("user:notice"),
+                       => U ("user:notice"),
                        Protocol_Family
-                       => TUS ("Family_Unspec"),
+                       => U ("Family_Unspec"),
                        Receive_Timeout
-                       => TUS ("30.0"),
+                       => U ("30.0"),
                        Reuse_Address
-                       => TUS ("False"),
+                       => U ("False"),
                        Security
-                       => TUS ("False"),
+                       => U ("False"),
                        Security_Mode
-                       => TUS ("SSLv23"),
+                       => U ("SSLv23"),
                        Send_Timeout
-                       => TUS ("40.0"),
+                       => U ("40.0"),
                        Server_Host
-                       => TUS (""),
+                       => U (""),
                        Server_Name
-                       => TUS ("Yolk"),
+                       => U ("Yolk"),
                        Server_Port
-                       => TUS ("4242"),
+                       => U ("4242"),
                        Session
-                       => TUS ("True"),
+                       => U ("True"),
                        Session_Cleanup_Interval
-                       => TUS ("300.0"),
+                       => U ("300.0"),
                        Session_Data_File
-                       => TUS ("session/session.data"),
+                       => U ("session/session.data"),
                        Session_Id_Length
-                       => TUS ("11"),
+                       => U ("11"),
                        Session_Lifetime
-                       => TUS ("1200.0"),
+                       => U ("1200.0"),
                        Session_Name
-                       => TUS ("Yolk"),
+                       => U ("Yolk"),
                        SQL_Log_Activate
-                       => TUS ("True"),
+                       => U ("True"),
                        SQL_Syslog_Facility_Level
-                       => TUS ("user:info"),
+                       => U ("user:info"),
                        SQL_Cache_Log_Activate
-                       => TUS ("True"),
+                       => U ("True"),
                        SQL_Cache_Syslog_Facility_Level
-                       => TUS ("user:info"),
+                       => U ("user:info"),
                        SQL_Error_Log_Activate
-                       => TUS ("True"),
+                       => U ("True"),
                        SQL_Error_Syslog_Facility_Level
-                       => TUS ("user:error"),
+                       => U ("user:error"),
                        SQL_Select_Log_Activate
-                       => TUS ("True"),
+                       => U ("True"),
                        SQL_Select_Syslog_Facility_Level
-                       => TUS ("user:info"),
+                       => U ("user:info"),
                        Status_Page
-                       => TUS ("templates/system/aws_status.thtml"),
+                       => U ("templates/system/aws_staU.thtml"),
                        System_Templates_Path
-                       => TUS ("templates/system"),
+                       => U ("templates/system"),
                        Transient_Cleanup_Interval
-                       => TUS ("180.0"),
+                       => U ("180.0"),
                        Transient_Lifetime
-                       => TUS ("300.0"),
+                       => U ("300.0"),
                        Trusted_CA
-                       => TUS (""),
+                       => U (""),
                        Upload_Directory
-                       => TUS ("uploads"),
+                       => U ("uploads"),
                        Upload_Size_Limit
-                       => TUS ("16#500_000#"),
+                       => U ("16#500_000#"),
                        Warning_Log_Activate
-                       => TUS ("True"),
+                       => U ("True"),
                        Warning_Syslog_Facility_Level
-                       => TUS ("user:warning"),
+                       => U ("user:warning"),
                        WebSocket_Message_Queue_Size
-                       => TUS ("10"),
+                       => U ("10"),
                        WebSocket_Origin
-                       => TUS (""),
+                       => U (""),
                        WWW_Root
-                       => TUS ("static_content"),
+                       => U ("static_content"),
                        Yolk_User
-                       => TUS ("thomas"));
+                       => U ("thomas"));
    --  Default values for the configuration Keys. These values can be over-
    --  written by the configuration file given when instantiating the
    --  Config_File_Parser generic.

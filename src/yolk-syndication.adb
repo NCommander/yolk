@@ -29,11 +29,8 @@
 with Ada.Streams;
 with DOM.Core.Nodes;
 with Yolk.Syndication.DOM_Builder;
-with Yolk.Utilities;
 
 package body Yolk.Syndication is
-
-   use Yolk.Utilities;
 
    -------------------
    --  Equal_Entry  --
@@ -59,11 +56,11 @@ package body Yolk.Syndication is
    begin
       return An_Entry : Atom_Entry := Null_Atom_Entry do
          if Base_URI /= None then
-            An_Entry.Common.Base_URI := TUS (Base_URI);
+            An_Entry.Common.Base_URI := U (Base_URI);
          end if;
 
          if Language /= None then
-            An_Entry.Common.Language := TUS (Language);
+            An_Entry.Common.Language := U (Language);
          end if;
       end return;
    end New_Atom_Entry;
@@ -80,11 +77,11 @@ package body Yolk.Syndication is
    begin
       return Source : Atom_Entry_Source := Null_Atom_Entry_Source do
          if Base_URI /= None then
-            Source.Common.Base_URI := TUS (Base_URI);
+            Source.Common.Base_URI := U (Base_URI);
          end if;
 
          if Language /= None then
-            Source.Common.Language := TUS (Language);
+            Source.Common.Language := U (Language);
          end if;
          null;
       end return;
@@ -102,8 +99,8 @@ package body Yolk.Syndication is
       Min_Entries : in Positive := 10)
       return Atom_Feed
    is
-      Common : constant Atom_Common := (Base_URI => TUS (Base_URI),
-                                        Language => TUS (Language));
+      Common : constant Atom_Common := (Base_URI => U (Base_URI),
+                                        Language => U (Language));
    begin
       return Feed : Atom_Feed do
          Feed.PAF.Set_Common (Value => Common);
@@ -300,7 +297,7 @@ package body Yolk.Syndication is
       begin
          C := Entries.First;
          while Has_Element (C) loop
-            if Element (C).Id.URI = TUS (Id) then
+            if Element (C).Id.URI = U (Id) then
                Entries.Delete (C);
             end if;
 
@@ -420,7 +417,7 @@ package body Yolk.Syndication is
 
          Free (Doc);
 
-         return PI & TS (Output.Str);
+         return PI & To_String (Output.Str);
       end Get_String;
 
       ------------------

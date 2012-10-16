@@ -26,11 +26,7 @@
 --                                                                           --
 -------------------------------------------------------------------------------
 
-with Yolk.Utilities;
-
 package body Yolk.Syndication.Writer is
-
-   use Yolk.Utilities;
 
    ------------------
    --  Add_Author  --
@@ -47,11 +43,11 @@ package body Yolk.Syndication.Writer is
    begin
       Feed.PAF.Add_Author
         (Value => Atom_Person'(Common =>
-                                 Atom_Common'(Base_URI => TUS (Base_URI),
-                                              Language => TUS (Language)),
-                               Name   => TUS (Name),
-                               Email  => TUS (Email),
-                               URI    => TUS (URI)));
+                                 Atom_Common'(Base_URI => U (Base_URI),
+                                              Language => U (Language)),
+                               Name   => U (Name),
+                               Email  => U (Email),
+                               URI    => U (URI)));
    end Add_Author;
 
    ------------------
@@ -69,11 +65,11 @@ package body Yolk.Syndication.Writer is
    begin
       Entr.Authors.Append
         (New_Item => Atom_Person'(Common =>
-                                    Atom_Common'(Base_URI => TUS (Base_URI),
-                                                 Language => TUS (Language)),
-                                  Name   => TUS (Name),
-                                  Email  => TUS (Email),
-                                  URI    => TUS (URI)));
+                                    Atom_Common'(Base_URI => U (Base_URI),
+                                                 Language => U (Language)),
+                                  Name   => U (Name),
+                                  Email  => U (Email),
+                                  URI    => U (URI)));
    end Add_Author;
 
    ------------------
@@ -91,11 +87,11 @@ package body Yolk.Syndication.Writer is
    begin
       Entry_Source.Authors.Append
         (New_Item => Atom_Person'(Common =>
-                                    Atom_Common'(Base_URI => TUS (Base_URI),
-                                                 Language => TUS (Language)),
-                                  Name   => TUS (Name),
-                                  Email  => TUS (Email),
-                                  URI    => TUS (URI)));
+                                    Atom_Common'(Base_URI => U (Base_URI),
+                                                 Language => U (Language)),
+                                  Name   => U (Name),
+                                  Email  => U (Email),
+                                  URI    => U (URI)));
    end Add_Author;
 
    --------------------
@@ -113,11 +109,11 @@ package body Yolk.Syndication.Writer is
    begin
       Feed.PAF.Add_Category
         (Value => Atom_Category'(Common =>
-                                   Atom_Common'(Base_URI => TUS (Base_URI),
-                                                Language => TUS (Language)),
-                                 Label    => TUS (Label),
-                                 Scheme   => TUS (Scheme),
-                                 Term     => TUS (Term)));
+                                   Atom_Common'(Base_URI => U (Base_URI),
+                                                Language => U (Language)),
+                                 Label    => U (Label),
+                                 Scheme   => U (Scheme),
+                                 Term     => U (Term)));
    end Add_Category;
 
    --------------------
@@ -135,11 +131,11 @@ package body Yolk.Syndication.Writer is
    begin
       Entr.Categories.Append
         (New_Item => Atom_Category'(Common =>
-                                      Atom_Common'(Base_URI => TUS (Base_URI),
-                                                   Language => TUS (Language)),
-                                    Label    => TUS (Label),
-                                    Scheme   => TUS (Scheme),
-                                    Term     => TUS (Term)));
+                                      Atom_Common'(Base_URI => U (Base_URI),
+                                                   Language => U (Language)),
+                                    Label    => U (Label),
+                                    Scheme   => U (Scheme),
+                                    Term     => U (Term)));
    end Add_Category;
 
    --------------------
@@ -157,11 +153,11 @@ package body Yolk.Syndication.Writer is
    begin
       Entry_Source.Categories.Append
         (New_Item => Atom_Category'(Common =>
-                                      Atom_Common'(Base_URI => TUS (Base_URI),
-                                                   Language => TUS (Language)),
-                                    Label    => TUS (Label),
-                                    Scheme   => TUS (Scheme),
-                                    Term     => TUS (Term)));
+                                      Atom_Common'(Base_URI => U (Base_URI),
+                                                   Language => U (Language)),
+                                    Label    => U (Label),
+                                    Scheme   => U (Scheme),
+                                    Term     => U (Term)));
    end Add_Category;
 
    -----------------------
@@ -179,11 +175,11 @@ package body Yolk.Syndication.Writer is
    begin
       Feed.PAF.Add_Contributor
         (Value => Atom_Person'(Common =>
-                                 Atom_Common'(Base_URI => TUS (Base_URI),
-                                              Language => TUS (Language)),
-                               Name   => TUS (Name),
-                               Email  => TUS (Email),
-                               URI    => TUS (URI)));
+                                 Atom_Common'(Base_URI => U (Base_URI),
+                                              Language => U (Language)),
+                               Name   => U (Name),
+                               Email  => U (Email),
+                               URI    => U (URI)));
    end Add_Contributor;
 
    -----------------------
@@ -201,11 +197,11 @@ package body Yolk.Syndication.Writer is
    begin
       Entr.Contributors.Append
         (New_Item => Atom_Person'(Common =>
-                                    Atom_Common'(Base_URI => TUS (Base_URI),
-                                                 Language => TUS (Language)),
-                                  Name   => TUS (Name),
-                                  Email  => TUS (Email),
-                                  URI    => TUS (URI)));
+                                    Atom_Common'(Base_URI => U (Base_URI),
+                                                 Language => U (Language)),
+                                  Name   => U (Name),
+                                  Email  => U (Email),
+                                  URI    => U (URI)));
    end Add_Contributor;
 
    -----------------------
@@ -223,11 +219,11 @@ package body Yolk.Syndication.Writer is
    begin
       Entry_Source.Contributors.Append
         (New_Item => Atom_Person'(Common =>
-                                    Atom_Common'(Base_URI => TUS (Base_URI),
-                                                 Language => TUS (Language)),
-                                  Name   => TUS (Name),
-                                  Email  => TUS (Email),
-                                  URI    => TUS (URI)));
+                                    Atom_Common'(Base_URI => U (Base_URI),
+                                                 Language => U (Language)),
+                                  Name   => U (Name),
+                                  Email  => U (Email),
+                                  URI    => U (URI)));
    end Add_Contributor;
 
    -----------------
@@ -265,14 +261,14 @@ package body Yolk.Syndication.Writer is
    begin
       Feed.PAF.Add_Link
         (Value => Atom_Link'(Common =>
-                               Atom_Common'(Base_URI => TUS (Base_URI),
-                                            Language => TUS (Language)),
-                             Href      => TUS (Href),
-                             Hreflang  => TUS (Hreflang),
+                               Atom_Common'(Base_URI => U (Base_URI),
+                                            Language => U (Language)),
+                             Href      => U (Href),
+                             Hreflang  => U (Hreflang),
                              Length    => Length,
-                             Mime_Type => TUS (Mime_Type),
+                             Mime_Type => U (Mime_Type),
                              Rel       => Rel,
-                             Title     => TUS (Title)));
+                             Title     => U (Title)));
    end Add_Link;
 
    ----------------
@@ -293,14 +289,14 @@ package body Yolk.Syndication.Writer is
    begin
       Entr.Links.Append
         (New_Item => Atom_Link'(Common =>
-                                  Atom_Common'(Base_URI => TUS (Base_URI),
-                                               Language => TUS (Language)),
-                                Href      => TUS (Href),
-                                Hreflang  => TUS (Hreflang),
+                                  Atom_Common'(Base_URI => U (Base_URI),
+                                               Language => U (Language)),
+                                Href      => U (Href),
+                                Hreflang  => U (Hreflang),
                                 Length    => Length,
-                                Mime_Type => TUS (Mime_Type),
+                                Mime_Type => U (Mime_Type),
                                 Rel       => Rel,
-                                Title     => TUS (Title)));
+                                Title     => U (Title)));
    end Add_Link;
 
    ----------------
@@ -321,14 +317,14 @@ package body Yolk.Syndication.Writer is
    begin
       Entry_Source.Links.Append
         (New_Item => Atom_Link'(Common =>
-                                  Atom_Common'(Base_URI => TUS (Base_URI),
-                                               Language => TUS (Language)),
-                                Href      => TUS (Href),
-                                Hreflang  => TUS (Hreflang),
+                                  Atom_Common'(Base_URI => U (Base_URI),
+                                               Language => U (Language)),
+                                Href      => U (Href),
+                                Hreflang  => U (Hreflang),
                                 Length    => Length,
-                                Mime_Type => TUS (Mime_Type),
+                                Mime_Type => U (Mime_Type),
                                 Rel       => Rel,
-                                Title     => TUS (Title)));
+                                Title     => U (Title)));
    end Add_Link;
 
    -------------------------
@@ -401,8 +397,8 @@ package body Yolk.Syndication.Writer is
       Language : in     String := None)
    is
    begin
-      Feed.PAF.Set_Common (Value => Atom_Common'(Base_URI => TUS (Base_URI),
-                                                 Language => TUS (Language)));
+      Feed.PAF.Set_Common (Value => Atom_Common'(Base_URI => U (Base_URI),
+                                                 Language => U (Language)));
    end Set_Common;
 
    ------------------
@@ -415,8 +411,8 @@ package body Yolk.Syndication.Writer is
       Language     : in     String := None)
    is
    begin
-      Entry_Source.Common := Atom_Common'(Base_URI => TUS (Base_URI),
-                                          Language => TUS (Language));
+      Entry_Source.Common := Atom_Common'(Base_URI => U (Base_URI),
+                                          Language => U (Language));
    end Set_Common;
 
    -------------------
@@ -433,9 +429,9 @@ package body Yolk.Syndication.Writer is
    begin
       Entr.Content :=
         Atom_Entry_Content'(Common       =>
-                              Atom_Common'(Base_URI => TUS (Base_URI),
-                                           Language => TUS (Language)),
-                            Content      => TUS (Content),
+                              Atom_Common'(Base_URI => U (Base_URI),
+                                           Language => U (Language)),
+                            Content      => U (Content),
                             Content_Kind => Content_Kind,
                             Mime_Type    => Null_Unbounded_String,
                             Source       => Null_Unbounded_String);
@@ -455,11 +451,11 @@ package body Yolk.Syndication.Writer is
    begin
       Entr.Content :=
         Atom_Entry_Content'(Common       =>
-                              Atom_Common'(Base_URI => TUS (Base_URI),
-                                           Language => TUS (Language)),
-                            Content      => TUS (Content),
+                              Atom_Common'(Base_URI => U (Base_URI),
+                                           Language => U (Language)),
+                            Content      => U (Content),
                             Content_Kind => InlineOther,
-                            Mime_Type    => TUS (Mime_Type),
+                            Mime_Type    => U (Mime_Type),
                             Source       => Null_Unbounded_String);
    end Set_Content_Inline;
 
@@ -477,12 +473,12 @@ package body Yolk.Syndication.Writer is
    begin
       Entr.Content :=
         Atom_Entry_Content'(Common       =>
-                              Atom_Common'(Base_URI => TUS (Base_URI),
-                                           Language => TUS (Language)),
+                              Atom_Common'(Base_URI => U (Base_URI),
+                                           Language => U (Language)),
                             Content      => Null_Unbounded_String,
                             Content_Kind => OutOfLineOther,
-                            Mime_Type    => TUS (Mime_Type),
-                            Source       => TUS (Source));
+                            Mime_Type    => U (Mime_Type),
+                            Source       => U (Source));
    end Set_Content_OutOfLine;
 
    ------------------------
@@ -516,12 +512,12 @@ package body Yolk.Syndication.Writer is
    is
    begin
       Feed.PAF.Set_Generator
-        (Value => Atom_Generator'(Agent => TUS (Agent),
+        (Value => Atom_Generator'(Agent => U (Agent),
                                   Common  =>
-                                    Atom_Common'(Base_URI => TUS (Base_URI),
-                                                 Language => TUS (Language)),
-                                  URI     => TUS (URI),
-                                  Version => TUS (Version)));
+                                    Atom_Common'(Base_URI => U (Base_URI),
+                                                 Language => U (Language)),
+                                  URI     => U (URI),
+                                  Version => U (Version)));
    end Set_Generator;
 
    ---------------------
@@ -538,12 +534,12 @@ package body Yolk.Syndication.Writer is
    is
    begin
       Entry_Source.Generator := Atom_Generator'
-        (Agent   => TUS (Agent),
+        (Agent   => U (Agent),
          Common  =>
-           Atom_Common'(Base_URI => TUS (Base_URI),
-                        Language => TUS (Language)),
-         URI     => TUS (URI),
-         Version => TUS (Version));
+           Atom_Common'(Base_URI => U (Base_URI),
+                        Language => U (Language)),
+         URI     => U (URI),
+         Version => U (Version));
    end Set_Generator;
 
    ----------------
@@ -559,9 +555,9 @@ package body Yolk.Syndication.Writer is
    begin
       Feed.PAF.Set_Icon
         (Value => Atom_Icon'(Common =>
-                               Atom_Common'(Base_URI => TUS (Base_URI),
-                                            Language => TUS (Language)),
-                             URI    => TUS (URI)));
+                               Atom_Common'(Base_URI => U (Base_URI),
+                                            Language => U (Language)),
+                             URI    => U (URI)));
    end Set_Icon;
 
    ----------------
@@ -577,9 +573,9 @@ package body Yolk.Syndication.Writer is
    begin
       Entry_Source.Icon := Atom_Icon'
         (Common =>
-           Atom_Common'(Base_URI => TUS (Base_URI),
-                        Language => TUS (Language)),
-         URI    => TUS (URI));
+           Atom_Common'(Base_URI => U (Base_URI),
+                        Language => U (Language)),
+         URI    => U (URI));
    end Set_Icon;
 
    --------------
@@ -595,9 +591,9 @@ package body Yolk.Syndication.Writer is
    begin
       Feed.PAF.Set_Id
         (Value => Atom_Id'(Common =>
-                             Atom_Common'(Base_URI => TUS (Base_URI),
-                                          Language => TUS (Language)),
-                           URI    => TUS (Id)));
+                             Atom_Common'(Base_URI => U (Base_URI),
+                                          Language => U (Language)),
+                           URI    => U (Id)));
    end Set_Id;
 
    --------------
@@ -612,9 +608,9 @@ package body Yolk.Syndication.Writer is
    is
    begin
       Entr.Id := Atom_Id'(Common =>
-                            Atom_Common'(Base_URI => TUS (Base_URI),
-                                         Language => TUS (Language)),
-                          URI    => TUS (Id));
+                            Atom_Common'(Base_URI => U (Base_URI),
+                                         Language => U (Language)),
+                          URI    => U (Id));
    end Set_Id;
 
    --------------
@@ -629,9 +625,9 @@ package body Yolk.Syndication.Writer is
    is
    begin
       Entry_Source.Id := Atom_Id'(Common =>
-                                    Atom_Common'(Base_URI => TUS (Base_URI),
-                                                 Language => TUS (Language)),
-                                  URI    => TUS (Id));
+                                    Atom_Common'(Base_URI => U (Base_URI),
+                                                 Language => U (Language)),
+                                  URI    => U (Id));
    end Set_Id;
 
    ----------------
@@ -647,9 +643,9 @@ package body Yolk.Syndication.Writer is
    begin
       Feed.PAF.Set_Logo
         (Value => Atom_Logo'(Common =>
-                               Atom_Common'(Base_URI => TUS (Base_URI),
-                                            Language => TUS (Language)),
-                             URI    => TUS (URI)));
+                               Atom_Common'(Base_URI => U (Base_URI),
+                                            Language => U (Language)),
+                             URI    => U (URI)));
    end Set_Logo;
 
    ----------------
@@ -665,9 +661,9 @@ package body Yolk.Syndication.Writer is
    begin
       Entry_Source.Logo := Atom_Logo'
         (Common =>
-           Atom_Common'(Base_URI => TUS (Base_URI),
-                        Language => TUS (Language)),
-         URI    => TUS (URI));
+           Atom_Common'(Base_URI => U (Base_URI),
+                        Language => U (Language)),
+         URI    => U (URI));
    end Set_Logo;
 
    ---------------------
@@ -682,8 +678,8 @@ package body Yolk.Syndication.Writer is
    is
    begin
       Entr.Published := Atom_Date'(Common     =>
-                                     Atom_Common'(Base_URI => TUS (Base_URI),
-                                                  Language => TUS (Language)),
+                                     Atom_Common'(Base_URI => U (Base_URI),
+                                                  Language => U (Language)),
                                    Is_Set     => True,
                                    Time_Stamp => Published_Time);
    end Set_Published;
@@ -702,9 +698,9 @@ package body Yolk.Syndication.Writer is
    begin
       Feed.PAF.Set_Rights
         (Value => Atom_Text'(Common =>
-                               Atom_Common'(Base_URI => TUS (Base_URI),
-                                            Language => TUS (Language)),
-                             Text_Content => TUS (Rights),
+                               Atom_Common'(Base_URI => U (Base_URI),
+                                            Language => U (Language)),
+                             Text_Content => U (Rights),
                              Text_Kind    => Rights_Kind));
    end Set_Rights;
 
@@ -721,9 +717,9 @@ package body Yolk.Syndication.Writer is
    is
    begin
       Entr.Rights := Atom_Text'(Common       =>
-                                  Atom_Common'(Base_URI => TUS (Base_URI),
-                                               Language => TUS (Language)),
-                                Text_Content => TUS (Rights),
+                                  Atom_Common'(Base_URI => U (Base_URI),
+                                               Language => U (Language)),
+                                Text_Content => U (Rights),
                                 Text_Kind    => Rights_Kind);
    end Set_Rights;
 
@@ -741,9 +737,9 @@ package body Yolk.Syndication.Writer is
    begin
       Entry_Source.Rights := Atom_Text'
         (Common       =>
-           Atom_Common'(Base_URI => TUS (Base_URI),
-                        Language => TUS (Language)),
-         Text_Content => TUS (Rights),
+           Atom_Common'(Base_URI => U (Base_URI),
+                        Language => U (Language)),
+         Text_Content => U (Rights),
          Text_Kind    => Rights_Kind);
    end Set_Rights;
 
@@ -761,9 +757,9 @@ package body Yolk.Syndication.Writer is
    begin
       Feed.PAF.Set_Subtitle
         (Value => Atom_Text'(Common =>
-                               Atom_Common'(Base_URI => TUS (Base_URI),
-                                            Language => TUS (Language)),
-                             Text_Content => TUS (Subtitle),
+                               Atom_Common'(Base_URI => U (Base_URI),
+                                            Language => U (Language)),
+                             Text_Content => U (Subtitle),
                              Text_Kind    => Subtitle_Kind));
    end Set_Subtitle;
 
@@ -781,9 +777,9 @@ package body Yolk.Syndication.Writer is
    begin
       Entry_Source.Subtitle := Atom_Text'
         (Common       =>
-           Atom_Common'(Base_URI => TUS (Base_URI),
-                        Language => TUS (Language)),
-         Text_Content => TUS (Subtitle),
+           Atom_Common'(Base_URI => U (Base_URI),
+                        Language => U (Language)),
+         Text_Content => U (Subtitle),
          Text_Kind    => Subtitle_Kind);
    end Set_Subtitle;
 
@@ -800,9 +796,9 @@ package body Yolk.Syndication.Writer is
    is
    begin
       Entr.Summary := Atom_Text'(Common       =>
-                                   Atom_Common'(Base_URI => TUS (Base_URI),
-                                                Language => TUS (Language)),
-                                 Text_Content => TUS (Summary),
+                                   Atom_Common'(Base_URI => U (Base_URI),
+                                                Language => U (Language)),
+                                 Text_Content => U (Summary),
                                  Text_Kind    => Summary_Kind);
    end Set_Summary;
 
@@ -820,9 +816,9 @@ package body Yolk.Syndication.Writer is
    begin
       Feed.PAF.Set_Title
         (Value => Atom_Text'(Common =>
-                               Atom_Common'(Base_URI => TUS (Base_URI),
-                                            Language => TUS (Language)),
-                             Text_Content => TUS (Title),
+                               Atom_Common'(Base_URI => U (Base_URI),
+                                            Language => U (Language)),
+                             Text_Content => U (Title),
                              Text_Kind    => Title_Kind));
    end Set_Title;
 
@@ -839,9 +835,9 @@ package body Yolk.Syndication.Writer is
    is
    begin
       Entr.Title := Atom_Text'(Common       =>
-                                 Atom_Common'(Base_URI => TUS (Base_URI),
-                                              Language => TUS (Language)),
-                               Text_Content => TUS (Title),
+                                 Atom_Common'(Base_URI => U (Base_URI),
+                                              Language => U (Language)),
+                               Text_Content => U (Title),
                                Text_Kind    => Title_Kind);
    end Set_Title;
 
@@ -859,9 +855,9 @@ package body Yolk.Syndication.Writer is
    begin
       Entry_Source.Title := Atom_Text'
         (Common       =>
-           Atom_Common'(Base_URI => TUS (Base_URI),
-                        Language => TUS (Language)),
-         Text_Content => TUS (Title),
+           Atom_Common'(Base_URI => U (Base_URI),
+                        Language => U (Language)),
+         Text_Content => U (Title),
          Text_Kind    => Title_Kind);
    end Set_Title;
 
@@ -878,8 +874,8 @@ package body Yolk.Syndication.Writer is
    begin
       Feed.PAF.Set_Updated_Time
         (Value => Atom_Date'(Common =>
-                               Atom_Common'(Base_URI => TUS (Base_URI),
-                                            Language => TUS (Language)),
+                               Atom_Common'(Base_URI => U (Base_URI),
+                                            Language => U (Language)),
                              Is_Set     => True,
                              Time_Stamp => Update_Time));
    end Set_Updated;
@@ -896,8 +892,8 @@ package body Yolk.Syndication.Writer is
    is
    begin
       Entr.Updated := Atom_Date'(Common     =>
-                                   Atom_Common'(Base_URI => TUS (Base_URI),
-                                                Language => TUS (Language)),
+                                   Atom_Common'(Base_URI => U (Base_URI),
+                                                Language => U (Language)),
                                  Is_Set     => True,
                                  Time_Stamp => Update_Time);
    end Set_Updated;
@@ -915,8 +911,8 @@ package body Yolk.Syndication.Writer is
    begin
       Entry_Source.Updated := Atom_Date'
         (Common     =>
-           Atom_Common'(Base_URI => TUS (Base_URI),
-                        Language => TUS (Language)),
+           Atom_Common'(Base_URI => U (Base_URI),
+                        Language => U (Language)),
          Is_Set     => True,
          Time_Stamp => Update_Time);
    end Set_Updated;

@@ -2,7 +2,7 @@
 --                                                                           --
 --                                  Yolk                                     --
 --                                                                           --
---                      Yolk.Syndication.DOM_Builder                         --
+--                       Yolk.Syndication.DOM_Builder                        --
 --                                                                           --
 --                                  SPEC                                     --
 --                                                                           --
