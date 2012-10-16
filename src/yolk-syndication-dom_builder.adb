@@ -90,15 +90,9 @@ package body Yolk.Syndication.DOM_Builder is
       use DOM.Core.Elements;
       use DOM.Core.Nodes;
 
-      A_Category     : Atom_Category;
-      C              : Category_List.Cursor := List.First;
-      Category_Node  : Node;
+      Category_Node : Node;
    begin
-      loop
-         exit when not Category_List.Has_Element (C);
-
-         A_Category := Category_List.Element (C);
-
+      for A_Category of List loop
          Category_Node := Append_Child
            (N         => Parent,
             New_Child => Create_Element (Doc      => Doc,
@@ -123,8 +117,6 @@ package body Yolk.Syndication.DOM_Builder is
          Attribute (Elem  => Category_Node,
                     Name  => "scheme",
                     Value => To_String (A_Category.Scheme));
-
-         Category_List.Next (C);
       end loop;
    end Create_Category_Elements;
 
@@ -197,15 +189,9 @@ package body Yolk.Syndication.DOM_Builder is
       use DOM.Core.Documents;
       use DOM.Core.Nodes;
 
-      An_Entry   : Atom_Entry;
-      C          : Entry_List.Cursor := Entries.First;
       Entry_Node : Node;
    begin
-      loop
-         exit when not Entry_List.Has_Element (C);
-
-         An_Entry := Entry_List.Element (C);
-
+      for An_Entry of Entries loop
          Entry_Node := Append_Child
            (N         => Parent,
             New_Child => Create_Element (Doc      => Doc,
@@ -318,8 +304,6 @@ package body Yolk.Syndication.DOM_Builder is
                Elem_Name => "updated",
                Parent    => Entry_Node);
          end if;
-
-         Entry_List.Next (C);
       end loop;
    end Create_Entry_Elements;
 
@@ -682,15 +666,9 @@ package body Yolk.Syndication.DOM_Builder is
       use DOM.Core.Elements;
       use DOM.Core.Nodes;
 
-      A_Link      : Atom_Link;
-      C           : Link_List.Cursor := List.First;
-      Link_Node   : Node;
+      Link_Node : Node;
    begin
-      loop
-         exit when not Link_List.Has_Element (C);
-
-         A_Link := Link_List.Element (C);
-
+      for A_Link of List loop
          Link_Node := Append_Child
            (N         => Parent,
             New_Child => Create_Element (Doc      => Doc,
@@ -751,8 +729,6 @@ package body Yolk.Syndication.DOM_Builder is
          Attribute (Elem  => Link_Node,
                     Name  => "title",
                     Value => To_String (A_Link.Title));
-
-         Link_List.Next (C);
       end loop;
    end Create_Link_Elements;
 
@@ -812,16 +788,10 @@ package body Yolk.Syndication.DOM_Builder is
       use DOM.Core.Documents;
       use DOM.Core.Nodes;
 
-      A_Person    : Atom_Person;
-      Person_Node : Node;
-      C           : Person_List.Cursor := List.First;
       Elem_Node   : Node;
+      Person_Node : Node;
    begin
-      loop
-         exit when not Person_List.Has_Element (C);
-
-         A_Person := Person_List.Element (C);
-
+      for A_Person of List loop
          Person_Node := Append_Child
            (N         => Parent,
             New_Child => Create_Element (Doc      => Doc,
@@ -867,8 +837,6 @@ package body Yolk.Syndication.DOM_Builder is
                  (Doc  => Doc,
                   Data => To_String (A_Person.URI)));
          end if;
-
-         Person_List.Next (C);
       end loop;
    end Create_Person_Elements;
 

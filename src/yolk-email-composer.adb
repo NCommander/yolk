@@ -55,9 +55,9 @@ package body Yolk.Email.Composer is
    ---------------------------
 
    procedure Add_File_Attachment
-     (ES            : in out Structure;
-      Path_To_File  : in     String;
-      Charset       : in     Character_Set := US_ASCII)
+     (ES           : in out Structure;
+      Path_To_File : in     String;
+      Charset      : in     Character_Set := US_ASCII)
    is
       New_Attachment : Attachment_Data;
    begin
@@ -73,10 +73,10 @@ package body Yolk.Email.Composer is
    ----------------
 
    procedure Add_From
-     (ES        : in out Structure;
-      Address   : in     String;
-      Name      : in     String := "";
-      Charset   : in     Character_Set := US_ASCII)
+     (ES      : in out Structure;
+      Address : in     String;
+      Name    : in     String := "";
+      Charset : in     Character_Set := US_ASCII)
    is
       New_From : Email_Data;
    begin
@@ -91,11 +91,11 @@ package body Yolk.Email.Composer is
    ---------------------
 
    procedure Add_Recipient
-     (ES       : in out Structure;
-      Address  : in     String;
-      Name     : in     String := "";
-      Kind     : in     Recipient_Kind := To;
-      Charset  : in     Character_Set := US_ASCII)
+     (ES      : in out Structure;
+      Address : in     String;
+      Name    : in     String := "";
+      Kind    : in     Recipient_Kind := To;
+      Charset : in     Character_Set := US_ASCII)
    is
       New_Recipient : Email_Data;
    begin
@@ -118,10 +118,10 @@ package body Yolk.Email.Composer is
    --------------------
 
    procedure Add_Reply_To
-     (ES       : in out Structure;
-      Address  : in     String;
-      Name     : in     String := "";
-      Charset  : in     Character_Set := US_ASCII)
+     (ES      : in out Structure;
+      Address : in     String;
+      Name    : in     String := "";
+      Charset : in     Character_Set := US_ASCII)
    is
       New_Reply_To : Email_Data;
    begin
@@ -136,9 +136,9 @@ package body Yolk.Email.Composer is
    -----------------------
 
    procedure Add_SMTP_Server
-     (ES    : in out Structure;
-      Host  : in     String;
-      Port  : in     Positive := 25)
+     (ES   : in out Structure;
+      Host : in     String;
+      Port : in     Positive := 25)
    is
       New_SMTP : SMTP_Server;
    begin
@@ -267,16 +267,16 @@ package body Yolk.Email.Composer is
    ------------
 
    procedure Send
-     (ES             : in out Structure;
-      From_Address   : in     String;
-      From_Name      : in     String := "";
-      To_Address     : in     String;
-      To_Name        : in     String := "";
-      Subject        : in     String;
-      Text_Part      : in     String;
-      SMTP_Server    : in     String := "localhost";
-      SMTP_Port      : in     Positive := 25;
-      Charset        : in     Character_Set := US_ASCII)
+     (ES           : in out Structure;
+      From_Address : in     String;
+      From_Name    : in     String := "";
+      To_Address   : in     String;
+      To_Name      : in     String := "";
+      Subject      : in     String;
+      Text_Part    : in     String;
+      SMTP_Server  : in     String := "localhost";
+      SMTP_Port    : in     Positive := 25;
+      Charset      : in     Character_Set := US_ASCII)
    is
    begin
       Add_From (ES      => ES,
@@ -310,17 +310,17 @@ package body Yolk.Email.Composer is
    ------------
 
    procedure Send
-     (ES             : in out Structure;
-      From_Address   : in     String;
-      From_Name      : in     String := "";
-      To_Address     : in     String;
-      To_Name        : in     String := "";
-      Subject        : in     String;
-      Text_Part      : in     String;
-      HTML_Part      : in     String;
-      SMTP_Server    : in     String := "localhost";
-      SMTP_Port      : in     Positive := 25;
-      Charset        : in     Character_Set := US_ASCII)
+     (ES           : in out Structure;
+      From_Address : in     String;
+      From_Name    : in     String := "";
+      To_Address   : in     String;
+      To_Name      : in     String := "";
+      Subject      : in     String;
+      Text_Part    : in     String;
+      HTML_Part    : in     String;
+      SMTP_Server  : in     String := "localhost";
+      SMTP_Port    : in     Positive := 25;
+      Charset      : in     Character_Set := US_ASCII)
    is
    begin
       Set_HTML_Part (ES      => ES,
@@ -344,9 +344,9 @@ package body Yolk.Email.Composer is
    ---------------------
 
    procedure Set_HTML_Part
-     (ES         : in out Structure;
-      Part       : in     String;
-      Charset    : in     Character_Set := US_ASCII)
+     (ES      : in out Structure;
+      Part    : in     String;
+      Charset : in     Character_Set := US_ASCII)
    is
       use GNATCOLL.Email.Utils;
 
@@ -368,10 +368,10 @@ package body Yolk.Email.Composer is
    ------------------
 
    procedure Set_Sender
-     (ES         : in out Structure;
-      Address    : in     String;
-      Name       : in     String := "";
-      Charset    : in     Character_Set := US_ASCII)
+     (ES      : in out Structure;
+      Address : in     String;
+      Name    : in     String := "";
+      Charset : in     Character_Set := US_ASCII)
    is
    begin
       ES.Sender.Address := U (Address);
@@ -384,9 +384,9 @@ package body Yolk.Email.Composer is
    -------------------
 
    procedure Set_Subject
-     (ES        : in out Structure;
-      Subject   : in     String;
-      Charset   : in     Character_Set := US_ASCII)
+     (ES      : in out Structure;
+      Subject : in     String;
+      Charset : in     Character_Set := US_ASCII)
    is
    begin
       ES.Subject.Content := U (Subject);
@@ -398,9 +398,9 @@ package body Yolk.Email.Composer is
    ---------------------
 
    procedure Set_Text_Part
-     (ES         : in out Structure;
-      Part       : in     String;
-      Charset    : in     Character_Set := US_ASCII)
+     (ES      : in out Structure;
+      Part    : in     String;
+      Charset : in     Character_Set := US_ASCII)
    is
       use GNATCOLL.Email.Utils;
 

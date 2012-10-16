@@ -79,15 +79,15 @@ private
 
    type Attachment_Data is
       record
-         Charset        : Character_Set := US_ASCII;
-         Path_To_File   : Unbounded_String;
+         Charset      : Character_Set := US_ASCII;
+         Path_To_File : Unbounded_String;
       end record;
 
    type Email_Data is
       record
-         Address  : Unbounded_String;
-         Charset  : Character_Set  := US_ASCII;
-         Name     : Unbounded_String;
+         Address : Unbounded_String;
+         Charset : Character_Set  := US_ASCII;
+         Name    : Unbounded_String;
       end record;
 
    type Email_Kind is (Text,
@@ -116,8 +116,8 @@ private
 
    type Text_Data is
       record
-         Content  : Unbounded_String;
-         Charset  : Character_Set := US_ASCII;
+         Content : Unbounded_String;
+         Charset : Character_Set := US_ASCII;
       end record;
    --  This type is used for both text and HTML parts, so the "Text" part of
    --  Text_Data simply refers to the fact that both text and HTML parts are
@@ -130,24 +130,24 @@ private
 
    type Structure is
       record
-         Attachment_List   : Attachments_Container.Vector;
-         Bcc_List          : Email_Data_Container.Vector;
-         Cc_List           : Email_Data_Container.Vector;
-         Composed_Message  : GNATCOLL.Email.Message;
-         Custom_Headers    : Custom_Headers_Container.Vector;
-         Email_Is_Sent     : Boolean := False;
-         From_List         : Email_Data_Container.Vector;
-         Has_Attachment    : Boolean := False;
-         Has_HTML_Part     : Boolean := False;
-         Has_Text_Part     : Boolean := False;
-         HTML_Part         : Text_Data;
-         Reply_To_List     : Email_Data_Container.Vector;
-         Sender            : Email_Data;
-         SMTP_List         : SMTP_Servers_Container.Vector;
-         Subject           : Subject_Data;
-         Text_Part         : Text_Data;
-         To_List           : Email_Data_Container.Vector;
-         Type_Of_Email     : Email_Kind;
+         Attachment_List  : Attachments_Container.Vector;
+         Bcc_List         : Email_Data_Container.Vector;
+         Cc_List          : Email_Data_Container.Vector;
+         Composed_Message : GNATCOLL.Email.Message;
+         Custom_Headers   : Custom_Headers_Container.Vector;
+         Email_Is_Sent    : Boolean := False;
+         From_List        : Email_Data_Container.Vector;
+         Has_Attachment   : Boolean := False;
+         Has_HTML_Part    : Boolean := False;
+         Has_Text_Part    : Boolean := False;
+         HTML_Part        : Text_Data;
+         Reply_To_List    : Email_Data_Container.Vector;
+         Sender           : Email_Data;
+         SMTP_List        : SMTP_Servers_Container.Vector;
+         Subject          : Subject_Data;
+         Text_Part        : Text_Data;
+         To_List          : Email_Data_Container.Vector;
+         Type_Of_Email    : Email_Kind;
       end record;
    --  The type used to hold describe an email.
    --    Attachment_List:

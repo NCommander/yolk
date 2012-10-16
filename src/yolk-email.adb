@@ -287,8 +287,8 @@ package body Yolk.Email is
    ------------------------
 
    procedure Build_Email_Data
-     (Header   : in out GNATCOLL.Email.Header;
-      List     : in     Email_Data_Container.Vector)
+     (Header : in out GNATCOLL.Email.Header;
+      List   : in     Email_Data_Container.Vector)
    is
       use Yolk.Utilities;
 
