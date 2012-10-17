@@ -58,7 +58,9 @@ package Yolk.Server is
    --    then the server will only recognize the default AWS MIME types.
    --  Server_Uses_WebSockets
    --    If True then the AWS WebSocket servers are started when the server is
-   --    started.
+   --    started. Basically this controls whether
+   --      AWS.Net.WebSocket.Registry.Control.Start;
+   --    is called or not.
    --  Set_Dispatchers
    --    Access to a procedure that set ALL the necessary URI dispatchers for
    --    the HTTP server. This includes the default callback and whatever
