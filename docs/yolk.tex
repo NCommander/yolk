@@ -1291,6 +1291,71 @@ is used in conjunction with the \emph{Yolk.Configuration.Yolk\_User}
 parameter.
 
 
+\section{Yolk.Server}
+
+This is a convenience package to handle creating, starting and stopping
+an AWS HTTP server. The biggest drawback to this package is that it
+can only create and manage \emph{one} AWS server.
+
+
+\subsection{Yolk.Server.Create}
+
+Creating a server is done by calling the \emph{Create} function. This
+function accepts a set of parameters that should be fairly self-explanatory.
+
+\begin{minipage}[t]{1\columnwidth}%
+\begin{lstlisting}[basicstyle={\small\sffamily},frame=tblr,language=Ada,showstringspaces=false,tabsize=3,xleftmargin=1em,xrightmargin=1em]
+type Resource_Dispatchers is not null access 
+  procedure (RH : out AWS.Services.Dispatchers.URI.Handler);
+
+type HTTP is tagged limited private;
+
+function Create
+  (Compress_Static_Content : in Boolean := True;       
+   Load_Extra_MIME_Types   : in Boolean := True;       
+   Server_Uses_WebSockets  : in Boolean := True;       
+   Set_Dispatchers         : in Resource_Dispatchers;       
+   Unexpected              : in AWS.Exceptions.Unexpected_Exception_Handler)       
+   return HTTP;    
+\end{lstlisting}
+%
+\end{minipage}
+
+Worth noting is the \emph{Set\_Dispatchers} parameter. This parameter
+is access to a procedure which must handle adding \emph{all} the URI
+and WebSocket dispatchers the application needs. There's currently
+only support for URI dispatchers, so if your application needs any
+of the other AWS dispatchers (Method, Linker, Timer etc. etc.) then
+you will have to manage creating and starting/stopping the AWS component
+manually.
+
+
+\subsection{Yolk.Server.Start}
+
+\begin{minipage}[t]{1\columnwidth}%
+\begin{lstlisting}[basicstyle={\small\sffamily},frame=tblr,language=Ada,showstringspaces=false,tabsize=3,xleftmargin=1em,xrightmargin=1em]
+procedure Start 
+  (WS : in out HTTP);
+\end{lstlisting}
+%
+\end{minipage}
+
+This does as expected: Starts the server.
+
+
+\subsection{Yolk.Server.Stop}
+
+\begin{minipage}[t]{1\columnwidth}%
+\begin{lstlisting}[basicstyle={\small\sffamily},frame=tblr,language=Ada,showstringspaces=false,tabsize=3,xleftmargin=1em,xrightmargin=1em]
+procedure Stop      
+  (WS : in out HTTP);
+\end{lstlisting}
+%
+\end{minipage}
+
+This does as expected: Stops the server.
+
+
 \section{Yolk.Static\_Content}
 
 Most web applications have a lot of static content, ie. stuff that
@@ -1896,10 +1961,7 @@ them on each and every hit.
 
 \section{Yolk.Utilities}
 
-This package contains various support functionality or simple renames
-of other subprograms, such as renaming the unyielding \emph{To\_Unbounded\_String}
-function to the more manageable \emph{TUS}. Check the \emph{yolk-utilities.ads}
-source file for more information.
+This package contains various support functionality.
 
 
 \section{Yolk.Whoops}

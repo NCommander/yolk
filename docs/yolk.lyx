@@ -4656,6 +4656,237 @@ Yolk.Configuration.Yolk_User
 \end_layout
 
 \begin_layout Section
+Yolk.Server
+\end_layout
+
+\begin_layout Standard
+This is a convenience package to handle creating, starting and stopping
+ an AWS HTTP server.
+ The biggest drawback to this package is that it can only create and manage
+ 
+\emph on
+one
+\emph default
+ AWS server.
+\end_layout
+
+\begin_layout Subsection
+Yolk.Server.Create
+\end_layout
+
+\begin_layout Standard
+Creating a server is done by calling the 
+\emph on
+Create
+\emph default
+ function.
+ This function accepts a set of parameters that should be fairly self-explanator
+y.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Box Frameless
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "100col%"
+special "none"
+height "1in"
+height_special "totalheight"
+status open
+
+\begin_layout Plain Layout
+\begin_inset listings
+lstparams "basicstyle={\small\sffamily},frame=tblr,language=Ada,showstringspaces=false,tabsize=3,xleftmargin=1em,xrightmargin=1em"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+type Resource_Dispatchers is not null access 
+\end_layout
+
+\begin_layout Plain Layout
+
+  procedure (RH : out AWS.Services.Dispatchers.URI.Handler);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+type HTTP is tagged limited private;
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+function Create
+\end_layout
+
+\begin_layout Plain Layout
+
+  (Compress_Static_Content : in Boolean := True;       
+\end_layout
+
+\begin_layout Plain Layout
+
+   Load_Extra_MIME_Types   : in Boolean := True;       
+\end_layout
+
+\begin_layout Plain Layout
+
+   Server_Uses_WebSockets  : in Boolean := True;       
+\end_layout
+
+\begin_layout Plain Layout
+
+   Set_Dispatchers         : in Resource_Dispatchers;       
+\end_layout
+
+\begin_layout Plain Layout
+
+   Unexpected              : in AWS.Exceptions.Unexpected_Exception_Handler)
+       
+\end_layout
+
+\begin_layout Plain Layout
+
+   return HTTP;    
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Worth noting is the 
+\emph on
+Set_Dispatchers
+\emph default
+ parameter.
+ This parameter is access to a procedure which must handle adding 
+\emph on
+all
+\emph default
+ the URI and WebSocket dispatchers the application needs.
+ There's currently only support for URI dispatchers, so if your application
+ needs any of the other AWS dispatchers (Method, Linker, Timer etc.
+ etc.) then you will have to manage creating and starting/stopping the AWS
+ component manually.
+\end_layout
+
+\begin_layout Subsection
+Yolk.Server.Start
+\end_layout
+
+\begin_layout Standard
+\begin_inset Box Frameless
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "100col%"
+special "none"
+height "1in"
+height_special "totalheight"
+status open
+
+\begin_layout Plain Layout
+\begin_inset listings
+lstparams "basicstyle={\small\sffamily},frame=tblr,language=Ada,showstringspaces=false,tabsize=3,xleftmargin=1em,xrightmargin=1em"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+procedure Start 
+\end_layout
+
+\begin_layout Plain Layout
+
+  (WS : in out HTTP);
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This does as expected: Starts the server.
+\end_layout
+
+\begin_layout Subsection
+Yolk.Server.Stop
+\end_layout
+
+\begin_layout Standard
+\begin_inset Box Frameless
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "100col%"
+special "none"
+height "1in"
+height_special "totalheight"
+status open
+
+\begin_layout Plain Layout
+\begin_inset listings
+lstparams "basicstyle={\small\sffamily},frame=tblr,language=Ada,showstringspaces=false,tabsize=3,xleftmargin=1em,xrightmargin=1em"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+procedure Stop      
+\end_layout
+
+\begin_layout Plain Layout
+
+  (WS : in out HTTP);
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This does as expected: Stops the server.
+\end_layout
+
+\begin_layout Section
 Yolk.Static_Content
 \end_layout
 
@@ -6786,21 +7017,7 @@ Yolk.Utilities
 \end_layout
 
 \begin_layout Standard
-This package contains various support functionality or simple renames of
- other subprograms, such as renaming the unyielding 
-\emph on
-To_Unbounded_String
-\emph default
- function to the more manageable 
-\emph on
-TUS
-\emph default
-.
- Check the 
-\emph on
-yolk-utilities.ads
-\emph default
- source file for more information.
+This package contains various support functionality.
 \end_layout
 
 \begin_layout Section
