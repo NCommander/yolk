@@ -45,9 +45,8 @@ package body My_Handlers is
      (RH : out AWS.Services.Dispatchers.URI.Handler)
    is
       use AWS.Dispatchers.Callback;
+      use My_Configuration;
       use Yolk;
-
-      package My renames My_Configuration;
    begin
       -----------------------------------------
       --  Unknown Resource (404) Dispatcher  --
@@ -74,31 +73,31 @@ package body My_Handlers is
       --    the request.
 
       RH.Register
-        (URI    => My.Config.Get (My.Handler_DB_Test),
+        (URI    => Config.Get (Handler_DB_Test),
          Action => Create (Callback => View.DB_Test.Generate'Access));
 
       RH.Register_Regexp
-        (URI    => My.Config.Get (My.Handler_Dir),
+        (URI    => Config.Get (Handler_Dir),
          Action => Create (Callback => View.Dir.Generate'Access));
 
       RH.Register
-        (URI    => My.Config.Get (My.Handler_Email),
+        (URI    => Config.Get (Handler_Email),
          Action => Create (Callback => View.Email.Generate'Access));
 
       RH.Register
-        (URI    => My.Config.Get (My.Handler_Index),
+        (URI    => Config.Get (Handler_Index),
          Action => Create (Callback => View.Index.Generate'Access));
 
       RH.Register
-        (URI    => My.Config.Get (My.Handler_Session_Test),
+        (URI    => Config.Get (Handler_Session_Test),
          Action => Create (Callback => View.Session_Test.Generate'Access));
 
       RH.Register
-        (URI    => My.Config.Get (My.Handler_Syndication),
+        (URI    => Config.Get (Handler_Syndication),
          Action => Create (Callback => View.Syndication.Generate'Access));
 
       RH.Register
-        (URI    => My.Config.Get (My.Handler_Websocket),
+        (URI    => Config.Get (Handler_Websocket),
          Action => Create (Callback => View.Websocket.Generate'Access));
 
       Handlers.Set (RH);
