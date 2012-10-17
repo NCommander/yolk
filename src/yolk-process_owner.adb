@@ -53,7 +53,7 @@ package body Yolk.Process_Owner is
       Set_User_ID (ID => User_ID_Of (DB_Item => User_DI));
    exception
       when others =>
-         raise Username_Does_Not_Exist with Username;
+         raise Username_Does_Not_Exist with "Unknown username " & Username;
    end Set_User;
 
 end Yolk.Process_Owner;
