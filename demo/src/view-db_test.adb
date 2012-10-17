@@ -40,9 +40,9 @@ package body View.DB_Test is
       use GNATCOLL.SQL;
       use GNATCOLL.SQL.Exec;
 
-      DB_Conn        : constant Database_Connection :=
-                         Get_Task_Connection (Description => DB_Description);
-      FC             : Forward_Cursor;
+      DB_Conn : constant Database_Connection :=
+                  Get_Task_Connection (Description => DB_Description);
+      FC      : Forward_Cursor;
 
       Query_Insert_Data : constant SQL_Query := SQL_Insert
         ((Tmp.Id = Integer_Param (1)) &

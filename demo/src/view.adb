@@ -31,9 +31,9 @@ package body View is
 
    function Build_Response
      (Status_Data   : in AWS.Status.Data;
-      Template_File  : in String;
-      Translations   : in AWS.Templates.Translate_Set;
-      MIME_Type      : in String := Text_HTML)
+      Template_File : in String;
+      Translations  : in AWS.Templates.Translate_Set;
+      MIME_Type     : in String := Text_HTML)
       return AWS.Response.Data
    is
       use AWS.Templates;

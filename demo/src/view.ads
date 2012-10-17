@@ -45,11 +45,11 @@ package View is
 
    DB_Description : GNATCOLL.SQL.Exec.Database_Description :=
                       GNATCOLL.SQL.Postgres.Setup
-                        (Database      => My.Config.Get (My.DB_Name),
-                         User          => My.Config.Get (My.DB_User),
-                         Host          => My.Config.Get (My.DB_Host),
-                         Password      => My.Config.Get (My.DB_Password),
-                         SSL           => GNATCOLL.SQL.Postgres.Disable);
+                        (Database => My.Config.Get (My.DB_Name),
+                         User     => My.Config.Get (My.DB_User),
+                         Host     => My.Config.Get (My.DB_Host),
+                         Password => My.Config.Get (My.DB_Password),
+                         SSL      => GNATCOLL.SQL.Postgres.Disable);
    --  A GNATColl database description object.
 
    type Cache_Keys is (Feed_Data);
@@ -62,19 +62,19 @@ package View is
    --  Discrete_Keys cache.
 
    function Build_Response
-     (Status_Data    : in AWS.Status.Data;
-      Content        : in String;
-      MIME_Type      : in String := Text_HTML)
+     (Status_Data : in AWS.Status.Data;
+      Content     : in String;
+      MIME_Type   : in String := Text_HTML)
       return AWS.Response.Data;
    --  Build the resource response.
    --  This is a convenience function that gets rid of a few with clauses in
    --  the files for the View child packages.
 
    function Build_Response
-     (Status_Data    : in AWS.Status.Data;
-      Template_File  : in String;
-      Translations   : in AWS.Templates.Translate_Set;
-      MIME_Type      : in String := Text_HTML)
+     (Status_Data   : in AWS.Status.Data;
+      Template_File : in String;
+      Translations  : in AWS.Templates.Translate_Set;
+      MIME_Type     : in String := Text_HTML)
       return AWS.Response.Data;
    --  Build the resource response.
    --  This is a convenience function that gets rid of a few with clauses in
@@ -82,5 +82,12 @@ package View is
    --  This one is just a wrapper for the first Build_Response function. With
    --  this one you can add the template file and translate set directly,
    --  instead of having to parse those in the view.* child package.
+
+private
+
+   function U
+     (S : in String)
+      return Unbounded_String
+      renames To_Unbounded_String;
 
 end View;
