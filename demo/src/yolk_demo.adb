@@ -39,15 +39,16 @@ procedure Yolk_Demo is
    use Yolk.Log;
    use Yolk.Process_Control;
    use Yolk.Process_Owner;
+   use Yolk.Server;
 
-   WS : Yolk.Server.HTTP := Yolk.Server.Create
+   Web_Server : HTTP := Create
      (Set_Dispatchers => My_Handlers.Set'Access,
       Unexpected      => Yolk.Whoops.Unexpected_Exception_Handler'Access);
 begin
    Set_User (Username => Config.Get (Yolk_User));
    --  Switch user.
 
-   WS.Start;
+   Web_Server.Start;
    --  Start the HTTP server.
 
    Websocket_Demo.Start;
@@ -57,7 +58,7 @@ begin
    --  This is the main "loop". We will wait here as long as the
    --  Yolk.Process_Control.Controller.Check entry barrier is False.
 
-   WS.Stop;
+   Web_Server.Stop;
    --  Stop the HTTP server.
 
    Websocket_Demo.Stop;
@@ -67,6 +68,6 @@ exception
       Trace (Handle  => Error,
              Message => Exception_Information (Event));
       --  Write the exception information to the rotating Error log trace.
-      WS.Stop;
+      Web_Server.Stop;
       Websocket_Demo.Stop;
 end Yolk_Demo;
