@@ -51,7 +51,8 @@ package Yolk.Server is
    --  Compress_Static_Content
    --    If True then delete old compressed content and create a clean
    --    directory for the compressed static content. Also set the
-   --    Cache-Control header options for the static content.
+   --    Cache-Control header options for the static content. All this is done
+   --    using the Yolk.Static_Content.Static_Content_Cache_Setup procedure.
    --  Load_Extra_MIME_Types
    --    If True then the ./configuration/aws.mime file is loaded. If False
    --    then the server will only recognize the default AWS MIME types.
