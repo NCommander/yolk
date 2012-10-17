@@ -45,7 +45,6 @@ package body Yolk.Config_File_Parser is
    is
    begin
       return Boolean'Value (To_String (Values (Key)));
-
    exception
       when Constraint_Error =>
          raise Conversion_Error with Key_Type'Image (Key);
@@ -61,7 +60,6 @@ package body Yolk.Config_File_Parser is
    is
    begin
       return Duration'Value (To_String (Values (Key)));
-
    exception
       when Constraint_Error =>
          raise Conversion_Error with Key_Type'Image (Key);
@@ -77,7 +75,6 @@ package body Yolk.Config_File_Parser is
    is
    begin
       return Float'Value (To_String (Values (Key)));
-
    exception
       when Constraint_Error =>
          raise Conversion_Error with Key_Type'Image (Key);
@@ -93,7 +90,6 @@ package body Yolk.Config_File_Parser is
    is
    begin
       return Integer'Value (To_String (Values (Key)));
-
    exception
       when Constraint_Error =>
          raise Conversion_Error with Key_Type'Image (Key);
@@ -257,12 +253,13 @@ package body Yolk.Config_File_Parser is
       end loop;
 
       Close (File => File);
-
    exception
       when Name_Error | Use_Error | Device_Error =>
          raise Cannot_Open_Config_File with Config_File;
    end Load_File;
+
 begin
+
    Load_File (Config_File => Config_File);
 
 end Yolk.Config_File_Parser;

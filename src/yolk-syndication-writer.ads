@@ -740,11 +740,11 @@ package Yolk.Syndication.Writer is
    --    The rights kind. See Content_Type.
 
    procedure Set_Subtitle
-     (Feed           : in out Atom_Feed;
-      Subtitle       : in     String;
-      Base_URI       : in     String := None;
-      Language       : in     String := None;
-      Subtitle_Kind  : in     Text_Kinds := Text);
+     (Feed          : in out Atom_Feed;
+      Subtitle      : in     String;
+      Base_URI      : in     String := None;
+      Language      : in     String := None;
+      Subtitle_Kind : in     Text_Kinds := Text);
    --  Conveys a human-readable description or subtitle for a feed.
    --
    --  Subtitle:
@@ -757,11 +757,11 @@ package Yolk.Syndication.Writer is
    --    The rights kind. See Content_Type.
 
    procedure Set_Subtitle
-     (Entry_Source   : in out Atom_Entry_Source;
-      Subtitle       : in     String;
-      Base_URI       : in     String := None;
-      Language       : in     String := None;
-      Subtitle_Kind  : in     Text_Kinds := Text);
+     (Entry_Source  : in out Atom_Entry_Source;
+      Subtitle      : in     String;
+      Base_URI      : in     String := None;
+      Language      : in     String := None;
+      Subtitle_Kind : in     Text_Kinds := Text);
    --  Conveys a human-readable description or subtitle for an entry.
    --
    --  Subtitle:
@@ -774,11 +774,11 @@ package Yolk.Syndication.Writer is
    --    The rights kind. See Content_Type.
 
    procedure Set_Summary
-     (Entr           : in out Atom_Entry;
-      Summary        : in     String;
-      Base_URI       : in     String := None;
-      Language       : in     String := None;
-      Summary_Kind   : in     Text_Kinds := Text);
+     (Entr         : in out Atom_Entry;
+      Summary      : in     String;
+      Base_URI     : in     String := None;
+      Language     : in     String := None;
+      Summary_Kind : in     Text_Kinds := Text);
    --  Conveys a short summary, abstract, or excerpt of an entry.
    --
    --  Base_URI:

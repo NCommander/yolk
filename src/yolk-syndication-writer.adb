@@ -748,11 +748,11 @@ package body Yolk.Syndication.Writer is
    --------------------
 
    procedure Set_Subtitle
-     (Feed           : in out Atom_Feed;
-      Subtitle       : in String;
-      Base_URI       : in String := None;
-      Language       : in String := None;
-      Subtitle_Kind  : in Text_Kinds := Text)
+     (Feed          : in out Atom_Feed;
+      Subtitle      : in String;
+      Base_URI      : in String := None;
+      Language      : in String := None;
+      Subtitle_Kind : in Text_Kinds := Text)
    is
    begin
       Feed.PAF.Set_Subtitle
@@ -788,11 +788,11 @@ package body Yolk.Syndication.Writer is
    -----------------
 
    procedure Set_Summary
-     (Entr           : in out Atom_Entry;
-      Summary        : in     String;
-      Base_URI       : in     String := None;
-      Language       : in     String := None;
-      Summary_Kind   : in     Text_Kinds := Text)
+     (Entr         : in out Atom_Entry;
+      Summary      : in     String;
+      Base_URI     : in     String := None;
+      Language     : in     String := None;
+      Summary_Kind : in     Text_Kinds := Text)
    is
    begin
       Entr.Summary := Atom_Text'(Common       =>

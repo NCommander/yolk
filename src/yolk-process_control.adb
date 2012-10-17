@@ -40,7 +40,7 @@ package body Yolk.Process_Control is
 
    type Controller_State is (Running, Shutdown, Stopped);
 
-   PID : constant String   :=
+   PID : constant String :=
            Compose
              (Containing_Directory => Current_Directory,
               Name                 => Simple_Name (Command_Name & ".pid"));
@@ -103,7 +103,6 @@ package body Yolk.Process_Control is
       Put (File => File,
            Item => Fixed.Trim (Image (Get_Process_ID), Both));
       Close (File);
-
    exception
       when Ada.Text_IO.Name_Error |
            Ada.Text_IO.Use_Error |

@@ -38,13 +38,13 @@ package Yolk.Process_Control is
    --  Make sure that GNAT does not handle SIGINT interrupts automatically.
    --  Check your compiler for reserved signals.
 
-   Cannot_Create_PID_File  : exception;
+   Cannot_Create_PID_File : exception;
    --  Is raised if the PID file cannot be created, eg. the server lacks
    --  permissions to write to the current directory.
-   Cannot_Delete_PID_File  : exception;
+   Cannot_Delete_PID_File : exception;
    --  Is raised if the PID file cannot be deleted, eg. the server lacks
    --  permissions to write to the current directory or to the PID file itself.
-   PID_File_Exists         : exception;
+   PID_File_Exists        : exception;
    --  Is raised when the PID file already exists, ie. the server is already
    --  running, or it was shutdown incorrectly.
 

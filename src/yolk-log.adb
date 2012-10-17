@@ -47,8 +47,8 @@ package body Yolk.Log is
      (Message : in String)
    is
    begin
-      GNATCOLL.Traces.Trace (Handle   => AWS_Access,
-                             Message  => Message);
+      GNATCOLL.Traces.Trace (Handle  => AWS_Access,
+                             Message => Message);
    end AWS_Access_Log_Writer;
 
    ----------------------------
@@ -59,8 +59,8 @@ package body Yolk.Log is
      (Message : in String)
    is
    begin
-      GNATCOLL.Traces.Trace (Handle   => AWS_Error,
-                             Message  => Message);
+      GNATCOLL.Traces.Trace (Handle  => AWS_Error,
+                             Message => Message);
    end AWS_Error_Log_Writer;
 
    ------------------
@@ -237,8 +237,8 @@ package body Yolk.Log is
       Message : in String)
    is
    begin
-      GNATCOLL.Traces.Trace (Handle   => Handle_Array (Handle),
-                             Message  => Message);
+      GNATCOLL.Traces.Trace (Handle  => Handle_Array (Handle),
+                             Message => Message);
    end Trace;
 begin
    Initialize;

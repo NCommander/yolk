@@ -67,7 +67,6 @@
 with Ada.Strings.Unbounded;
 
 generic
-
    use Ada.Strings.Unbounded;
 
    type Key_Type is (<>);
@@ -88,18 +87,23 @@ package Yolk.Config_File_Parser is
    function Get
      (Key : in Key_Type)
       return Boolean;
+
    function Get
      (Key : in Key_Type)
       return Duration;
+
    function Get
      (Key : in Key_Type)
       return Float;
+
    function Get
      (Key : in Key_Type)
       return Integer;
+
    function Get
      (Key : in Key_Type)
       return String;
+
    function Get
      (Key : in Key_Type)
       return Unbounded_String;

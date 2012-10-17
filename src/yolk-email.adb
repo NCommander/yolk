@@ -73,8 +73,8 @@ package body Yolk.Email is
    --  Build the Date header and add it to Email.
 
    procedure Build_Email_Data
-     (Header   : in out GNATCOLL.Email.Header;
-      List     : in     Email_Data_Container.Vector);
+     (Header : in out GNATCOLL.Email.Header;
+      List   : in     Email_Data_Container.Vector);
    --  Construct the actual content for the sender/recipient headers, such as
    --  To, Cc, Bcc, Reply-To and so on.
 

@@ -226,7 +226,6 @@ package body Yolk.Cache.String_Keys is
             New_Item => (Added_Timestamp => Ada.Calendar.Clock,
                          Element         => Value));
       end Write;
-
    end P_Element_List;
 
    ---------------

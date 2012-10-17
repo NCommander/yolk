@@ -122,15 +122,15 @@ package Yolk.Syndication is
    type Atom_Feed is limited private;
    --  The atom:feed object. This type is thread safe.
 
-   Q             : Character renames Ada.Characters.Latin_1.Quotation;
+   Q : Character renames Ada.Characters.Latin_1.Quotation;
 
-   None     : constant String := "";
-   PI       : constant String := "<?xml version="
+   None    : constant String := "";
+   PI      : constant String := "<?xml version="
      & Q & "1.0" & Q & " encoding=" & Q & "utf-8" & Q & "?>"
      & Ada.Characters.Latin_1.LF;
-   XHTMLNS  : constant String := "http://www.w3.org/1999/xhtml";
-   XMLNS    : constant String := "http://www.w3.org/2005/Atom";
-   DIVNS    : constant String := "xmlns=" & Q & XHTMLNS & Q;
+   XHTMLNS : constant String := "http://www.w3.org/1999/xhtml";
+   XMLNS   : constant String := "http://www.w3.org/2005/Atom";
+   DIVNS   : constant String := "xmlns=" & Q & XHTMLNS & Q;
 
    function New_Atom_Entry
      (Base_URI : in String := None;
@@ -218,78 +218,78 @@ private
 
    type Atom_Category is
       record
-         Common   : Atom_Common;
-         Label    : Unbounded_String;
-         Scheme   : Unbounded_String;
-         Term     : Unbounded_String;
+         Common : Atom_Common;
+         Label  : Unbounded_String;
+         Scheme : Unbounded_String;
+         Term   : Unbounded_String;
       end record;
 
    type Atom_Date is
       record
-         Common      : Atom_Common;
-         Is_Set      : Boolean;
-         Time_Stamp  : Ada.Calendar.Time;
+         Common     : Atom_Common;
+         Is_Set     : Boolean;
+         Time_Stamp : Ada.Calendar.Time;
       end record;
 
    type Atom_Entry_Content is
       record
-         Common         : Atom_Common;
-         Content        : Unbounded_String;
-         Content_Kind   : Content_Kinds;
-         Mime_Type      : Unbounded_String;
-         Source         : Unbounded_String;
+         Common       : Atom_Common;
+         Content      : Unbounded_String;
+         Content_Kind : Content_Kinds;
+         Mime_Type    : Unbounded_String;
+         Source       : Unbounded_String;
       end record;
 
    type Atom_Generator is
       record
-         Agent    : Unbounded_String;
-         Common   : Atom_Common;
-         URI      : Unbounded_String;
-         Version  : Unbounded_String;
+         Agent   : Unbounded_String;
+         Common  : Atom_Common;
+         URI     : Unbounded_String;
+         Version : Unbounded_String;
       end record;
 
    type Atom_Icon is
       record
-         Common   : Atom_Common;
-         URI      : Unbounded_String;
+         Common : Atom_Common;
+         URI    : Unbounded_String;
       end record;
 
    type Atom_Id is
       record
-         Common   : Atom_Common;
-         URI      : Unbounded_String;
+         Common : Atom_Common;
+         URI    : Unbounded_String;
       end record;
 
    type Atom_Link is
       record
-         Common      : Atom_Common;
-         Href        : Unbounded_String;
-         Hreflang    : Unbounded_String;
-         Length      : Natural;
-         Mime_Type   : Unbounded_String;
-         Rel         : Relation_Kinds;
-         Title       : Unbounded_String;
+         Common    : Atom_Common;
+         Href      : Unbounded_String;
+         Hreflang  : Unbounded_String;
+         Length    : Natural;
+         Mime_Type : Unbounded_String;
+         Rel       : Relation_Kinds;
+         Title     : Unbounded_String;
       end record;
 
    type Atom_Logo is
       record
-         Common   : Atom_Common;
-         URI      : Unbounded_String;
+         Common : Atom_Common;
+         URI    : Unbounded_String;
       end record;
 
    type Atom_Person is
       record
-         Common   : Atom_Common;
-         Email    : Unbounded_String;
-         Name     : Unbounded_String;
-         URI      : Unbounded_String;
+         Common : Atom_Common;
+         Email  : Unbounded_String;
+         Name   : Unbounded_String;
+         URI    : Unbounded_String;
       end record;
 
    type Atom_Text is
       record
-         Common         : Atom_Common;
-         Text_Content   : Unbounded_String;
-         Text_Kind      : Text_Kinds;
+         Common       : Atom_Common;
+         Text_Content : Unbounded_String;
+         Text_Kind    : Text_Kinds;
       end record;
 
    package Category_List is new Doubly_Linked_Lists (Atom_Category);
@@ -298,147 +298,147 @@ private
 
    type Atom_Entry_Source is
       record
-         Authors        : Person_List.List;
-         Categories     : Category_List.List;
-         Common         : Atom_Common;
-         Contributors   : Person_List.List;
-         Generator      : Atom_Generator;
-         Icon           : Atom_Icon;
-         Id             : Atom_Id;
-         Links          : Link_List.List;
-         Logo           : Atom_Logo;
-         Rights         : Atom_Text;
-         Subtitle       : Atom_Text;
-         Title          : Atom_Text;
-         Updated        : Atom_Date;
+         Authors      : Person_List.List;
+         Categories   : Category_List.List;
+         Common       : Atom_Common;
+         Contributors : Person_List.List;
+         Generator    : Atom_Generator;
+         Icon         : Atom_Icon;
+         Id           : Atom_Id;
+         Links        : Link_List.List;
+         Logo         : Atom_Logo;
+         Rights       : Atom_Text;
+         Subtitle     : Atom_Text;
+         Title        : Atom_Text;
+         Updated      : Atom_Date;
       end record;
 
    Null_Atom_Entry_Source : constant Atom_Entry_Source
-     := (Authors       => Person_List.Empty_List,
-         Categories    => Category_List.Empty_List,
-         Common        => Atom_Common'(Base_URI => Null_Unbounded_String,
-                                       Language => Null_Unbounded_String),
-         Contributors  => Person_List.Empty_List,
-         Generator     =>
+     := (Authors      => Person_List.Empty_List,
+         Categories   => Category_List.Empty_List,
+         Common       => Atom_Common'(Base_URI => Null_Unbounded_String,
+                                      Language => Null_Unbounded_String),
+         Contributors => Person_List.Empty_List,
+         Generator    =>
            Atom_Generator'(Agent   => Null_Unbounded_String,
                            Common  =>
                              Atom_Common'(Base_URI => Null_Unbounded_String,
                                           Language => Null_Unbounded_String),
                            URI     => Null_Unbounded_String,
                            Version => Null_Unbounded_String),
-         Icon          =>
+         Icon         =>
            Atom_Icon'(Common =>
                         Atom_Common'(Base_URI => Null_Unbounded_String,
                                      Language => Null_Unbounded_String),
                       URI    => Null_Unbounded_String),
-         Id            => Atom_Id'(Common =>
-                                     Atom_Common'(Base_URI =>
-                                                    Null_Unbounded_String,
-                                                  Language =>
-                                                    Null_Unbounded_String),
-                                   URI    => Null_Unbounded_String),
-         Links         => Link_List.Empty_List,
-         Logo          =>  Atom_Logo'(Common => Atom_Common'
-                                        (Base_URI => Null_Unbounded_String,
-                                         Language => Null_Unbounded_String),
-                                      URI    => Null_Unbounded_String),
-         Rights        => Atom_Text'(Common       => Atom_Common'
+         Id           => Atom_Id'(Common =>
+                                    Atom_Common'(Base_URI =>
+                                                   Null_Unbounded_String,
+                                                 Language =>
+                                                   Null_Unbounded_String),
+                                  URI    => Null_Unbounded_String),
+         Links        => Link_List.Empty_List,
+         Logo         =>  Atom_Logo'(Common => Atom_Common'
                                        (Base_URI => Null_Unbounded_String,
                                         Language => Null_Unbounded_String),
-                                     Text_Content => Null_Unbounded_String,
-                                     Text_Kind    => Text),
-         Subtitle      => Atom_Text'(Common       => Atom_Common'
-                                       (Base_URI => Null_Unbounded_String,
-                                        Language => Null_Unbounded_String),
-                                     Text_Content => Null_Unbounded_String,
-                                     Text_Kind    => Text),
-         Title         => Atom_Text'(Common       => Atom_Common'
-                                       (Base_URI => Null_Unbounded_String,
-                                        Language => Null_Unbounded_String),
-                                     Text_Content => Null_Unbounded_String,
-                                     Text_Kind    => Text),
-         Updated       => Atom_Date'(Common     => Atom_Common'
-                                       (Base_URI => Null_Unbounded_String,
-                                        Language => Null_Unbounded_String),
-                                     Is_Set     => False,
-                                     Time_Stamp => Ada.Calendar.Clock));
+                                     URI    => Null_Unbounded_String),
+         Rights       => Atom_Text'(Common       => Atom_Common'
+                                      (Base_URI => Null_Unbounded_String,
+                                       Language => Null_Unbounded_String),
+                                    Text_Content => Null_Unbounded_String,
+                                    Text_Kind    => Text),
+         Subtitle     => Atom_Text'(Common       => Atom_Common'
+                                      (Base_URI => Null_Unbounded_String,
+                                       Language => Null_Unbounded_String),
+                                    Text_Content => Null_Unbounded_String,
+                                    Text_Kind    => Text),
+         Title        => Atom_Text'(Common       => Atom_Common'
+                                      (Base_URI => Null_Unbounded_String,
+                                       Language => Null_Unbounded_String),
+                                    Text_Content => Null_Unbounded_String,
+                                    Text_Kind    => Text),
+         Updated      => Atom_Date'(Common     => Atom_Common'
+                                      (Base_URI => Null_Unbounded_String,
+                                       Language => Null_Unbounded_String),
+                                    Is_Set     => False,
+                                    Time_Stamp => Ada.Calendar.Clock));
 
    type Atom_Entry is
       record
-         Authors        : Person_List.List;
-         Categories     : Category_List.List;
-         Common         : Atom_Common;
-         Content        : Atom_Entry_Content;
-         Contributors   : Person_List.List;
-         Id             : Atom_Id;
-         Links          : Link_List.List;
-         Published      : Atom_Date;
-         Rights         : Atom_Text;
-         Source         : Atom_Entry_Source;
-         Summary        : Atom_Text;
-         Title          : Atom_Text;
-         Updated        : Atom_Date;
+         Authors      : Person_List.List;
+         Categories   : Category_List.List;
+         Common       : Atom_Common;
+         Content      : Atom_Entry_Content;
+         Contributors : Person_List.List;
+         Id           : Atom_Id;
+         Links        : Link_List.List;
+         Published    : Atom_Date;
+         Rights       : Atom_Text;
+         Source       : Atom_Entry_Source;
+         Summary      : Atom_Text;
+         Title        : Atom_Text;
+         Updated      : Atom_Date;
       end record;
 
    Null_Atom_Entry : constant Atom_Entry
-     := (Authors       => Person_List.Empty_List,
-         Categories    => Category_List.Empty_List,
-         Common        => Atom_Common'(Base_URI => Null_Unbounded_String,
-                                       Language => Null_Unbounded_String),
-         Content       =>
-           Atom_Entry_Content'(Common        =>
+     := (Authors      => Person_List.Empty_List,
+         Categories   => Category_List.Empty_List,
+         Common       => Atom_Common'(Base_URI => Null_Unbounded_String,
+                                      Language => Null_Unbounded_String),
+         Content      =>
+           Atom_Entry_Content'(Common       =>
                                  Atom_Common'(Base_URI =>
                                                 Null_Unbounded_String,
                                               Language =>
                                                 Null_Unbounded_String),
-                               Content       => Null_Unbounded_String,
-                               Content_Kind  => Text,
-                               Mime_Type     => Null_Unbounded_String,
-                               Source        => Null_Unbounded_String),
-         Contributors  => Person_List.Empty_List,
-         Id            => Atom_Id'(Common =>
-                                     Atom_Common'(Base_URI =>
-                                                    Null_Unbounded_String,
-                                                  Language =>
-                                                    Null_Unbounded_String),
-                                   URI    => Null_Unbounded_String),
-         Links         => Link_List.Empty_List,
-         Published     => Atom_Date'(Common     =>
-                                       Atom_Common'(Base_URI =>
-                                                      Null_Unbounded_String,
-                                                    Language =>
-                                                      Null_Unbounded_String),
-                                     Is_Set     => False,
-                                     Time_Stamp => Ada.Calendar.Clock),
-         Rights        => Atom_Text'(Common       =>
-                                       Atom_Common'(Base_URI =>
-                                                      Null_Unbounded_String,
-                                                    Language =>
-                                                      Null_Unbounded_String),
-                                     Text_Content => Null_Unbounded_String,
-                                     Text_Kind    => Text),
-         Source        => Null_Atom_Entry_Source,
-         Summary       => Atom_Text'(Common       =>
-                                       Atom_Common'(Base_URI =>
-                                                      Null_Unbounded_String,
-                                                    Language =>
-                                                      Null_Unbounded_String),
-                                     Text_Content => Null_Unbounded_String,
-                                     Text_Kind    => Text),
-         Title         => Atom_Text'(Common       =>
-                                       Atom_Common'(Base_URI =>
-                                                      Null_Unbounded_String,
-                                                    Language =>
-                                                      Null_Unbounded_String),
-                                     Text_Content => Null_Unbounded_String,
-                                     Text_Kind    => Text),
-         Updated       => Atom_Date'(Common     =>
-                                       Atom_Common'(Base_URI =>
-                                                      Null_Unbounded_String,
-                                                    Language =>
-                                                      Null_Unbounded_String),
-                                     Is_Set     => False,
-                                     Time_Stamp => Ada.Calendar.Clock));
+                               Content      => Null_Unbounded_String,
+                               Content_Kind => Text,
+                               Mime_Type    => Null_Unbounded_String,
+                               Source       => Null_Unbounded_String),
+         Contributors => Person_List.Empty_List,
+         Id           => Atom_Id'(Common =>
+                                    Atom_Common'(Base_URI =>
+                                                   Null_Unbounded_String,
+                                                 Language =>
+                                                   Null_Unbounded_String),
+                                  URI    => Null_Unbounded_String),
+         Links        => Link_List.Empty_List,
+         Published    => Atom_Date'(Common     =>
+                                      Atom_Common'(Base_URI =>
+                                                     Null_Unbounded_String,
+                                                   Language =>
+                                                     Null_Unbounded_String),
+                                    Is_Set     => False,
+                                    Time_Stamp => Ada.Calendar.Clock),
+         Rights       => Atom_Text'(Common       =>
+                                      Atom_Common'(Base_URI =>
+                                                     Null_Unbounded_String,
+                                                   Language =>
+                                                     Null_Unbounded_String),
+                                    Text_Content => Null_Unbounded_String,
+                                    Text_Kind    => Text),
+         Source       => Null_Atom_Entry_Source,
+         Summary      => Atom_Text'(Common       =>
+                                      Atom_Common'(Base_URI =>
+                                                     Null_Unbounded_String,
+                                                   Language =>
+                                                     Null_Unbounded_String),
+                                    Text_Content => Null_Unbounded_String,
+                                    Text_Kind    => Text),
+         Title        => Atom_Text'(Common       =>
+                                      Atom_Common'(Base_URI =>
+                                                     Null_Unbounded_String,
+                                                   Language =>
+                                                     Null_Unbounded_String),
+                                    Text_Content => Null_Unbounded_String,
+                                    Text_Kind    => Text),
+         Updated      => Atom_Date'(Common     =>
+                                      Atom_Common'(Base_URI =>
+                                                     Null_Unbounded_String,
+                                                   Language =>
+                                                     Null_Unbounded_String),
+                                    Is_Set     => False,
+                                    Time_Stamp => Ada.Calendar.Clock));
 
    function Equal_Entry
      (Left, Right : in Atom_Entry)
@@ -533,23 +533,23 @@ private
         (Value : in Atom_Date);
       --  ????
    private
-      Authors        : Person_List.List;
-      Categories     : Category_List.List;
-      Common         : Atom_Common;
-      Contributors   : Person_List.List;
-      Entries        : Entry_List.List;
-      Generator      : Atom_Generator;
-      Icon           : Atom_Icon;
-      Id             : Atom_Id;
-      Links          : Link_List.List;
-      Logo           : Atom_Logo;
-      Max_Entry_Age  : Duration;
-      Max_Entries    : Positive;
-      Min_Entries    : Positive;
-      Rights         : Atom_Text;
-      Subtitle       : Atom_Text;
-      Title          : Atom_Text;
-      Updated        : Atom_Date;
+      Authors       : Person_List.List;
+      Categories    : Category_List.List;
+      Common        : Atom_Common;
+      Contributors  : Person_List.List;
+      Entries       : Entry_List.List;
+      Generator     : Atom_Generator;
+      Icon          : Atom_Icon;
+      Id            : Atom_Id;
+      Links         : Link_List.List;
+      Logo          : Atom_Logo;
+      Max_Entry_Age : Duration;
+      Max_Entries   : Positive;
+      Min_Entries   : Positive;
+      Rights        : Atom_Text;
+      Subtitle      : Atom_Text;
+      Title         : Atom_Text;
+      Updated       : Atom_Date;
    end Protected_Atom_Feed;
 
    type Atom_Feed is
