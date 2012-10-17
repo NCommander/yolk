@@ -24,7 +24,6 @@
 with Ada.Calendar;
 with Ada.Strings.Fixed;
 with Yolk.Syndication.Writer;
-with Yolk.Utilities;
 
 package body View.Syndication is
 
@@ -78,7 +77,6 @@ package body View.Syndication is
    is
       use AWS.Response;
       use AWS.Status;
-      use Yolk.Utilities;
 
       Valid : Boolean := False;
       Value : Unbounded_String;
@@ -93,7 +91,7 @@ package body View.Syndication is
          Set_Updated (Feed        => Feed,
                       Update_Time => Ada.Calendar.Clock);
 
-         Value := TUS (Get_XML_String (Feed => Feed));
+         Value := U (Get_XML_String (Feed => Feed));
 
          Cache.Write (Key   => Feed_Data,
                       Value => Value);
@@ -101,7 +99,7 @@ package body View.Syndication is
 
       return Build_Response
         (Status_Data => Request,
-         Content     => TS (Value),
+         Content     => To_String (Value),
          MIME_Type   => Text_XML);
 
    exception
