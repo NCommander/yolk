@@ -25,11 +25,15 @@
 
 with Ada.Strings.Unbounded;
 with Yolk.Config_File_Parser;
-with Yolk.Utilities;
 
 package My_Configuration is
 
-   use Yolk.Utilities;
+   use Ada.Strings.Unbounded;
+
+   function U
+     (S : in String)
+      return Unbounded_String
+      renames To_Unbounded_String;
 
    type Keys is (DB_Host,
                  DB_Name,
@@ -51,46 +55,45 @@ package My_Configuration is
                  Template_Websocket);
    --  The valid configuration keys.
 
-   type Defaults_Array is array (Keys) of
-     Ada.Strings.Unbounded.Unbounded_String;
+   type Defaults_Array is array (Keys) of Unbounded_String;
 
    Default_Values : constant Defaults_Array :=
                       (DB_Host
-                       => TUS ("localhost"),
+                       => U ("localhost"),
                        DB_Name
-                       => TUS ("yolk"),
+                       => U ("yolk"),
                        DB_User
-                       => TUS ("adauser"),
+                       => U ("adauser"),
                        DB_Password
-                       => TUS ("secret"),
+                       => U ("secret"),
                        Handler_DB_Test
-                       => TUS ("/dbtest"),
+                       => U ("/dbtest"),
                        Handler_Dir
-                       => TUS ("^/dir/.*"),
+                       => U ("^/dir/.*"),
                        Handler_Email
-                       => TUS ("/email"),
+                       => U ("/email"),
                        Handler_Index
-                       => TUS ("/"),
+                       => U ("/"),
                        Handler_Session_Test
-                       => TUS ("/sessiontest"),
+                       => U ("/sessiontest"),
                        Handler_Syndication
-                       => TUS ("/syndication"),
+                       => U ("/syndication"),
                        Handler_Websocket
-                       => TUS ("/websocket"),
+                       => U ("/websocket"),
                        SMTP_Host
-                       => TUS ("localhost"),
+                       => U ("localhost"),
                        SMTP_Port
-                       => TUS ("25"),
+                       => U ("25"),
                        Template_DB_Test
-                       => TUS ("templates/website/database.tmpl"),
+                       => U ("templates/website/database.tmpl"),
                        Template_Email
-                       => TUS ("templates/website/email.tmpl"),
+                       => U ("templates/website/email.tmpl"),
                        Template_Index
-                       => TUS ("templates/website/index.tmpl"),
+                       => U ("templates/website/index.tmpl"),
                        Template_Session_Test
-                       => TUS ("templates/website/session_test.tmpl"),
+                       => U ("templates/website/session_test.tmpl"),
                       Template_Websocket
-                       => TUS ("templates/website/websocket.tmpl"));
+                       => U ("templates/website/websocket.tmpl"));
    --  Default values for the configuration Keys. These values can be over-
    --  written by the configuration file given when instantiating the
    --  Yolk.Config_File_Parser generic.
