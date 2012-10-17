@@ -36,7 +36,6 @@ package body View.Websocket is
       T    : Translate_Set;
       URI  : constant String := AWS.Status.URI (Request);
       Host : constant String := AWS.Status.Host (Request);
-
    begin
       Insert (T, Assoc ("URI", URI));
       Insert (T, Assoc ("HOST", Host));

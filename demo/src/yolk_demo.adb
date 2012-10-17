@@ -50,6 +50,9 @@ begin
    WS.Start;
    --  Start the HTTP server.
 
+   Websocket_Demo.Start;
+   --  Start the WebSocket demo.
+
    Wait;
    --  This is the main "loop". We will wait here as long as the
    --  Yolk.Process_Control.Controller.Check entry barrier is False.
@@ -57,12 +60,13 @@ begin
    WS.Stop;
    --  Stop the HTTP server.
 
-   Websocket_Demo.Die;
+   Websocket_Demo.Stop;
+   --  Stop the WebSocket demo.
 exception
    when Event : others =>
       Trace (Handle  => Error,
              Message => Exception_Information (Event));
       --  Write the exception information to the rotating Error log trace.
       WS.Stop;
-      Websocket_Demo.Die;
+      Websocket_Demo.Stop;
 end Yolk_Demo;

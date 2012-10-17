@@ -59,7 +59,8 @@ package body Websocket_Demo is
    --  Targets all clients (any Origin) whose URI is /websocket
 
    task Clocker is
-      entry Die;
+      entry Start;
+      entry Stop;
    end Clocker;
    --  The Clocker task is nothing but a simple loop that broadcasts a
    --  timestamp, the amount of connected clients and a string with 10 random
@@ -73,12 +74,14 @@ package body Websocket_Demo is
    is
       use Yolk.Log;
    begin
+      accept Start;
+
       Trace (Handle  => Info,
              Message => "Websocket.Clocker task started");
 
       loop
          select
-            accept Die;
+            accept Stop;
             exit;
          or
             delay 1.0;
@@ -108,7 +111,7 @@ package body Websocket_Demo is
              Message => "Websocket.Clocker task stopped");
    exception
       when others =>
-         null;
+         null; --  Forget everything...
    end Clocker;
 
    --------------
@@ -129,16 +132,6 @@ package body Websocket_Demo is
                      (AWS.Net.WebSocket.Create (Socket, Request))
                      with null record);
    end Create;
-
-   -----------
-   --  Die  --
-   -----------
-
-   procedure Die
-   is
-   begin
-      Clocker.Die;
-   end Die;
 
    ----------------
    --  On_Close  --
@@ -201,5 +194,25 @@ package body Websocket_Demo is
       Trace (Handle  => Info,
              Message => "WebSocket opened: " & Message);
    end On_Open;
+
+   -------------
+   --  Start  --
+   -------------
+
+   procedure Start
+   is
+   begin
+      Clocker.Start;
+   end Start;
+
+   ------------
+   --  Stop  --
+   ------------
+
+   procedure Stop
+   is
+   begin
+      Clocker.Stop;
+   end Stop;
 
 end Websocket_Demo;
