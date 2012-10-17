@@ -91,7 +91,7 @@ package body View.Syndication is
          Set_Updated (Feed        => Feed,
                       Update_Time => Ada.Calendar.Clock);
 
-         Value := U (Get_XML_String (Feed => Feed));
+         Value := To_Unbounded_String (Get_XML_String (Feed => Feed));
 
          Cache.Write (Key   => Feed_Data,
                       Value => Value);

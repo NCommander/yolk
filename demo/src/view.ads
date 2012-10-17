@@ -83,11 +83,4 @@ package View is
    --  this one you can add the template file and translate set directly,
    --  instead of having to parse those in the view.* child package.
 
-private
-
-   function U
-     (S : in String)
-      return Unbounded_String
-      renames To_Unbounded_String;
-
 end View;
