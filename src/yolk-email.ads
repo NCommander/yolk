@@ -56,9 +56,6 @@ package Yolk.Email is
                           UTF8);
    --  The available character sets. We try to provide the same character sets
    --  as defined in gnatcoll-email.ads.
-   --  Note:
-   --    gnatcoll-email does not support UTF8, so this has been added by me
-   --    specifically.
 
    type Recipient_Kind is (Bcc, Cc, To);
    --  The kind of recipient, when adding a new recipient to an email.

@@ -213,7 +213,7 @@ package body Yolk.Email is
                            Value => "quoted-printable");
          when UTF8 =>
             CTE := Create (Name  => Content_Transfer_Encoding,
-                           Value => "base64");
+                           Value => "quoted-printable");
       end case;
 
       Email.Add_Header (H => CTE);
@@ -697,7 +697,7 @@ package body Yolk.Email is
          when ISO_8859_14 => return GNATCOLL.Email.Charset_ISO_8859_14;
          when ISO_8859_15 => return GNATCOLL.Email.Charset_ISO_8859_15;
          when Windows_1252 => return GNATCOLL.Email.Charset_Windows_1252;
-         when UTF8 => return "utf-8";
+         when UTF8 => return GNATCOLL.Email.Charset_UTF_8;
       end case;
    end Get_Charset;
 
