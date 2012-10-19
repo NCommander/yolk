@@ -29,7 +29,8 @@
 --  Static content such as images, HTML and XML files are handled here. The
 --  paths to where the server is supposed to look for the content is defined
 --  by the WWW_Root configuration parameter.
---  Compressed content is saved in the Compressed_Cache_Directory.
+--  Compressed content is saved in the Compressed_Static_Content_Cache
+--  directory.
 
 with AWS.Messages;
 with AWS.Response;
