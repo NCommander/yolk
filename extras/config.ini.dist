@@ -797,7 +797,8 @@ MIME_Types_File configuration/aws.mime
 # Used by AWS: yes
 #
 # The MIME type file. MIME types defined in this file are added to AWS if
-# Yolk.Server.Create is called with
+# Load_MIME_Types_File is True and Yolk.Server.Create is used to create the
+# AWS server.
 
 Protocol_Family Family_Unspec
 # String
