@@ -34,7 +34,7 @@
 \title{Yolk Manual}
 
 
-\date{Revised May 25th. 2012}
+\date{Revised October 19th. 2012}
 
 \maketitle
 \newpage{}
@@ -70,8 +70,9 @@ and the \href{http://libre.adacore.com/libre/tools/gnat-component-collection/}{G
 but it does make the job of building complete web-applications a bit
 simpler. Things like changing user for the running application, catching
 POSIX signals such as SIGKILL, sending log data to syslogd, adding
-basic static content handlers and building Atom syndication XML are
-all made a bit easier with Yolk.
+basic static content handlers, creating and starting/stopping an AWS
+powered HTTP server and building Atom syndication XML are all made
+a bit easier with Yolk.
 
 A Yolk application is in reality an AWS application, with some sugar
 added, so you're not really building a Yolk web-application, as much
@@ -608,15 +609,12 @@ to use it, you have to instantiate it, like this:
 package My_Configuration is
 
    type Keys is (Foo, Bar);
-   type Defaults_Array is array (Keys) of
-     Ada.Strings.Unbounded.Unbounded_String;
+   type Defaults_Array is array (Keys) of Unbounded_String;
 
    Default_Values : constant Defaults_Array :=
-                      (Foo => TUS ("some foo"),
-                       Bar => TUS ("some bar"));
-   --  TUS is a rename of the To_Unbounded_String function. It
-   --  is found in the Yolk.Utilities package.
-
+                      (Foo => To_Unbounded_String ("some foo"),
+                       Bar => To_Unbounded_String ("some bar"));
+   
    package Config is new Yolk.Config_File_Parser
      (Key_Type => Keys,
       Defaults_Array_Type => Defaults_Array,
@@ -633,6 +631,10 @@ as the configuration file. This means that KEY/VALUE pairs found in
 this file will overwrite the default values set in the \emph{Default\_Values}
 array. Setting a default value to \emph{Null\_Unbounded\_String} means
 the value is empty.
+
+Note that the \emph{config.ini} file does not have to contain all
+the valid keys. It is perfectly fine to only add those keys that have
+non-default values to the configuration file.
 
 
 \subsection{Re-loading configuration files}
@@ -817,9 +819,9 @@ procedure Add_From
 
 This does not mean that \emph{Yolk.Email.Composer.Add\_From} will
 encode \emph{Name} as \emph{US\_ASCII}, instead it means that the
-data given in \emph{Name} is already encoded as \emph{US\_ASCII}.
-So if \emph{Name} had contained an ISO-8859-1 encoded \emph{String},
-then the call would've looked like this:
+data given in \emph{Name} already is \emph{US\_ASCII}. So if \emph{Name}
+had contained an ISO-8859-1 encoded \emph{String}, then the call would've
+looked like this:
 
 \begin{minipage}[t]{1\columnwidth}%
 \begin{lstlisting}[basicstyle={\small\sffamily},frame=tblr,language=Ada,showstringspaces=false,tabsize=3,xleftmargin=1em,xrightmargin=1em]
@@ -842,8 +844,8 @@ In this case you will end up with a From header looking like this:
 \begin{lyxcode}
 From:~=?ISO-8859-1?Q?Alice?=~<alice@domain.tld>
 \end{lyxcode}
-So bear in mind that it is your responsibility to encode your data,
-and then set the \emph{Character\_Set} parameters accordingly.
+So bear in mind that it is your responsibility to ensure that your
+data, and the \emph{Character\_Set} parameter match.
 
 The \emph{Recipient\_Kind} type define the kind of recipient that
 is being added to an email. If you've worked with email, these three
@@ -942,8 +944,8 @@ end;
 \end{minipage}
 
 It is possible, and allowed, to call some of the various other procedures
-prior to calling one of convenience procedures. If for example you
-want to add a custom header, it can be done like this:
+prior to calling one of the convenience procedures. If for example
+you want to add a custom header, it can be done like this:
 
 \begin{minipage}[t]{1\columnwidth}%
 \begin{lstlisting}[basicstyle={\small\sffamily},frame=tblr,language=Ada,showstringspaces=false,tabsize=3,xleftmargin=1em,xrightmargin=1em]
@@ -1055,10 +1057,10 @@ The following filetypes are supported by \emph{Yolk.Handlers}:
 \item XSL
 \end{itemize}
 The filetypes that are textual, are compressed according to the \emph{Yolk.Configuration}
-parameter \emph{Compress\_Static\_Content}, and the various regular
-expressions for identifying these filetypes are also defined in \emph{Yolk.Configuration}
-by the \emph{Handler\_{*}} parameters. These regular expressions are
-registered by the \emph{AWS.Services.Dispatchers.URI.Register\_Regexp}
+parameter \emph{Compress\_Static\_Content} which defaults to \emph{False}.
+The regular expressions for identifying these filetypes are also defined
+in \emph{Yolk.Configuration} by the \emph{Handler\_{*}} parameters.
+These regular expressions are registered by the \emph{AWS.Services.Dispatchers.URI.Register\_Regexp}
 procedure.
 
 There's only one procedure in the \emph{Yolk.Handlers} package:
@@ -1128,9 +1130,9 @@ certain that you can get to the messages.
 
 \section{Yolk.Not\_Found}
 
-This job of this package is to return a HTTP 404 status code and an
-accompanying simple not found HTML page. It's sole function \emph{Generate}
-is about as simple as they come:
+The job of this package is to return a HTTP 404 status code and an
+accompanying simple \emph{not found} HTML page. It's sole function
+\emph{Generate} is about as simple as they come:
 
 \begin{minipage}[t]{1\columnwidth}%
 \begin{lstlisting}[basicstyle={\small\sffamily},frame=tblr,language=Ada,showstringspaces=false,tabsize=3,xleftmargin=1em,xrightmargin=1em]
@@ -1206,8 +1208,7 @@ procedure Wait;
 %
 \end{minipage}
 
-When you call the \emph{Wait} procedure, you basically enter an endless
-loop that doesn't stop until
+When you call the \emph{Wait} procedure, you basically hang here until
 \begin{enumerate}
 \item The \emph{Stop} procedure is called
 \item The application receives a SIGINT, SIGPWR or SIGTERM signal
@@ -1311,11 +1312,8 @@ type Resource_Dispatchers is not null access
 type HTTP is tagged limited private;
 
 function Create
-  (Compress_Static_Content : in Boolean := True;       
-   Load_Extra_MIME_Types   : in Boolean := True;       
-   Server_Uses_WebSockets  : in Boolean := True;       
-   Set_Dispatchers         : in Resource_Dispatchers;       
-   Unexpected              : in AWS.Exceptions.Unexpected_Exception_Handler)       
+  (Set_Dispatchers : in Resource_Dispatchers;       
+   Unexpected      : in AWS.Exceptions.Unexpected_Exception_Handler)       
    return HTTP;    
 \end{lstlisting}
 %
@@ -1328,6 +1326,21 @@ only support for URI dispatchers, so if your application needs any
 of the other AWS dispatchers (Method, Linker, Timer etc. etc.) then
 you will have to manage creating and starting/stopping the AWS component
 manually.
+
+Another potential manual operation is setting the \emph{Cache-Control}
+header. This can become necessary if you
+\begin{enumerate}
+\item use \emph{Yolk.Server} to create and start your AWS server and
+\item use the \emph{Yolk.Handlers} package to register dispatchers for static
+content and
+\item have the \emph{Compress\_Static\_Content} configuration parameter
+set to \emph{True}
+\item aren't content with the default \emph{Cache-Control} header
+\end{enumerate}
+In that case you can use the \emph{Yolk.Static\_Content.Set\_Cache\_Options}
+procedure to work your own magic on the \emph{Cache-Control} header
+sent to clients requesting static content. See the Yolk.Static\_Content
+chapter for more information.
 
 
 \subsection{Yolk.Server.Start}
@@ -1342,6 +1355,25 @@ procedure Start
 
 This does as expected: Starts the server.
 
+When calling \emph{Start} several things happen:
+\begin{enumerate}
+\item If the configuration parameter \emph{Load\_MIME\_Types\_File} is \emph{True}
+then the MIME types file given in \emph{MIME\_Types\_File} is loaded
+into AWS. 
+\item If the configuration parameter \emph{Start\_WebSocket\_Servers} is
+\emph{True} then the AWS WebSocket servers are started.
+\item \emph{Yolk.Static\_Content.Static\_Content\_Cache\_Setup} is called
+with its default parameters if the configuration parameter \emph{Compress\_Static\_Content}
+is \emph{True}.
+\item If session support is turned on for the server and the \emph{Session\_Data\_File}
+exists, then the session data is loaded from this file.
+\item The \emph{Yolk.Log.AWS\_Access\_Log\_Writer} procedure is registered
+to handle all AWS access log data if the configuration parameter \emph{AWS\_Access\_Log\_Activate}
+is \emph{True} .
+\item The \emph{Yolk.Log.AWS\_Error\_Log\_Writer} procedure is registered
+to handle all AWS error log data if the configuration parameter \emph{AWS\_Error\_Log\_Activate}
+is \emph{True} .
+\end{enumerate}
 
 \subsection{Yolk.Server.Stop}
 
@@ -1353,13 +1385,14 @@ procedure Stop
 %
 \end{minipage}
 
-This does as expected: Stops the server.
+This does as expected: Stops everything that was started when the
+\emph{Yolk.Server.Start} call was made.
 
 
 \section{Yolk.Static\_Content}
 
 Most web applications have a lot of static content, ie. stuff that
-doesn't change. Things like PNG's, HTML, CSS and Javascript. These
+rarely changes. Things like PNG's, HTML, CSS and Javascript. These
 are content types that are common for most websites, so a application
 is going to have to handle these in some way. This is where \emph{Yolk.Static\_Content}
 comes in. Two kinds of files are handled by \emph{Yolk.Static\_Content}:
@@ -1375,22 +1408,23 @@ gzip} header. Non-compressable files are simply returned as is. For
 both kinds, a generic 404 is returned if the requested file doesn't
 exist.
 
-\emph{Yolk.Static\_Content} is affected by four configuration settings:
+\emph{Yolk.Static\_Content} is affected by five configuration settings:
 \begin{itemize}
-\item Compressed\_Cache\_Directory
-\item Compressed\_Max\_Age
-\item Compress\_Minimum\_File\_Size
+\item Compress\_Static\_Content
+\item Compress\_Static\_Content\_Minimum\_File\_Size
+\item Compressed\_Static\_Content\_Cache
+\item Compressed\_Static\_Content\_Max\_Age
 \item WWW\_Root
 \end{itemize}
 You should carefully read the \emph{demo/exe/configuration/config.ini}
 file for information on what exactly these do.
 
 
-\subsection{The static content cache setup}
+\subsection{Yolk.Static\_Content.Static\_Content\_Cache\_Setup}
 
-The configuration parameter \emph{Compressed\_Cache\_Directory} defines
-where the compressed version of the static content is saved. When
-your application is started, this directory may or may not exist,
+The configuration parameter \emph{Compressed\_Static\_Content\_Cache}
+defines where the compressed version of the static content is saved.
+When your application is started, this directory may or may not exist,
 and it may or may not contain various compressed files. To make sure
 that the directory exists and is empty, you should call the \emph{Static\_Content\_Cache\_Setup}
 procedure:
@@ -1398,8 +1432,7 @@ procedure:
 \begin{minipage}[t]{1\columnwidth}%
 \begin{lstlisting}[basicstyle={\small\sffamily},frame=tblr,language=Ada,showstringspaces=false,tabsize=3,xleftmargin=1em,xrightmargin=1em]
 procedure Static_Content_Cache_Setup      
-  (Log_To_Info_Trace : in Boolean := True;       
-   No_Cache          : in Boolean := False;       
+  (No_Cache          : in Boolean := False;       
    No_Store          : in Boolean := False;       
    No_Transform      : in Boolean := False;       
    Max_Age           : in AWS.Messages.Delta_Seconds := 86400;
@@ -1412,17 +1445,14 @@ procedure Static_Content_Cache_Setup
 %
 \end{minipage}
 
-This procedure creates the compressed cache directory, if it doesn't
-already exist, and if it exists, it deletes everything in it. So basically
-you're left with an empty directory after a call to this procedure. 
+This procedure creates the \emph{Compressed\_Static\_Content\_Cache}
+directory if it doesn't already exists and if it exists, it deletes
+everything in it. So basically you're left with an empty directory
+after a call to this procedure. 
 
-If \emph{Log\_To\_Info\_Trace} is \emph{False} then no information
-about the deletion and creation of the compressed cache directory
-is logged to the \emph{Yolk.Log.Info} trace.
-
-The remaining parameters defines the content of the \emph{Cache-Control}
-header sent to the user agent when a request for static content is
-made. The default settings are fairly sane, and will result in a cache
+The parameters defines the content of the \emph{Cache-Control} header
+sent to the user agent when a request for static content is made.
+The default parameters are fairly sane, and will result in a cache
 header looking like this:
 
 \begin{minipage}[t]{1\columnwidth}%
@@ -1435,11 +1465,14 @@ Cache-Control: max-age=86400, must-revalidate
 Read the \href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html\#sec14.9}{HTTP/1.1 Cache-Control header definition}
 for more information on what the various settings do.
 
-You must call \emph{Static\_Content\_Cache\_Setup} prior to starting
-the HTTP server, if you plan on using the \emph{Yolk.Static\_Content}
-package. Calling it repeatedly will simply wipe out the compressed
-cache directory and reset the \emph{Control\_Cache} header according
-to the given parameters. This is a threadsafe operation.
+If you use \emph{Yolk.Server} to create and start your AWS server,
+then this called is made automatically with it's default parameters. 
+
+If you don't use \emph{Yolk.Server} and you use the \emph{Yolk.Static\_Content}
+package to serve static content, then you must call this procedure
+before starting the AWS server. Calling it repeatedly will simply
+wipe out the compressed cache directory and reset the \emph{Control\_Cache}
+header according to the given parameters.
 
 
 \subsection{Yolk.Static\_Content.Compressable}
@@ -1502,13 +1535,14 @@ function. The following steps are then taken:
 \item Is there a compressed version of the resource available on disk?
 
 \begin{enumerate}
-\item if no, then make one, save it to disk, and return it
+\item if no, then make one, cache it for future use, and return it
 \item If yes, then proceed to 4
 \end{enumerate}
 \item Is the age of the compressed file <= Compressed\_Max\_Age?
 
 \begin{enumerate}
-\item If no, then delete the current file, build a new one and return it
+\item If no, then delete the current file, build a new one, cache it and
+return it
 \item If yes, then return it
 \end{enumerate}
 \end{enumerate}
@@ -1533,18 +1567,18 @@ The compressed version of \emph{index.css} is saved as:
 
 \begin{minipage}[t]{1\columnwidth}%
 \begin{lstlisting}[basicstyle={\small\sffamily},frame=tblr,language=Ada,showstringspaces=false,tabsize=3,xleftmargin=1em,xrightmargin=1em]
-Compressed_Cache_Directory & "/css/index.css" & ".gz";
+Compressed_Static_Content_Cache & "/css/index.css" & ".gz";
 \end{lstlisting}
 %
 \end{minipage}
 
-Using the default configuration value for \emph{Compressed\_Cache\_Directory},
+Using the default configuration value for \emph{Compressed\_Static\_Content\_Cache},
 we'll end up with the path:
 \begin{lyxcode}
 static\_content/compressed\_cache/css/index.css.gz
 \end{lyxcode}
 In these two cases the paths are relative to the executable, but you
-can of course also define \emph{WWW\_Root} and \emph{Compressed\_Cache\_Directory}
+can of course also define \emph{WWW\_Root} and \emph{Compressed\_Static\_Content\_Cache}
 as absolute paths in the configuration file.
 
 
@@ -1595,6 +1629,47 @@ is where you define you content handlers, but it can obviously be
 used wherever your application handles requests for static content.
 
 
+\subsection{Yolk.Static.Set\_Cache\_Options}
+
+You can alter the \emph{Cache-Control} header sent to clients requesting
+static content with a call to \emph{Set\_Cache\_Options}\@. This
+is especially handy if you use the \emph{Yolk.Server} package to create
+and start your server, since the initial call to \emph{Static\_Content\_Cache\_Setup}
+is hidden you're forced to live with the default values given in the
+\emph{Static\_Content\_Cache\_Setup} call, resulting in a \emph{Cache-Control}
+header looking like this:
+
+\begin{minipage}[t]{1\columnwidth}%
+\begin{lstlisting}[basicstyle={\small\sffamily},frame=tblr,language=Ada,showstringspaces=false,tabsize=3,xleftmargin=1em,xrightmargin=1em]
+Cache-Control: max-age=86400, must-revalidate
+\end{lstlisting}
+%
+\end{minipage}
+
+If this is not what you want, you can use \emph{Set\_Cache\_Options}
+to change it:
+
+\begin{minipage}[t]{1\columnwidth}%
+\begin{lstlisting}[basicstyle={\small\sffamily},frame=tblr,language=Ada,showstringspaces=false,tabsize=3,xleftmargin=1em,xrightmargin=1em]
+procedure Set_Cache_Options
+  (No_Cache          : in Boolean := False;       
+   No_Store          : in Boolean := False;       
+   No_Transform      : in Boolean := False;      
+   Max_Age           : in AWS.Messages.Delta_Seconds := 86400;       
+   S_Max_Age         : in AWS.Messages.Delta_Seconds := 
+     AWS.Messages.Unset;       
+   Public            : in Boolean := False;       
+   Must_Revalidate   : in Boolean := True;       
+   Proxy_Revalidate  : in Boolean := False);
+\end{lstlisting}
+%
+\end{minipage}
+
+This should preferably be called after having called \emph{Yolk.Server.Create},
+since the call to \emph{Static\_Content\_Cache\_Setup} in \emph{Create}
+will overwrite the cache options.
+
+
 \section{Yolk.Syndication}
 
 The Atom Syndication format (\href{http://tools.ietf.org/html/rfc4287}{RFC4287})
@@ -1614,9 +1689,9 @@ rules have been followed, so if the Atom specification says that
 atom:feed elements MUST contain exactly one atom:id element.
 \end{quote}
 then it is your job to make sure that your Atom feed has exactly one
-ID. So before venturing into the realm of Atom, it's probably a good
-idea to read \href{http://tools.ietf.org/html/rfc4287}{RFC4287} for
-a good understanding of the requirements for this document format.
+such element. So before venturing into the realm of Atom, it's probably
+a good idea to read \href{http://tools.ietf.org/html/rfc4287}{RFC4287}
+for a good understanding of the requirements for this document format.
 A basic example of how to build an Atom feed can be found in the Yolk
 demo application.
 

@@ -610,38 +610,58 @@ Cleaner_Wait_For_Client_Timeout 60.0
 # changing it.
 # This is a timeout for the regular cleaner task.
 
-Compressed_Cache_Directory static_content/compressed_cache
-# String
-# Default: static_content/compressed_cache
+Compress_Static_Content False
+# Boolean
+# Default: False
 # AWS configuration option: No
 #
-# The directory where the .gz compressed versions of static content are saved.
-# This directory is cleared out on every reboot of the server, meaning that
-# _everything_ in this directory is deleted, so be _very_ careful about the path
-# you set for this parameter.
+# If True we initialize the Compressed_Static_Content_Cache. This entails
+# creating the Compressed_Static_Content_Cache directory if it doesn't exist or
+# delete and recreate it if it does.
 #
-# This directory will be created if it doesn't exist when the server is started.
+# This parameter controls two things in Yolk:
+#   1. Whether or not Yolk.Static_Content.Static_Content_Cache_Setup is called
+#      when starting a server using the Yolk.Server package.
+#   2. Whether or not the static content URI dispatchers in Yolk.Handlers use
+#      the Yolk.Static_Content.Compressable function for static content such
+#      as CSS/HTML/JS files.
 #
-# NOTE:
-#   Do not add the final forward slash.
+# If True and you do not use Yolk.Server to create and start your server, then
+# you MUST call Yolk.Static_Content.Static_Content_Cache_Setup manually before
+# starting AWS. This is necessary to Yolk from trying to save compressed static
+# content in a potentially non-existant directory.
 
-Compressed_Max_Age 86400
-# Natural
-# Default: 86400
-# AWS configuration option: No
-#
-# If a resource compressed by the Yolk.Static_Content.Compressable function is
-# more than Compressed_Max_Age seconds old, then it is deleted and compressed
-# anew.
-# If this is set to 0, then the compressed files are never deleted due to age.
-
-Compress_Minimum_File_Size 200
+Compress_Static_Content_Minimum_File_Size 200
 # Natural
 # Default: 200
 # AWS configuration option: No
 #
 # The minimum size, in bytes, a compressable file must have in order to be
 # pre-compressed. Files below this threshold will _not_ be compressed.
+
+Compressed_Static_Content_Cache static_content/compressed_cache
+# String
+# Default: static_content/compressed_cache
+# AWS configuration option: No
+#
+# The directory where the .gz compressed versions of static content are saved.
+# If you use the Yolk.Server package to create and start your server and the
+# Compress_Static_Content parameter is True, then this directory is emptied out
+# whenever the server is started. This also happens if you manually call
+# Yolk.Static_Content.Static_Content_Cache_Setup.
+#
+# NOTE:
+#   Do not add the final forward slash.
+
+Compressed_Static_Content_Max_Age 86400
+# Natural
+# Default: 86400
+# AWS configuration option: No
+#
+# If a resource compressed by the Yolk.Static_Content.Compressable function is
+# more than Compressed_Static_Content_Max_Age seconds old, then it is deleted
+# and compressed anew.
+# If this is set to 0, then the compressed files are never deleted due to age.
 
 Context_Lifetime 28800.0
 # Duration
@@ -729,6 +749,14 @@ Line_Stack_Size 16#150_000#
 # The HTTP line stack size. The stack size must be adjusted for each application,
 # depending on the use of the stack done by the callback procedures.
 
+Load_MIME_Types_File False
+# Boolean
+# Default: False
+# AWS configuration option: No
+#
+# If True the load the MIME_Types_File when the Yolk.Server package is used to
+# create and start your server.
+
 Max_Concurrent_Download 25
 # Positive
 # Default: 25
@@ -763,13 +791,13 @@ Max_WebSocket_Handler 2
 #
 # The maximum number of messages to handle simultaneously.
 
-MIME_Types configuration/aws.mime
+MIME_Types_File configuration/aws.mime
 # String
 # Default: configuration/aws.mime
 # Used by AWS: yes
 #
-# The MIME type file. MIME types defined in this file are added to AWS when the
-# server is started.
+# The MIME type file. MIME types defined in this file are added to AWS if
+# Yolk.Server.Create is called with
 
 Protocol_Family Family_Unspec
 # String
@@ -836,6 +864,14 @@ Server_Port 4242
 # Port the server is listening on. Remember that only root can listen on
 # ports < 1024, so this value should be higher than 1024, or else you'll
 # have to run the server as root, which is _not_ recommended.
+
+Start_WebSocket_Servers False
+# Boolean
+# Default: False
+# AWS configuration option: No
+#
+# Define whether or not the AWS WebSocket servers are started when using the
+# Yolk.Server package to create and start your server.
 
 Transient_Cleanup_Interval 180.0
 # Duration

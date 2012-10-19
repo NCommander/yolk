@@ -48,6 +48,11 @@ package body Yolk.Server is
    end State_Manager;
    --  This makes sure that Create can only ever be called once.
 
+   procedure Load_MIME_Types
+     (MIME_File : in String := "");
+   --  Load MIME_File and record every MIME type. Note that the format of this
+   --  file follows the common standard format used by Apache mime.types.
+
    ---------------------
    --  State_Manager  --
    ---------------------
@@ -68,11 +73,8 @@ package body Yolk.Server is
    --------------
 
    function Create
-     (Compress_Static_Content : in Boolean := True;
-      Load_Extra_MIME_Types   : in Boolean := True;
-      Server_Uses_WebSockets  : in Boolean := True;
-      Set_Dispatchers         : in Resource_Dispatchers;
-      Unexpected              : in AWS.Exceptions.Unexpected_Exception_Handler)
+     (Set_Dispatchers : in Resource_Dispatchers;
+      Unexpected      : in AWS.Exceptions.Unexpected_Exception_Handler)
       return HTTP
    is
       use Yolk.Configuration;
@@ -84,13 +86,7 @@ package body Yolk.Server is
                             New_State     => Initialized);
 
          if State = Not_Initialized then
-            WS.Load_MIME_Types := Load_Extra_MIME_Types;
-
-            WS.Uses_Compressed_Cache := Compress_Static_Content;
-
             WS.Web_Server_Config := Get_AWS_Configuration;
-
-            WS.Uses_WebSockets := Server_Uses_WebSockets;
 
             Set_Dispatchers (WS.URI_Handlers);
 
@@ -98,6 +94,27 @@ package body Yolk.Server is
          end if;
       end return;
    end Create;
+
+   -----------------------
+   --  Load_MIME_Types  --
+   -----------------------
+
+   procedure Load_MIME_Types
+     (MIME_File : in String := "")
+   is
+      use Ada.Directories;
+      use Yolk.Configuration;
+      use Yolk.Log;
+   begin
+      if MIME_File'Length > 0
+        and then Exists (MIME_File)
+      then
+         AWS.MIME.Load (MIME_File);
+         Trace (Info, "Loaded MIME types file " & MIME_File);
+      else
+         Trace (Error, "Cannot load MIME file " & MIME_File);
+      end if;
+   end Load_MIME_Types;
 
    -------------
    --  Start  --
@@ -117,17 +134,12 @@ package body Yolk.Server is
                          New_State     => Started);
 
       if State = Initialized or State = Stopped then
-         if WS.Uses_Compressed_Cache then
-            Static_Content_Cache_Setup;
+         if Config.Get (Load_MIME_Types_File) then
+            Load_MIME_Types (Config.Get (MIME_Types_File));
          end if;
 
-         if WS.Load_MIME_Types then
-            AWS.MIME.Load (MIME_File => Config.Get (MIME_Types));
-            --  Load the MIME type file. We need to do this here, because
-            --  the AWS.MIME package has already been initialized with the
-            --  default AWS configuration parameters, and in these the
-            --  aws.mime file is placed in ./ whereas our aws.mime is in
-            --  Configuration.MIME_Types.
+         if Config.Get (Compress_Static_Content) then
+            Static_Content_Cache_Setup;
          end if;
 
          AWS.Server.Set_Unexpected_Exception_Handler
@@ -138,17 +150,14 @@ package body Yolk.Server is
            and then Exists (Config.Get (Session_Data_File))
          then
             AWS.Session.Load (Config.Get (Session_Data_File));
-            --  If sessions are enabled and the Session_Data_File exists,
-            --  then load the old session data.
          end if;
 
          AWS.Server.Start (Web_Server => WS.Web_Server,
                            Dispatcher => WS.URI_Handlers,
                            Config     => WS.Web_Server_Config);
 
-         if WS.Uses_WebSockets then
+         if Config.Get (Start_WebSocket_Servers) then
             AWS.Net.WebSocket.Registry.Control.Start;
-            --  Start listening for incoming WebSocket messages.
          end if;
 
          if Config.Get (AWS_Access_Log_Activate) then
@@ -163,7 +172,6 @@ package body Yolk.Server is
               (Web_Server => WS.Web_Server,
                Callback   => Yolk.Log.AWS_Error_Log_Writer'Access,
                Name       => "AWS Error Log");
-            --  Start the access and error logs.
          end if;
 
          Trace (Info,
@@ -194,13 +202,10 @@ package body Yolk.Server is
       if State = Started then
          if AWS.Config.Session (WS.Web_Server_Config) then
             AWS.Session.Save (Config.Get (Session_Data_File));
-            --  If sessions are enabled, then save the session data to the
-            --  Session_Data_File.
          end if;
 
-         if WS.Uses_WebSockets then
+         if Config.Get (Start_WebSocket_Servers) then
             AWS.Net.WebSocket.Registry.Control.Shutdown;
-            --  Stop listening for incoming WebSocket messages.
          end if;
 
          AWS.Server.Shutdown (WS.Web_Server);

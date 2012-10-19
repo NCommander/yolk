@@ -69,7 +69,7 @@ Yolk Manual
 \end_layout
 
 \begin_layout Date
-Revised May 25th.
+Revised October 19th.
  2012
 \end_layout
 
@@ -156,8 +156,8 @@ target "http://libre.adacore.com/libre/tools/gnat-component-collection/"
 , but it does make the job of building complete web-applications a bit simpler.
  Things like changing user for the running application, catching POSIX signals
  such as SIGKILL, sending log data to syslogd, adding basic static content
- handlers and building Atom syndication XML are all made a bit easier with
- Yolk.
+ handlers, creating and starting/stopping an AWS powered HTTP server and
+ building Atom syndication XML are all made a bit easier with Yolk.
 \end_layout
 
 \begin_layout Standard
@@ -2121,12 +2121,7 @@ package My_Configuration is
 
 \begin_layout Plain Layout
 
-   type Defaults_Array is array (Keys) of
-\end_layout
-
-\begin_layout Plain Layout
-
-     Ada.Strings.Unbounded.Unbounded_String;
+   type Defaults_Array is array (Keys) of Unbounded_String;
 \end_layout
 
 \begin_layout Plain Layout
@@ -2140,27 +2135,17 @@ package My_Configuration is
 
 \begin_layout Plain Layout
 
-                      (Foo => TUS ("some foo"),
+                      (Foo => To_Unbounded_String ("some foo"),
 \end_layout
 
 \begin_layout Plain Layout
 
-                       Bar => TUS ("some bar"));
+                       Bar => To_Unbounded_String ("some bar"));
 \end_layout
 
 \begin_layout Plain Layout
 
-   --  TUS is a rename of the To_Unbounded_String function.
- It
-\end_layout
-
-\begin_layout Plain Layout
-
-   --  is found in the Yolk.Utilities package.
-\end_layout
-
-\begin_layout Plain Layout
-
+   
 \end_layout
 
 \begin_layout Plain Layout
@@ -2228,6 +2213,16 @@ Default_Values
 Null_Unbounded_String
 \emph default
  means the value is empty.
+\end_layout
+
+\begin_layout Standard
+Note that the 
+\emph on
+config.ini
+\emph default
+ file does not have to contain all the valid keys.
+ It is perfectly fine to only add those keys that have non-default values
+ to the configuration file.
 \end_layout
 
 \begin_layout Subsection
@@ -2916,7 +2911,7 @@ US_ASCII
 \emph on
 Name
 \emph default
- is already encoded as 
+ already is 
 \emph on
 US_ASCII
 \emph default
@@ -3025,12 +3020,12 @@ From: =?ISO-8859-1?Q?Alice?= <alice@domain.tld>
 \end_layout
 
 \begin_layout Standard
-So bear in mind that it is your responsibility to encode your data, and
- then set the 
+So bear in mind that it is your responsibility to ensure that your data,
+ and the 
 \emph on
 Character_Set
 \emph default
- parameters accordingly.
+ parameter match.
 \end_layout
 
 \begin_layout Standard
@@ -3423,7 +3418,7 @@ end;
 
 \begin_layout Standard
 It is possible, and allowed, to call some of the various other procedures
- prior to calling one of convenience procedures.
+ prior to calling one of the convenience procedures.
  If for example you want to add a custom header, it can be done like this:
 \end_layout
 
@@ -3887,8 +3882,13 @@ Yolk.Configuration
 \emph on
 Compress_Static_Content
 \emph default
-, and the various regular expressions for identifying these filetypes are
- also defined in 
+ which defaults to 
+\emph on
+False
+\emph default
+.
+ The regular expressions for identifying these filetypes are also defined
+ in 
 \emph on
 Yolk.Configuration
 \emph default
@@ -4099,8 +4099,12 @@ Yolk.Not_Found
 \end_layout
 
 \begin_layout Standard
-This job of this package is to return a HTTP 404 status code and an accompanying
- simple not found HTML page.
+The job of this package is to return a HTTP 404 status code and an accompanying
+ simple 
+\emph on
+not found
+\emph default
+ HTML page.
  It's sole function 
 \emph on
 Generate
@@ -4362,7 +4366,7 @@ When you call the
 \emph on
 Wait
 \emph default
- procedure, you basically enter an endless loop that doesn't stop until
+ procedure, you basically hang here until
 \end_layout
 
 \begin_layout Enumerate
@@ -4734,28 +4738,13 @@ function Create
 
 \begin_layout Plain Layout
 
-  (Compress_Static_Content : in Boolean := True;       
+  (Set_Dispatchers : in Resource_Dispatchers;       
 \end_layout
 
 \begin_layout Plain Layout
 
-   Load_Extra_MIME_Types   : in Boolean := True;       
-\end_layout
-
-\begin_layout Plain Layout
-
-   Server_Uses_WebSockets  : in Boolean := True;       
-\end_layout
-
-\begin_layout Plain Layout
-
-   Set_Dispatchers         : in Resource_Dispatchers;       
-\end_layout
-
-\begin_layout Plain Layout
-
-   Unexpected              : in AWS.Exceptions.Unexpected_Exception_Handler)
-       
+   Unexpected      : in AWS.Exceptions.Unexpected_Exception_Handler)     
+  
 \end_layout
 
 \begin_layout Plain Layout
@@ -4788,6 +4777,62 @@ all
  needs any of the other AWS dispatchers (Method, Linker, Timer etc.
  etc.) then you will have to manage creating and starting/stopping the AWS
  component manually.
+\end_layout
+
+\begin_layout Standard
+Another potential manual operation is setting the 
+\emph on
+Cache-Control
+\emph default
+ header.
+ This can become necessary if you
+\end_layout
+
+\begin_layout Enumerate
+use 
+\emph on
+Yolk.Server
+\emph default
+ to create and start your AWS server and
+\end_layout
+
+\begin_layout Enumerate
+use the 
+\emph on
+Yolk.Handlers
+\emph default
+ package to register dispatchers for static content and
+\end_layout
+
+\begin_layout Enumerate
+have the 
+\emph on
+Compress_Static_Content
+\emph default
+ configuration parameter set to 
+\emph on
+True
+\end_layout
+
+\begin_layout Enumerate
+aren't content with the default 
+\emph on
+Cache-Control
+\emph default
+ header
+\end_layout
+
+\begin_layout Standard
+In that case you can use the 
+\emph on
+Yolk.Static_Content.Set_Cache_Options
+\emph default
+ procedure to work your own magic on the 
+\emph on
+Cache-Control
+\emph default
+ header sent to clients requesting static content.
+ See the Yolk.Static_Content chapter for more information.
 \end_layout
 
 \begin_layout Subsection
@@ -4838,6 +4883,101 @@ procedure Start
 This does as expected: Starts the server.
 \end_layout
 
+\begin_layout Standard
+When calling 
+\emph on
+Start
+\emph default
+ several things happen:
+\end_layout
+
+\begin_layout Enumerate
+If the configuration parameter 
+\emph on
+Load_MIME_Types_File
+\emph default
+ is 
+\emph on
+True
+\emph default
+ then the MIME types file given in 
+\emph on
+MIME_Types_File
+\emph default
+ is loaded into AWS.
+ 
+\end_layout
+
+\begin_layout Enumerate
+If the configuration parameter 
+\emph on
+Start_WebSocket_Servers
+\emph default
+ is 
+\emph on
+True
+\emph default
+ then the AWS WebSocket servers are started.
+\end_layout
+
+\begin_layout Enumerate
+
+\emph on
+Yolk.Static_Content.Static_Content_Cache_Setup
+\emph default
+ is called with its default parameters if the configuration parameter 
+\emph on
+Compress_Static_Content
+\emph default
+ is 
+\emph on
+True
+\emph default
+.
+\end_layout
+
+\begin_layout Enumerate
+If session support is turned on for the server and the 
+\emph on
+Session_Data_File
+\emph default
+ exists, then the session data is loaded from this file.
+\end_layout
+
+\begin_layout Enumerate
+The 
+\emph on
+Yolk.Log.AWS_Access_Log_Writer
+\emph default
+ procedure is registered to handle all AWS access log data if the configuration
+ parameter 
+\emph on
+AWS_Access_Log_Activate
+\emph default
+ is 
+\emph on
+True
+\emph default
+ .
+\end_layout
+
+\begin_layout Enumerate
+The 
+\emph on
+Yolk.Log.AWS_Error_Log_Writer
+\emph default
+ procedure is registered to handle all AWS error log data if the configuration
+ parameter 
+\emph on
+AWS_Error_Log_Activate
+\emph default
+ is 
+\emph on
+True
+\emph default
+ .
+\end_layout
+
 \begin_layout Subsection
 Yolk.Server.Stop
 \end_layout
@@ -4883,7 +5023,11 @@ procedure Stop
 \end_layout
 
 \begin_layout Standard
-This does as expected: Stops the server.
+This does as expected: Stops everything that was started when the 
+\emph on
+Yolk.Server.Start
+\emph default
+ call was made.
 \end_layout
 
 \begin_layout Section
@@ -4892,7 +5036,7 @@ Yolk.Static_Content
 
 \begin_layout Standard
 Most web applications have a lot of static content, ie.
- stuff that doesn't change.
+ stuff that rarely changes.
  Things like PNG's, HTML, CSS and Javascript.
  These are content types that are common for most websites, so a application
  is going to have to handle these in some way.
@@ -4935,19 +5079,23 @@ Accept-Encoding: gzip
 \emph on
 Yolk.Static_Content
 \emph default
- is affected by four configuration settings:
+ is affected by five configuration settings:
 \end_layout
 
 \begin_layout Itemize
-Compressed_Cache_Directory
+Compress_Static_Content
 \end_layout
 
 \begin_layout Itemize
-Compressed_Max_Age
+Compress_Static_Content_Minimum_File_Size
 \end_layout
 
 \begin_layout Itemize
-Compress_Minimum_File_Size
+Compressed_Static_Content_Cache
+\end_layout
+
+\begin_layout Itemize
+Compressed_Static_Content_Max_Age
 \end_layout
 
 \begin_layout Itemize
@@ -4963,13 +5111,13 @@ demo/exe/configuration/config.ini
 \end_layout
 
 \begin_layout Subsection
-The static content cache setup
+Yolk.Static_Content.Static_Content_Cache_Setup
 \end_layout
 
 \begin_layout Standard
 The configuration parameter 
 \emph on
-Compressed_Cache_Directory
+Compressed_Static_Content_Cache
 \emph default
  defines where the compressed version of the static content is saved.
  When your application is started, this directory may or may not exist,
@@ -5009,12 +5157,7 @@ procedure Static_Content_Cache_Setup
 
 \begin_layout Plain Layout
 
-  (Log_To_Info_Trace : in Boolean := True;       
-\end_layout
-
-\begin_layout Plain Layout
-
-   No_Cache          : in Boolean := False;       
+  (No_Cache          : in Boolean := False;       
 \end_layout
 
 \begin_layout Plain Layout
@@ -5068,36 +5211,23 @@ procedure Static_Content_Cache_Setup
 \end_layout
 
 \begin_layout Standard
-This procedure creates the compressed cache directory, if it doesn't already
- exist, and if it exists, it deletes everything in it.
+This procedure creates the 
+\emph on
+Compressed_Static_Content_Cache
+\emph default
+ directory if it doesn't already exists and if it exists, it deletes everything
+ in it.
  So basically you're left with an empty directory after a call to this procedure.
  
 \end_layout
 
 \begin_layout Standard
-If 
-\emph on
-Log_To_Info_Trace
-\emph default
- is 
-\emph on
-False
-\emph default
- then no information about the deletion and creation of the compressed cache
- directory is logged to the 
-\emph on
-Yolk.Log.Info
-\emph default
- trace.
-\end_layout
-
-\begin_layout Standard
-The remaining parameters defines the content of the 
+The parameters defines the content of the 
 \emph on
 Cache-Control
 \emph default
  header sent to the user agent when a request for static content is made.
- The default settings are fairly sane, and will result in a cache header
+ The default parameters are fairly sane, and will result in a cache header
  looking like this:
 \end_layout
 
@@ -5149,22 +5279,32 @@ target "http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.9"
 \end_layout
 
 \begin_layout Standard
-You must call 
+If you use 
 \emph on
-Static_Content_Cache_Setup
+Yolk.Server
 \emph default
- prior to starting the HTTP server, if you plan on using the 
+ to create and start your AWS server, then this called is made automatically
+ with it's default parameters.
+ 
+\end_layout
+
+\begin_layout Standard
+If you don't use 
+\emph on
+Yolk.Server
+\emph default
+ and you use the 
 \emph on
 Yolk.Static_Content
 \emph default
- package.
+ package to serve static content, then you must call this procedure before
+ starting the AWS server.
  Calling it repeatedly will simply wipe out the compressed cache directory
  and reset the 
 \emph on
 Control_Cache
 \emph default
  header according to the given parameters.
- This is a threadsafe operation.
 \end_layout
 
 \begin_layout Subsection
@@ -5386,7 +5526,7 @@ Is there a compressed version of the resource available on disk?
 
 \begin_deeper
 \begin_layout Enumerate
-if no, then make one, save it to disk, and return it
+if no, then make one, cache it for future use, and return it
 \end_layout
 
 \begin_layout Enumerate
@@ -5400,7 +5540,8 @@ Is the age of the compressed file <= Compressed_Max_Age?
 
 \begin_deeper
 \begin_layout Enumerate
-If no, then delete the current file, build a new one and return it
+If no, then delete the current file, build a new one, cache it and return
+ it
 \end_layout
 
 \begin_layout Enumerate
@@ -5502,7 +5643,7 @@ status open
 
 \begin_layout Plain Layout
 
-Compressed_Cache_Directory & "/css/index.css" & ".gz";
+Compressed_Static_Content_Cache & "/css/index.css" & ".gz";
 \end_layout
 
 \end_inset
@@ -5518,7 +5659,7 @@ Compressed_Cache_Directory & "/css/index.css" & ".gz";
 \begin_layout Standard
 Using the default configuration value for 
 \emph on
-Compressed_Cache_Directory
+Compressed_Static_Content_Cache
 \emph default
 , we'll end up with the path:
 \end_layout
@@ -5535,7 +5676,7 @@ WWW_Root
 \emph default
  and 
 \emph on
-Compressed_Cache_Directory
+Compressed_Static_Content_Cache
 \emph default
  as absolute paths in the configuration file.
 \end_layout
@@ -5701,6 +5842,178 @@ Non_Compressable
  wherever your application handles requests for static content.
 \end_layout
 
+\begin_layout Subsection
+Yolk.Static.Set_Cache_Options
+\end_layout
+
+\begin_layout Standard
+You can alter the 
+\emph on
+Cache-Control
+\emph default
+ header sent to clients requesting static content with a call to 
+\emph on
+Set_Cache_Options
+\emph default
+\SpecialChar \@.
+ This is especially handy if you use the 
+\emph on
+Yolk.Server
+\emph default
+ package to create and start your server, since the initial call to 
+\emph on
+Static_Content_Cache_Setup
+\emph default
+ is hidden you're forced to live with the default values given in the 
+\emph on
+Static_Content_Cache_Setup
+\emph default
+ call, resulting in a 
+\emph on
+Cache-Control
+\emph default
+ header looking like this:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Box Frameless
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "100col%"
+special "none"
+height "1in"
+height_special "totalheight"
+status open
+
+\begin_layout Plain Layout
+\begin_inset listings
+lstparams "basicstyle={\small\sffamily},frame=tblr,language=Ada,showstringspaces=false,tabsize=3,xleftmargin=1em,xrightmargin=1em"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+Cache-Control: max-age=86400, must-revalidate
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+If this is not what you want, you can use 
+\emph on
+Set_Cache_Options
+\emph default
+ to change it:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Box Frameless
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "100col%"
+special "none"
+height "1in"
+height_special "totalheight"
+status open
+
+\begin_layout Plain Layout
+\begin_inset listings
+lstparams "basicstyle={\small\sffamily},frame=tblr,language=Ada,showstringspaces=false,tabsize=3,xleftmargin=1em,xrightmargin=1em"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+procedure Set_Cache_Options
+\end_layout
+
+\begin_layout Plain Layout
+
+  (No_Cache          : in Boolean := False;       
+\end_layout
+
+\begin_layout Plain Layout
+
+   No_Store          : in Boolean := False;       
+\end_layout
+
+\begin_layout Plain Layout
+
+   No_Transform      : in Boolean := False;      
+\end_layout
+
+\begin_layout Plain Layout
+
+   Max_Age           : in AWS.Messages.Delta_Seconds := 86400;       
+\end_layout
+
+\begin_layout Plain Layout
+
+   S_Max_Age         : in AWS.Messages.Delta_Seconds := 
+\end_layout
+
+\begin_layout Plain Layout
+
+     AWS.Messages.Unset;       
+\end_layout
+
+\begin_layout Plain Layout
+
+   Public            : in Boolean := False;       
+\end_layout
+
+\begin_layout Plain Layout
+
+   Must_Revalidate   : in Boolean := True;       
+\end_layout
+
+\begin_layout Plain Layout
+
+   Proxy_Revalidate  : in Boolean := False);
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This should preferably be called after having called 
+\emph on
+Yolk.Server.Create
+\emph default
+, since the call to 
+\emph on
+Static_Content_Cache_Setup
+\emph default
+ in 
+\emph on
+Create
+\emph default
+ will overwrite the cache options.
+\end_layout
+
 \begin_layout Section
 Yolk.Syndication
 \end_layout
@@ -5753,7 +6066,8 @@ atom:feed elements MUST contain exactly one atom:id element.
 \end_layout
 
 \begin_layout Standard
-then it is your job to make sure that your Atom feed has exactly one ID.
+then it is your job to make sure that your Atom feed has exactly one such
+ element.
  So before venturing into the realm of Atom, it's probably a good idea to
  read 
 \begin_inset CommandInset href

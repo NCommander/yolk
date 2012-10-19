@@ -39,28 +39,13 @@ package Yolk.Server is
    type HTTP is tagged limited private;
 
    function Create
-     (Compress_Static_Content : in Boolean := True;
-      Load_Extra_MIME_Types   : in Boolean := True;
-      Server_Uses_WebSockets  : in Boolean := True;
-      Set_Dispatchers         : in Resource_Dispatchers;
-      Unexpected              : in AWS.Exceptions.Unexpected_Exception_Handler)
+     (Set_Dispatchers : in Resource_Dispatchers;
+      Unexpected      : in AWS.Exceptions.Unexpected_Exception_Handler)
       return HTTP;
-   --  Create a HTTP object. This contains an AWS HTTP(S) server that is
+   --  Create a HTTP object. This contains an AWS HTTP server that is
    --  configured according to the configuration settings found in
    --  ./configuration/config.ini.
-   --  Compress_Static_Content
-   --    If True then delete old compressed content and create a clean
-   --    directory for the compressed static content. Also set the
-   --    Cache-Control header options for the static content. All this is done
-   --    using the Yolk.Static_Content.Static_Content_Cache_Setup procedure.
-   --  Load_Extra_MIME_Types
-   --    If True then the ./configuration/aws.mime file is loaded. If False
-   --    then the server will only recognize the default AWS MIME types.
-   --  Server_Uses_WebSockets
-   --    If True then the AWS WebSocket servers are started when the server is
-   --    started. Basically this controls whether
-   --      AWS.Net.WebSocket.Registry.Control.Start;
-   --    is called or not.
+   --
    --  Set_Dispatchers
    --    Access to a procedure that set ALL the necessary URI dispatchers for
    --    the HTTP server. This includes the default callback and whatever
@@ -69,10 +54,9 @@ package Yolk.Server is
    --    Access to the unexpected exception handler.
    --
    --  NOTE:
-   --  Yolk currently only supports starting one AWS server, as it reads its
-   --  configuration from the Yolk.Configuration package. This means that
-   --  successive calls to Create are ignored. Only one HTTP object can be
-   --  active at any given point.
+   --  Yolk currently only supports starting one AWS server. Successive calls
+   --  to Create are ignored. Only one HTTP object can be active at any given
+   --  point.
 
    procedure Start
      (WS : in out HTTP);
@@ -87,10 +71,7 @@ private
    type HTTP is tagged limited
       record
          Handle_The_Unexpected : AWS.Exceptions.Unexpected_Exception_Handler;
-         Load_MIME_Types       : Boolean;
          URI_Handlers          : AWS.Services.Dispatchers.URI.Handler;
-         Uses_Compressed_Cache : Boolean;
-         Uses_WebSockets       : Boolean;
          Web_Server            : AWS.Server.HTTP;
          Web_Server_Config     : AWS.Config.Object;
       end record;

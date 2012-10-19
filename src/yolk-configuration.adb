@@ -153,7 +153,7 @@ package body Yolk.Configuration is
 
       AWS.Config.Set.MIME_Types
         (O     => Object,
-         Value => Config.Get (MIME_Types));
+         Value => Config.Get (MIME_Types_File));
 
       AWS.Config.Set.Protocol_Family
         (O     => Object,

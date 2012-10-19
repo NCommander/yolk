@@ -1,6 +1,6 @@
 Yolk Manual
 
-Revised May 25th. 2012
+Revised October 19th. 2012
 
 
 
@@ -37,9 +37,9 @@ that can't be accomplished simply by using [http://libre.adacore.com/libre/tools
 , but it does make the job of building complete web-applications 
 a bit simpler. Things like changing user for the running 
 application, catching POSIX signals such as SIGKILL, sending log 
-data to syslogd, adding basic static content handlers and 
-building Atom syndication XML are all made a bit easier with 
-Yolk.
+data to syslogd, adding basic static content handlers, creating 
+and starting/stopping an AWS powered HTTP server and building 
+Atom syndication XML are all made a bit easier with Yolk.
 
 A Yolk application is in reality an AWS application, with some 
 sugar added, so you're not really building a Yolk 
@@ -577,23 +577,17 @@ package My_Configuration is
 
    type Keys is (Foo, Bar);
 
-   type Defaults_Array is array (Keys) of
-
-     Ada.Strings.Unbounded.Unbounded_String;
+   type Defaults_Array is array (Keys) of Unbounded_String;
 
 
 
    Default_Values : constant Defaults_Array :=
 
-                      (Foo => TUS ("some foo"),
+                      (Foo => To_Unbounded_String ("some foo"),
 
-                       Bar => TUS ("some bar"));
+                       Bar => To_Unbounded_String ("some bar"));
 
-   --  TUS is a rename of the To_Unbounded_String function. It
-
-   --  is found in the Yolk.Utilities package.
-
-
+   
 
    package Config is new Yolk.Config_File_Parser
 
@@ -615,6 +609,10 @@ configuration file. This means that KEY/VALUE pairs found in this
 file will overwrite the default values set in the Default_Values 
 array. Setting a default value to Null_Unbounded_String means the 
 value is empty.
+
+Note that the config.ini file does not have to contain all the 
+valid keys. It is perfectly fine to only add those keys that have 
+non-default values to the configuration file.
 
 6.4 Re-loading configuration files
 
@@ -792,10 +790,9 @@ procedure Add_From
 
 
 This does not mean that Yolk.Email.Composer.Add_From will encode 
-Name as US_ASCII, instead it means that the data given in Name is 
-already encoded as US_ASCII. So if Name had contained an 
-ISO-8859-1 encoded String, then the call would've looked like 
-this:
+Name as US_ASCII, instead it means that the data given in Name 
+already is US_ASCII. So if Name had contained an ISO-8859-1 
+encoded String, then the call would've looked like this:
 
 declare
 
@@ -825,8 +822,8 @@ this:
 
 From: =?ISO-8859-1?Q?Alice?= <alice@domain.tld>
 
-So bear in mind that it is your responsibility to encode your 
-data, and then set the Character_Set parameters accordingly.
+So bear in mind that it is your responsibility to ensure that 
+your data, and the Character_Set parameter match.
 
 The Recipient_Kind type define the kind of recipient that is 
 being added to an email. If you've worked with email, these three 
@@ -959,8 +956,8 @@ end;
 
 
 It is possible, and allowed, to call some of the various other 
-procedures prior to calling one of convenience procedures. If for 
-example you want to add a custom header, it can be done like 
+procedures prior to calling one of the convenience procedures. If 
+for example you want to add a custom header, it can be done like 
 this:
 
 declare
@@ -1129,10 +1126,10 @@ The following filetypes are supported by Yolk.Handlers:
 • XSL
 
 The filetypes that are textual, are compressed according to the 
-Yolk.Configuration parameter Compress_Static_Content, and the 
-various regular expressions for identifying these filetypes are 
-also defined in Yolk.Configuration by the Handler_* parameters. 
-These regular expressions are registered by the 
+Yolk.Configuration parameter Compress_Static_Content which 
+defaults to False. The regular expressions for identifying these 
+filetypes are also defined in Yolk.Configuration by the Handler_* 
+parameters. These regular expressions are registered by the 
 AWS.Services.Dispatchers.URI.Register_Regexp procedure.
 
 There's only one procedure in the Yolk.Handlers package:
@@ -1195,7 +1192,7 @@ you've made certain that you can get to the messages.
 
 12 Yolk.Not_Found
 
-This job of this package is to return a HTTP 404 status code and 
+The job of this package is to return a HTTP 404 status code and 
 an accompanying simple not found HTML page. It's sole function 
 Generate is about as simple as they come:
 
@@ -1273,8 +1270,7 @@ procedure Stop;
 procedure Wait;
 
 
-When you call the Wait procedure, you basically enter an endless 
-loop that doesn't stop until
+When you call the Wait procedure, you basically hang here until
 
 1. The Stop procedure is called
 
@@ -1383,15 +1379,9 @@ type HTTP is tagged limited private;
 
 function Create
 
-  (Compress_Static_Content : in Boolean := True;       
+  (Set_Dispatchers : in Resource_Dispatchers;       
 
-   Load_Extra_MIME_Types   : in Boolean := True;       
-
-   Server_Uses_WebSockets  : in Boolean := True;       
-
-   Set_Dispatchers         : in Resource_Dispatchers;       
-
-   Unexpected              : in 
+   Unexpected      : in 
 AWS.Exceptions.Unexpected_Exception_Handler)       
 
    return HTTP;    
@@ -1405,6 +1395,25 @@ any of the other AWS dispatchers (Method, Linker, Timer etc.
 etc.) then you will have to manage creating and starting/stopping 
 the AWS component manually.
 
+Another potential manual operation is setting the Cache-Control 
+header. This can become necessary if you
+
+1. use Yolk.Server to create and start your AWS server and
+
+2. use the Yolk.Handlers package to register dispatchers for 
+  static content and
+
+3. have the Compress_Static_Content configuration parameter set 
+  to True
+
+4. aren't content with the default Cache-Control header
+
+In that case you can use the 
+Yolk.Static_Content.Set_Cache_Options procedure to work your own 
+magic on the Cache-Control header sent to clients requesting 
+static content. See the Yolk.Static_Content chapter for more 
+information.
+
 15.2 Yolk.Server.Start
 
 procedure Start 
@@ -1414,6 +1423,31 @@ procedure Start
 
 This does as expected: Starts the server.
 
+When calling Start several things happen:
+
+1. If the configuration parameter Load_MIME_Types_File is True 
+  then the MIME types file given in MIME_Types_File is loaded 
+  into AWS. 
+
+2. If the configuration parameter Start_WebSocket_Servers is True 
+  then the AWS WebSocket servers are started.
+
+3. Yolk.Static_Content.Static_Content_Cache_Setup is called with 
+  its default parameters if the configuration parameter 
+  Compress_Static_Content is True.
+
+4. If session support is turned on for the server and the 
+  Session_Data_File exists, then the session data is loaded from 
+  this file.
+
+5. The Yolk.Log.AWS_Access_Log_Writer procedure is registered to 
+  handle all AWS access log data if the configuration parameter 
+  AWS_Access_Log_Activate is True .
+
+6. The Yolk.Log.AWS_Error_Log_Writer procedure is registered to 
+  handle all AWS error log data if the configuration parameter 
+  AWS_Error_Log_Activate is True .
+
 15.3 Yolk.Server.Stop
 
 procedure Stop      
@@ -1421,12 +1455,13 @@ procedure Stop
   (WS : in out HTTP);
 
 
-This does as expected: Stops the server.
+This does as expected: Stops everything that was started when the 
+Yolk.Server.Start call was made.
 
 16 Yolk.Static_Content
 
 Most web applications have a lot of static content, ie. stuff 
-that doesn't change. Things like PNG's, HTML, CSS and Javascript. 
+that rarely changes. Things like PNG's, HTML, CSS and Javascript. 
 These are content types that are common for most websites, so a 
 application is going to have to handle these in some way. This is 
 where Yolk.Static_Content comes in. Two kinds of files are 
@@ -1444,33 +1479,33 @@ request includes a Accept-Encoding: gzip header. Non-compressable
 files are simply returned as is. For both kinds, a generic 404 is 
 returned if the requested file doesn't exist.
 
-Yolk.Static_Content is affected by four configuration settings:
+Yolk.Static_Content is affected by five configuration settings:
 
-• Compressed_Cache_Directory
+• Compress_Static_Content
 
-• Compressed_Max_Age
+• Compress_Static_Content_Minimum_File_Size
 
-• Compress_Minimum_File_Size
+• Compressed_Static_Content_Cache
+
+• Compressed_Static_Content_Max_Age
 
 • WWW_Root
 
 You should carefully read the demo/exe/configuration/config.ini 
 file for information on what exactly these do.
 
-16.1 The static content cache setup
+16.1 Yolk.Static_Content.Static_Content_Cache_Setup
 
-The configuration parameter Compressed_Cache_Directory defines 
-where the compressed version of the static content is saved. When 
-your application is started, this directory may or may not exist, 
-and it may or may not contain various compressed files. To make 
-sure that the directory exists and is empty, you should call the 
-Static_Content_Cache_Setup procedure:
+The configuration parameter Compressed_Static_Content_Cache 
+defines where the compressed version of the static content is 
+saved. When your application is started, this directory may or 
+may not exist, and it may or may not contain various compressed 
+files. To make sure that the directory exists and is empty, you 
+should call the Static_Content_Cache_Setup procedure:
 
 procedure Static_Content_Cache_Setup      
 
-  (Log_To_Info_Trace : in Boolean := True;       
-
-   No_Cache          : in Boolean := False;       
+  (No_Cache          : in Boolean := False;       
 
    No_Store          : in Boolean := False;       
 
@@ -1489,19 +1524,15 @@ procedure Static_Content_Cache_Setup
    Proxy_Revalidate  : in Boolean := False);
 
 
-This procedure creates the compressed cache directory, if it 
-doesn't already exist, and if it exists, it deletes everything in 
-it. So basically you're left with an empty directory after a call 
-to this procedure. 
+This procedure creates the Compressed_Static_Content_Cache 
+directory if it doesn't already exists and if it exists, it 
+deletes everything in it. So basically you're left with an empty 
+directory after a call to this procedure. 
 
-If Log_To_Info_Trace is False then no information about the 
-deletion and creation of the compressed cache directory is logged 
-to the Yolk.Log.Info trace.
-
-The remaining parameters defines the content of the Cache-Control 
-header sent to the user agent when a request for static content 
-is made. The default settings are fairly sane, and will result in 
-a cache header looking like this:
+The parameters defines the content of the Cache-Control header 
+sent to the user agent when a request for static content is made. 
+The default parameters are fairly sane, and will result in a 
+cache header looking like this:
 
 Cache-Control: max-age=86400, must-revalidate
 
@@ -1509,12 +1540,14 @@ Cache-Control: max-age=86400, must-revalidate
 Read the [http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.9||HTTP/1.1 Cache-Control header definition]
  for more information on what the various settings do.
 
-You must call Static_Content_Cache_Setup prior to starting the 
-HTTP server, if you plan on using the Yolk.Static_Content 
-package. Calling it repeatedly will simply wipe out the 
-compressed cache directory and reset the Control_Cache header 
-according to the given parameters. This is a threadsafe 
-operation.
+If you use Yolk.Server to create and start your AWS server, then 
+this called is made automatically with it's default parameters. 
+
+If you don't use Yolk.Server and you use the Yolk.Static_Content 
+package to serve static content, then you must call this 
+procedure before starting the AWS server. Calling it repeatedly 
+will simply wipe out the compressed cache directory and reset the 
+Control_Cache header according to the given parameters.
 
 16.2 Yolk.Static_Content.Compressable
 
@@ -1585,14 +1618,15 @@ the Compressable function. The following steps are then taken:
 3. Is there a compressed version of the resource available on 
   disk?
 
-  (a) if no, then make one, save it to disk, and return it
+  (a) if no, then make one, cache it for future use, and return 
+    it
 
   (b) If yes, then proceed to 4
 
 4. Is the age of the compressed file <= Compressed_Max_Age?
 
-  (a) If no, then delete the current file, build a new one and 
-    return it
+  (a) If no, then delete the current file, build a new one, cache 
+    it and return it
 
   (b) If yes, then return it
 
@@ -1611,18 +1645,18 @@ static_content/css/index.css
 
 The compressed version of index.css is saved as:
 
-Compressed_Cache_Directory & "/css/index.css" & ".gz";
+Compressed_Static_Content_Cache & "/css/index.css" & ".gz";
 
 
 Using the default configuration value for 
-Compressed_Cache_Directory, we'll end up with the path:
+Compressed_Static_Content_Cache, we'll end up with the path:
 
 static_content/compressed_cache/css/index.css.gz
 
 In these two cases the paths are relative to the executable, but 
 you can of course also define WWW_Root and 
-Compressed_Cache_Directory as absolute paths in the configuration 
-file.
+Compressed_Static_Content_Cache as absolute paths in the 
+configuration file.
 
 16.3 Yolk.Static_Content.Non_Compressable
 
@@ -1665,6 +1699,48 @@ is where you define you content handlers, but it can obviously be
 used wherever your application handles requests for static 
 content.
 
+16.4 Yolk.Static.Set_Cache_Options
+
+You can alter the Cache-Control header sent to clients requesting 
+static content with a call to Set_Cache_Options. This is 
+especially handy if you use the Yolk.Server package to create and 
+start your server, since the initial call to 
+Static_Content_Cache_Setup is hidden you're forced to live with 
+the default values given in the Static_Content_Cache_Setup call, 
+resulting in a Cache-Control header looking like this:
+
+Cache-Control: max-age=86400, must-revalidate
+
+
+If this is not what you want, you can use Set_Cache_Options to 
+change it:
+
+procedure Set_Cache_Options
+
+  (No_Cache          : in Boolean := False;       
+
+   No_Store          : in Boolean := False;       
+
+   No_Transform      : in Boolean := False;      
+
+   Max_Age           : in AWS.Messages.Delta_Seconds := 86400;    
+   
+
+   S_Max_Age         : in AWS.Messages.Delta_Seconds := 
+
+     AWS.Messages.Unset;       
+
+   Public            : in Boolean := False;       
+
+   Must_Revalidate   : in Boolean := True;       
+
+   Proxy_Revalidate  : in Boolean := False);
+
+
+This should preferably be called after having called 
+Yolk.Server.Create, since the call to Static_Content_Cache_Setup 
+in Create will overwrite the cache options.
+
 17 Yolk.Syndication
 
 The Atom Syndication format ([http://tools.ietf.org/html/rfc4287||RFC4287]
@@ -1684,9 +1760,9 @@ rules have been followed, so if the Atom specification says that
 atom:feed elements MUST contain exactly one atom:id element.
 
 then it is your job to make sure that your Atom feed has exactly 
-one ID. So before venturing into the realm of Atom, it's probably 
-a good idea to read [http://tools.ietf.org/html/rfc4287||RFC4287] 
-for a good understanding of the requirements for this document 
+one such element. So before venturing into the realm of Atom, 
+it's probably a good idea to read [http://tools.ietf.org/html/rfc4287||RFC4287]
+ for a good understanding of the requirements for this document 
 format. A basic example of how to build an Atom feed can be found 
 in the Yolk demo application.
 

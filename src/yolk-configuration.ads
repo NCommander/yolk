@@ -60,9 +60,10 @@ package Yolk.Configuration is
                  Cleaner_Client_Header_Timeout, --  AWS
                  Cleaner_Server_Response_Timeout, --  AWS
                  Cleaner_Wait_For_Client_Timeout, --  AWS
-                 Compressed_Cache_Directory,
-                 Compressed_Max_Age,
-                 Compress_Minimum_File_Size,
+                 Compress_Static_Content,
+                 Compress_Static_Content_Minimum_File_Size,
+                 Compressed_Static_Content_Cache,
+                 Compressed_Static_Content_Max_Age,
                  Context_Lifetime, --  AWS
                  Critical_Log_Activate,
                  Critical_Syslog_Facility_Level,
@@ -96,12 +97,13 @@ package Yolk.Configuration is
                  Keep_Alive_Force_Limit, --  AWS
                  Key, --  AWS
                  Line_Stack_Size, --  AWS
+                 Load_MIME_Types_File,
                  Log_Extended_Fields, --  AWS
                  Max_Concurrent_Download, --  AWS
                  Max_Connection, --  AWS
                  Max_POST_Parameters, --  AWS
                  Max_WebSocket_Handler, --  AWS
-                 MIME_Types, --  AWS
+                 MIME_Types_File, --  AWS
                  Notice_Log_Activate,
                  Notice_Syslog_Facility_Level,
                  Protocol_Family, --  AWS
@@ -127,6 +129,7 @@ package Yolk.Configuration is
                  SQL_Error_Syslog_Facility_Level,
                  SQL_Select_Log_Activate,
                  SQL_Select_Syslog_Facility_Level,
+                 Start_WebSocket_Servers,
                  Status_Page, --  AWS
                  System_Templates_Path,
                  Transient_Cleanup_Interval, --  AWS
@@ -178,12 +181,14 @@ package Yolk.Configuration is
                        => U ("60.0"),
                        Cleaner_Wait_For_Client_Timeout
                        => U ("60.0"),
-                       Compressed_Cache_Directory
-                       => U ("static_content/compressed_cache"),
-                       Compressed_Max_Age
-                       => U ("86400"),
-                       Compress_Minimum_File_Size
+                       Compress_Static_Content
+                       => U ("False"),
+                       Compress_Static_Content_Minimum_File_Size
                        => U ("200"),
+                       Compressed_Static_Content_Cache
+                       => U ("static_content/compressed_cache"),
+                       Compressed_Static_Content_Max_Age
+                       => U ("86400"),
                        Context_Lifetime
                        => U ("28800.0"),
                        Critical_Log_Activate
@@ -250,6 +255,8 @@ package Yolk.Configuration is
                        => U (""),
                        Line_Stack_Size
                        => U ("16#150_000#"),
+                       Load_MIME_Types_File
+                       => U ("False"),
                        Log_Extended_Fields
                        => U (""),
                        Max_Concurrent_Download
@@ -260,7 +267,7 @@ package Yolk.Configuration is
                        => U ("100"),
                        Max_WebSocket_Handler
                        => U ("2"),
-                       MIME_Types
+                       MIME_Types_File
                        => U ("configuration/aws.mime"),
                        Notice_Log_Activate
                        => U ("True"),
@@ -312,6 +319,8 @@ package Yolk.Configuration is
                        => U ("True"),
                        SQL_Select_Syslog_Facility_Level
                        => U ("user:info"),
+                       Start_WebSocket_Servers
+                       => U ("False"),
                        Status_Page
                        => U ("templates/system/aws_staU.thtml"),
                        System_Templates_Path

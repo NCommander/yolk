@@ -37,14 +37,27 @@ with AWS.Status;
 
 package Yolk.Static_Content is
 
+   function Compressable
+     (Request : in AWS.Status.Data)
+      return AWS.Response.Data;
+   --  Return compressed content. This function saves a pre-compressed version
+   --  in the Compressed_Static_Content_Cache directory of the requested
+   --  resource for future use. This compressed file times out according to the
+   --  Compressed_Static_Content_Max_Age configuration setting.
+   --
+   --  Note:
+   --  You can call this despite having set the Compress_Static_Content
+   --  configuration parameter to False. It will still try to save a compressed
+   --  version of the requested resource in the Compressed_Static_Content_Cache
+   --  directory.
+
    function Non_Compressable
      (Request : in AWS.Status.Data)
       return AWS.Response.Data;
    --  Return non-compressed content.
 
-   procedure Static_Content_Cache_Setup
-     (Log_To_Info_Trace : in Boolean := True;
-      No_Cache          : in Boolean := False;
+   procedure Set_Cache_Options
+     (No_Cache          : in Boolean := False;
       No_Store          : in Boolean := False;
       No_Transform      : in Boolean := False;
       Max_Age           : in AWS.Messages.Delta_Seconds := 86400;
@@ -52,17 +65,28 @@ package Yolk.Static_Content is
       Public            : in Boolean := False;
       Must_Revalidate   : in Boolean := True;
       Proxy_Revalidate  : in Boolean := False);
-   --  Set the cache options for the request and delete and re-create the
-   --  Compressed_Cache_Directory. Should preferably be called before any AWS
-   --  HTTP servers are started.
+   --  Set the response cache options. If you've started your server using the
+   --  Yolk.Server package, then the response cache options for static content
+   --  has been set using the default values in the Static_Content_Cache_Setup
+   --  call. If this is not what you need, you can change the defaults using
+   --  this procedure.
+
+   procedure Static_Content_Cache_Setup
+     (No_Cache          : in Boolean := False;
+      No_Store          : in Boolean := False;
+      No_Transform      : in Boolean := False;
+      Max_Age           : in AWS.Messages.Delta_Seconds := 86400;
+      S_Max_Age         : in AWS.Messages.Delta_Seconds := AWS.Messages.Unset;
+      Public            : in Boolean := False;
+      Must_Revalidate   : in Boolean := True;
+      Proxy_Revalidate  : in Boolean := False);
+   --  Set the response cache options and delete and re-create the
+   --  Compressed_Static_Content_Cache.
+   --  This procedure is called automatically if you use the Yolk.Server
+   --  package to create and start your server and the Compress_Static_Content
+   --  configuration parameter is True.
+   --  Should preferably be called before any AWS HTTP servers are started.
    --  This is a threadsafe operation, and it can be repeated as often as
    --  need be.
-
-   function Compressable
-     (Request : in AWS.Status.Data)
-      return AWS.Response.Data;
-   --  Return compressed content. This function saves a pre-compressed version
-   --  of the requested resource for future use. This compressed file times out
-   --  according to the Compressed_Max_Age configuration setting.
 
 end Yolk.Static_Content;

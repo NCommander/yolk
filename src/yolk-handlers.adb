@@ -27,6 +27,7 @@
 -------------------------------------------------------------------------------
 
 with AWS.Dispatchers.Callback;
+with AWS.Response;
 with Yolk.Configuration;
 with Yolk.Static_Content;
 
@@ -43,10 +44,18 @@ package body Yolk.Handlers is
       use Yolk.Configuration;
 
       package SC renames Yolk.Static_Content;
+
+      Compressable_Callback : AWS.Response.Callback;
    begin
+      if Config.Get (Compress_Static_Content) then
+         Compressable_Callback := SC.Compressable'Access;
+      else
+         Compressable_Callback := SC.Non_Compressable'Access;
+      end if;
+
       RH.Register_Regexp
         (URI    => Config.Get (Handler_CSS),
-         Action => Create (Callback => SC.Compressable'Access));
+         Action => Create (Callback => Compressable_Callback));
 
       RH.Register_Regexp
         (URI    => Config.Get (Handler_GIF),
@@ -54,7 +63,7 @@ package body Yolk.Handlers is
 
       RH.Register_Regexp
         (URI    => Config.Get (Handler_HTML),
-         Action => Create (Callback => SC.Compressable'Access));
+         Action => Create (Callback => Compressable_Callback));
 
       RH.Register_Regexp
         (URI    => Config.Get (Handler_ICO),
@@ -66,7 +75,7 @@ package body Yolk.Handlers is
 
       RH.Register_Regexp
         (URI    => Config.Get (Handler_JS),
-         Action => Create (Callback => SC.Compressable'Access));
+         Action => Create (Callback => Compressable_Callback));
 
       RH.Register_Regexp
         (URI    => Config.Get (Handler_PNG),
@@ -74,15 +83,15 @@ package body Yolk.Handlers is
 
       RH.Register_Regexp
         (URI    => Config.Get (Handler_SVG),
-         Action => Create (Callback => SC.Compressable'Access));
+         Action => Create (Callback => Compressable_Callback));
 
       RH.Register_Regexp
         (URI    => Config.Get (Handler_XML),
-         Action => Create (Callback => SC.Compressable'Access));
+         Action => Create (Callback => Compressable_Callback));
 
       RH.Register_Regexp
         (URI    => Config.Get (Handler_XSL),
-         Action => Create (Callback => SC.Compressable'Access));
+         Action => Create (Callback => Compressable_Callback));
    end Set;
 
 end Yolk.Handlers;
