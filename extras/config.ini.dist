@@ -786,7 +786,7 @@ Max_POST_Parameters 100
 
 Max_WebSocket_Handler 5
 # Positive
-# Default: 2
+# Default: 5
 # AWS configuration option: Yes
 #
 # The maximum number of messages to handle simultaneously.
