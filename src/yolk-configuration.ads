@@ -266,7 +266,7 @@ package Yolk.Configuration is
                        Max_POST_Parameters
                        => U ("100"),
                        Max_WebSocket_Handler
-                       => U ("2"),
+                       => U ("5"),
                        MIME_Types_File
                        => U ("configuration/aws.mime"),
                        Notice_Log_Activate
@@ -320,7 +320,7 @@ package Yolk.Configuration is
                        SQL_Select_Syslog_Facility_Level
                        => U ("user:info"),
                        Start_WebSocket_Servers
-                       => U ("False"),
+                       => U ("True"),
                        Status_Page
                        => U ("templates/system/aws_staU.thtml"),
                        System_Templates_Path

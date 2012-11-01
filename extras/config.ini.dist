@@ -784,7 +784,7 @@ Max_POST_Parameters 100
 # The maximum amount of POST parameters the server will accept from any one
 # connection.
 
-Max_WebSocket_Handler 2
+Max_WebSocket_Handler 5
 # Positive
 # Default: 2
 # AWS configuration option: Yes
@@ -866,9 +866,9 @@ Server_Port 4242
 # ports < 1024, so this value should be higher than 1024, or else you'll
 # have to run the server as root, which is _not_ recommended.
 
-Start_WebSocket_Servers False
+Start_WebSocket_Servers True
 # Boolean
-# Default: False
+# Default: True
 # AWS configuration option: No
 #
 # Define whether or not the AWS WebSocket servers are started when using the
