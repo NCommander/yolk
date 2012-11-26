@@ -26,7 +26,8 @@
 
 package Yolk is
 
-   Version : constant String := "0.82";
+   Default_Config_File : constant String := "configuration/config.ini";
+   Version             : constant String := "0.82";
 
    function Config_File
      return String;

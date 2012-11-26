@@ -45,7 +45,7 @@ package body Yolk is
          end if;
       end loop;
 
-      return "configuration/config.ini";
+      return Default_Config_File;
    end Config_File;
 
 end Yolk;
