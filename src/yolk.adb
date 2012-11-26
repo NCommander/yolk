@@ -36,9 +36,11 @@ package body Yolk is
      return String
    is
       use Ada.Command_Line;
+
+      Config_File_Parameter : constant String := "--yolk-config-file";
    begin
       for k in 1 .. Argument_Count loop
-         if Argument (k) = "--yolk-config-file"
+         if Argument (k) = Config_File_Parameter
            and then k < Argument_Count
          then
             return Argument (k + 1);
