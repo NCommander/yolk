@@ -69,7 +69,7 @@ Yolk Manual
 \end_layout
 
 \begin_layout Date
-Revised October 19th.
+Revised November 26th.
  2012
 \end_layout
 
@@ -225,18 +225,6 @@ When you read this document and the Yolk source code, you'll notice that
  locations.
  This is for example the case with the 
 \emph on
-Yolk.Configuration
-\emph default
- package, that must have a 
-\emph on
-config.ini
-\emph default
- file available in the 
-\emph on
-configuration/
-\emph default
- directory, or the 
-\emph on
 Yolk.Whoops
 \emph default
  package that expects its template file to be found at the path 
@@ -302,17 +290,29 @@ Yolk
 \end_layout
 
 \begin_layout Standard
-The Yolk main package currently only contain one thing: The Yolk 
+The Yolk main package currently only contain only a few things: The Yolk
+ 
 \emph on
 Version
 \emph default
- string.
- This is used in a few places, for example in the 
+ string and a 
+\emph on
+Config_File
+\emph default
+ function to get the location of the configuration file.
+ These are used in a few places, for example in the 
 \emph on
 directory.tmpl
 \emph default
- template file, but obviously it's not something that's of vital importance
- to most applications.
+ template file (the version string) and in the 
+\emph on
+Yolk.Configuration
+\emph default
+ package (the 
+\emph on
+Config_File
+\emph default
+ function).
 \end_layout
 
 \begin_layout Section
@@ -1977,7 +1977,7 @@ generic
 
 \begin_layout Plain Layout
 
-   Config_File : in String := "configuration/config.ini";
+   Config_File : in String;
 \end_layout
 
 \begin_layout Plain Layout
@@ -2001,17 +2001,11 @@ package Yolk.Config_File_Parser is
 \end_layout
 
 \begin_layout Standard
-Note that the 
+
 \emph on
 Config_File
 \emph default
- parameter has a default value.
- This path is actually where Yolk expects to find the configuration file
- used by the 
-\emph on
-Yolk.Configuration
-\emph default
- package.
+ is of course the name and location of the configuration file.
 \end_layout
 
 \begin_layout Subsection
@@ -2047,7 +2041,11 @@ Load_File
 Cannot_Open_Config_File
 \emph default
 .
- This is raised when a configuration file cannot be read.
+ This is raised when 
+\emph on
+Config_File
+\emph default
+ cannot be read.
 \end_layout
 
 \begin_layout Itemize
@@ -2531,7 +2529,7 @@ package Config is new Config_File_Parser
 
 \begin_layout Plain Layout
 
-  (Key_Type => Keys,
+  (Key_Type            => Keys,
 \end_layout
 
 \begin_layout Plain Layout
@@ -2541,12 +2539,12 @@ package Config is new Config_File_Parser
 
 \begin_layout Plain Layout
 
-   Defaults => Default_Values,
+   Defaults            => Default_Values,
 \end_layout
 
 \begin_layout Plain Layout
 
-   Config_File => "configuration/config.ini");
+   Config_File         => Config_File);
 \end_layout
 
 \end_inset
@@ -2560,14 +2558,39 @@ package Config is new Config_File_Parser
 \end_layout
 
 \begin_layout Standard
-As you can see, it is required that there's a configuration file found in
- 
+The 
+\emph on
+Config_File
+\emph default
+ function call return either the default Yolk configuration file (
 \emph on
 configuration/config.ini
 \emph default
-.
- This path is of course relative to the application.
- There's a fully commented 
+) or a user specified configuration file given by the 
+\emph on
+--yolk-config-file
+\emph default
+ command line argument, so
+\emph on
+ 
+\emph default
+starting for example the Yolk demo like this:
+\end_layout
+
+\begin_layout LyX-Code
+./yolk_demo --yolk-config-file /etc/yolk-config.ini
+\end_layout
+
+\begin_layout Standard
+will force the demo to look for the 
+\emph on
+/etc/yolk-config.ini
+\emph default
+ configuration file.
+\end_layout
+
+\begin_layout Standard
+There's a fully commented 
 \emph on
 config.ini.dist
 \emph default
@@ -2576,20 +2599,7 @@ config.ini.dist
 extras/
 \emph default
  directory.
- The only way to avoid having 
-\emph on
-config.ini
-\emph default
- in the 
-\emph on
-configuration/
-\emph default
- directory is if you manually change the path in the source file before
- compiling Yolk.
-\end_layout
-
-\begin_layout Standard
-I recommend taking a look at the Yolk demo application to see how the 
+ I recommend taking a look at the Yolk demo application to see how the 
 \emph on
 Yolk.Configuration
 \emph default
@@ -2601,16 +2611,8 @@ Get the AWS specific configuration settings
 \end_layout
 
 \begin_layout Standard
-When you start an AWS server, you need to give it an 
-\emph on
-AWS.Config.Object
-\emph default
- with all the necessary configuration settings.
- This is already handled for you in 
-\emph on
-Yolk.Configuration
-\emph default
-, all you have to do is call the 
+On some occassions it might be necessary to get the AWS configuration object.
+ This can easily be accomplished by calling the 
 \emph on
 Get_AWS_Configuration
 \emph default
@@ -2647,21 +2649,6 @@ AWS_Config : constant AWS.Config.Object :=
   Yolk.Configuration.Get_AWS_Configuration;
 \end_layout
 
-\begin_layout Plain Layout
-
-AWS.Server.Start (Web_Server => Web_Server,
-\end_layout
-
-\begin_layout Plain Layout
-
-                  Dispatcher => Resource_Handlers,
-\end_layout
-
-\begin_layout Plain Layout
-
-                  Config     => AWS_Config);
-\end_layout
-
 \end_inset
 
 
@@ -2670,18 +2657,6 @@ AWS.Server.Start (Web_Server => Web_Server,
 \end_inset
 
 
-\end_layout
-
-\begin_layout Standard
-You're not forced to use this, if you don't want to.
- But even if you don't, you'll still have to make a valid configuration
- file available in the configuration directory defined in the 
-\emph on
-Config
-\emph default
- instantiation, so you might as well use this as the configuration foundation
- for the AWS HTTP server component of your application.
- Again, see the demo application for examples on how this is done.
 \end_layout
 
 \begin_layout Section
@@ -4209,8 +4184,11 @@ Yolk.Process_Control
 \emph default
  you get the ability to control your application using the SIGINT, SIGPWR
  and SIGTERM signals.
- You also get a PID file placed next to your executable, which coupled with
- the 
+ You can also get a PID file placed next to your executable (see the 
+\emph on
+PID_File
+\emph default
+ configuration parameter), which coupled with the 
 \emph on
 extras/rc.yolk
 \emph default
@@ -4232,9 +4210,17 @@ These are:
 Cannot_Create_PID_File
 \emph default
 .
- Is raised if the PID file cannot be created, eg.
+ Is raised if the 
+\emph on
+PID_File
+\emph default
+ cannot be created, eg.
  if the application lacks permissions to write to the directory where the
- executable is located.
+ 
+\emph on
+PID_File
+\emph default
+ is located.
 \end_layout
 
 \begin_layout Itemize
@@ -4243,9 +4229,21 @@ Cannot_Create_PID_File
 Cannot_Delete_PID_File
 \emph default
 .
- Is raised if the PID file cannot be deleted, eg.
+ Is raised if the 
+\emph on
+PID_file
+\emph default
+ cannot be deleted, eg.
  if the application lacks permissions to write to the directory where the
- executable is located, or to the PID file itself.
+ 
+\emph on
+PID_File
+\emph default
+ is located, or to the 
+\emph on
+PID_File
+\emph default
+ itself.
 \end_layout
 
 \begin_layout Itemize
@@ -4254,7 +4252,11 @@ Cannot_Delete_PID_File
 PID_File_Exists
 \emph default
 .
- Is raised when the PID file already exists, ie.
+ Is raised when the 
+\emph on
+PID_File
+\emph default
+ already exists, ie.
  the application is already running or it was shutdown incorrectly.
 \end_layout
 
@@ -4366,7 +4368,7 @@ When you call the
 \emph on
 Wait
 \emph default
- procedure, you basically hang here until
+ procedure, you basically hang there until
 \end_layout
 
 \begin_layout Enumerate
@@ -4674,6 +4676,68 @@ one
  AWS server.
 \end_layout
 
+\begin_layout Standard
+Note a potential manual operation when using the 
+\emph on
+Yolk.Server 
+\emph default
+package : Setting the 
+\emph on
+Cache-Control
+\emph default
+ header.
+ This can become necessary if you
+\end_layout
+
+\begin_layout Enumerate
+use 
+\emph on
+Yolk.Server
+\emph default
+ to create and start your AWS server AND
+\end_layout
+
+\begin_layout Enumerate
+use the 
+\emph on
+Yolk.Handlers
+\emph default
+ package to register dispatchers for static content AND
+\end_layout
+
+\begin_layout Enumerate
+have the 
+\emph on
+Compress_Static_Content
+\emph default
+ configuration parameter set to 
+\emph on
+True 
+\emph default
+AND
+\end_layout
+
+\begin_layout Enumerate
+aren't content with the default 
+\emph on
+Cache-Control
+\emph default
+ header
+\end_layout
+
+\begin_layout Standard
+In that case you can use the 
+\emph on
+Yolk.Static_Content.Set_Cache_Options
+\emph default
+ procedure to work your own magic on the 
+\emph on
+Cache-Control
+\emph default
+ header sent to clients requesting static content.
+ See the Yolk.Static_Content chapter for more information.
+\end_layout
+
 \begin_layout Subsection
 Yolk.Server.Create
 \end_layout
@@ -4684,8 +4748,7 @@ Creating a server is done by calling the
 Create
 \emph default
  function.
- This function accepts a set of parameters that should be fairly self-explanator
-y.
+ This function accepts one parameter that should be fairly self-explanatory.
 \end_layout
 
 \begin_layout Standard
@@ -4710,20 +4773,6 @@ status open
 
 \begin_layout Plain Layout
 
-type Resource_Dispatchers is not null access 
-\end_layout
-
-\begin_layout Plain Layout
-
-  procedure (RH : out AWS.Services.Dispatchers.URI.Handler);
-\end_layout
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\begin_layout Plain Layout
-
 type HTTP is tagged limited private;
 \end_layout
 
@@ -4738,13 +4787,7 @@ function Create
 
 \begin_layout Plain Layout
 
-  (Set_Dispatchers : in Resource_Dispatchers;       
-\end_layout
-
-\begin_layout Plain Layout
-
-   Unexpected      : in AWS.Exceptions.Unexpected_Exception_Handler)     
-  
+  (Unexpected : in AWS.Exceptions.Unexpected_Exception_Handler)       
 \end_layout
 
 \begin_layout Plain Layout
@@ -4760,79 +4803,6 @@ function Create
 \end_inset
 
 
-\end_layout
-
-\begin_layout Standard
-Worth noting is the 
-\emph on
-Set_Dispatchers
-\emph default
- parameter.
- This parameter is access to a procedure which must handle adding 
-\emph on
-all
-\emph default
- the URI and WebSocket dispatchers the application needs.
- There's currently only support for URI dispatchers, so if your application
- needs any of the other AWS dispatchers (Method, Linker, Timer etc.
- etc.) then you will have to manage creating and starting/stopping the AWS
- component manually.
-\end_layout
-
-\begin_layout Standard
-Another potential manual operation is setting the 
-\emph on
-Cache-Control
-\emph default
- header.
- This can become necessary if you
-\end_layout
-
-\begin_layout Enumerate
-use 
-\emph on
-Yolk.Server
-\emph default
- to create and start your AWS server and
-\end_layout
-
-\begin_layout Enumerate
-use the 
-\emph on
-Yolk.Handlers
-\emph default
- package to register dispatchers for static content and
-\end_layout
-
-\begin_layout Enumerate
-have the 
-\emph on
-Compress_Static_Content
-\emph default
- configuration parameter set to 
-\emph on
-True
-\end_layout
-
-\begin_layout Enumerate
-aren't content with the default 
-\emph on
-Cache-Control
-\emph default
- header
-\end_layout
-
-\begin_layout Standard
-In that case you can use the 
-\emph on
-Yolk.Static_Content.Set_Cache_Options
-\emph default
- procedure to work your own magic on the 
-\emph on
-Cache-Control
-\emph default
- header sent to clients requesting static content.
- See the Yolk.Static_Content chapter for more information.
 \end_layout
 
 \begin_layout Subsection
@@ -4866,7 +4836,12 @@ procedure Start
 
 \begin_layout Plain Layout
 
-  (WS : in out HTTP);
+  (WS          : in out HTTP;
+\end_layout
+
+\begin_layout Plain Layout
+
+   Dispatchers : in     AWS.Dispatchers.Handler'Class);
 \end_layout
 
 \end_inset
@@ -4880,7 +4855,9 @@ procedure Start
 \end_layout
 
 \begin_layout Standard
-This does as expected: Starts the server.
+This does as expected: Starts the server with
+\emph on
+ Dispatchers.
 \end_layout
 
 \begin_layout Standard
@@ -5028,6 +5005,21 @@ This does as expected: Stops everything that was started when the
 Yolk.Server.Start
 \emph default
  call was made.
+ Note that if sessions support is turned on for the server, then the 
+\emph on
+Dispatchers
+\emph default
+ are switched for a plain 
+\emph on
+Not Found
+\emph default
+ dispatcher when 
+\emph on
+Stop
+\emph default
+ is called.
+ This is done to prevent session tampering while the server is shutting
+ down.
 \end_layout
 
 \begin_layout Section
@@ -5999,9 +5991,9 @@ procedure Set_Cache_Options
 \end_layout
 
 \begin_layout Standard
-This should preferably be called after having called 
+This MUST be called immediately after having called 
 \emph on
-Yolk.Server.Create
+Yolk.Server.Start
 \emph default
 , since the call to 
 \emph on
@@ -6009,7 +6001,7 @@ Static_Content_Cache_Setup
 \emph default
  in 
 \emph on
-Create
+Start
 \emph default
  will overwrite the cache options.
 \end_layout

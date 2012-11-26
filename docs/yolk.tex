@@ -34,7 +34,7 @@
 \title{Yolk Manual}
 
 
-\date{Revised October 19th. 2012}
+\date{Revised November 26th. 2012}
 
 \maketitle
 \newpage{}
@@ -117,10 +117,8 @@ directory.
 
 When you read this document and the Yolk source code, you'll notice
 that quite a few packages depend on various files being available
-at specified locations. This is for example the case with the \emph{Yolk.Configuration}
-package, that must have a \emph{config.ini} file available in the
-\emph{configuration/} directory, or the \emph{Yolk.Whoops} package
-that expects its template file to be found at the path \emph{templates/system/500.tmpl}
+at specified locations. This is for example the case with the \emph{Yolk.Whoops}
+package that expects its template file to be found at the path \emph{templates/system/500.tmpl}
 
 All such {}``dependencies'' will of course be noted accordingly
 as we go along, but instead of forgetting one or more in your own
@@ -150,10 +148,12 @@ or take a look at the source for yourself.
 
 \section{Yolk}
 
-The Yolk main package currently only contain one thing: The Yolk \emph{Version}
-string. This is used in a few places, for example in the \emph{directory.tmpl}
-template file, but obviously it's not something that's of vital importance
-to most applications.
+The Yolk main package currently only contain only a few things: The
+Yolk \emph{Version} string and a \emph{Config\_File} function to get
+the location of the configuration file. These are used in a few places,
+for example in the \emph{directory.tmpl} template file (the version
+string) and in the \emph{Yolk.Configuration} package (the \emph{Config\_File}
+function).
 
 
 \section{Yolk.Cache.Discrete\_Keys}
@@ -573,16 +573,15 @@ generic
    type Key_Type is (<>);
    type Defaults_Array_Type is array (Key_Type) of Unbounded_String;
    Defaults    : in Defaults_Array_Type;    
-   Config_File : in String := "configuration/config.ini";
+   Config_File : in String;
 package Yolk.Config_File_Parser is
 ...
 \end{lstlisting}
 %
 \end{minipage}
 
-Note that the \emph{Config\_File} parameter has a default value. This
-path is actually where Yolk expects to find the configuration file
-used by the \emph{Yolk.Configuration} package.
+\emph{Config\_File} is of course the name and location of the configuration
+file.
 
 
 \subsection{Exceptions}
@@ -593,8 +592,8 @@ package. These are:
 \item \emph{Unknown\_Key}. This is raised if an unknown key has been found
 in the configuration file given when instantiating the package or
 when \emph{Load\_File} is called.
-\item \emph{Cannot\_Open\_Config\_File}. This is raised when a configuration
-file cannot be read.
+\item \emph{Cannot\_Open\_Config\_File}. This is raised when \emph{Config\_File}
+cannot be read.
 \item \emph{Conversion\_Error}. This is raised when a value cannot be converted
 to the target type, ie. the value {}``42'' to a \emph{Boolean}.
 \end{itemize}
@@ -713,50 +712,43 @@ like this:
 \begin{minipage}[t]{1\columnwidth}%
 \begin{lstlisting}[basicstyle={\small\sffamily},frame=tblr,language=Ada,showstringspaces=false,tabsize=3,xleftmargin=1em,xrightmargin=1em]
 package Config is new Config_File_Parser
-  (Key_Type => Keys,
+  (Key_Type            => Keys,
    Defaults_Array_Type => Defaults_Array,
-   Defaults => Default_Values,
-   Config_File => "configuration/config.ini");
+   Defaults            => Default_Values,
+   Config_File         => Config_File);
 \end{lstlisting}
 %
 \end{minipage}
 
-As you can see, it is required that there's a configuration file found
-in \emph{configuration/config.ini}. This path is of course relative
-to the application. There's a fully commented \emph{config.ini.dist}
-file available in the \emph{extras/} directory. The only way to avoid
-having \emph{config.ini} in the \emph{configuration/} directory is
-if you manually change the path in the source file before compiling
-Yolk.
+The \emph{Config\_File} function call return either the default Yolk
+configuration file (\emph{configuration/config.ini}) or a user specified
+configuration file given by the \emph{--yolk-config-file} command
+line argument, so\emph{ }starting for example the Yolk demo like this:
+\begin{lyxcode}
+./yolk\_demo~-{}-yolk-config-file~/etc/yolk-config.ini
+\end{lyxcode}
+will force the demo to look for the \emph{/etc/yolk-config.ini} configuration
+file.
 
-I recommend taking a look at the Yolk demo application to see how
-the \emph{Yolk.Configuration} package is used.
+There's a fully commented \emph{config.ini.dist} file available in
+the \emph{extras/} directory. I recommend taking a look at the Yolk
+demo application to see how the \emph{Yolk.Configuration} package
+is used.
 
 
 \subsection{Get the AWS specific configuration settings}
 
-When you start an AWS server, you need to give it an \emph{AWS.Config.Object}
-with all the necessary configuration settings. This is already handled
-for you in \emph{Yolk.Configuration}, all you have to do is call the
-\emph{Get\_AWS\_Configuration} function:
+On some occassions it might be necessary to get the AWS configuration
+object. This can easily be accomplished by calling the \emph{Get\_AWS\_Configuration}
+function:
 
 \begin{minipage}[t]{1\columnwidth}%
 \begin{lstlisting}[basicstyle={\small\sffamily},frame=tblr,language=Ada,showstringspaces=false,tabsize=3,xleftmargin=1em,xrightmargin=1em]
 AWS_Config : constant AWS.Config.Object := 
   Yolk.Configuration.Get_AWS_Configuration;
-AWS.Server.Start (Web_Server => Web_Server,
-                  Dispatcher => Resource_Handlers,
-                  Config     => AWS_Config);
 \end{lstlisting}
 %
 \end{minipage}
-
-You're not forced to use this, if you don't want to. But even if you
-don't, you'll still have to make a valid configuration file available
-in the configuration directory defined in the \emph{Config} instantiation,
-so you might as well use this as the configuration foundation for
-the AWS HTTP server component of your application. Again, see the
-demo application for examples on how this is done.
 
 
 \section{Yolk.Email}
@@ -1159,24 +1151,27 @@ See the \emph{demo/src/my\_handlers.adb} file for more information.
 \section{Yolk.Process\_Control}
 
 With \emph{Yolk.Process\_Control} you get the ability to control your
-application using the SIGINT, SIGPWR and SIGTERM signals. You also
-get a PID file placed next to your executable, which coupled with
-the \emph{extras/rc.yolk} script gives you a rather nice and simple
-way of starting and stopping your application.
+application using the SIGINT, SIGPWR and SIGTERM signals. You can
+also get a PID file placed next to your executable (see the \emph{PID\_File}
+configuration parameter), which coupled with the \emph{extras/rc.yolk}
+script gives you a rather nice and simple way of starting and stopping
+your application.
 
 
 \subsection{Exceptions}
 
 These are:
 \begin{itemize}
-\item \emph{Cannot\_Create\_PID\_File}. Is raised if the PID file cannot
-be created, eg. if the application lacks permissions to write to the
-directory where the executable is located.
-\item \emph{Cannot\_Delete\_PID\_File}. Is raised if the PID file cannot
-be deleted, eg. if the application lacks permissions to write to the
-directory where the executable is located, or to the PID file itself.
-\item \emph{PID\_File\_Exists}. Is raised when the PID file already exists,
-ie. the application is already running or it was shutdown incorrectly.
+\item \emph{Cannot\_Create\_PID\_File}. Is raised if the \emph{PID\_File}
+cannot be created, eg. if the application lacks permissions to write
+to the directory where the \emph{PID\_File} is located.
+\item \emph{Cannot\_Delete\_PID\_File}. Is raised if the \emph{PID\_file}
+cannot be deleted, eg. if the application lacks permissions to write
+to the directory where the \emph{PID\_File} is located, or to the
+\emph{PID\_File} itself.
+\item \emph{PID\_File\_Exists}. Is raised when the \emph{PID\_File} already
+exists, ie. the application is already running or it was shutdown
+incorrectly.
 \end{itemize}
 
 \subsection{Using Yolk.Process\_Control}
@@ -1208,7 +1203,8 @@ procedure Wait;
 %
 \end{minipage}
 
-When you call the \emph{Wait} procedure, you basically hang here until
+When you call the \emph{Wait} procedure, you basically hang there
+until
 \begin{enumerate}
 \item The \emph{Stop} procedure is called
 \item The application receives a SIGINT, SIGPWR or SIGTERM signal
@@ -1298,43 +1294,15 @@ This is a convenience package to handle creating, starting and stopping
 an AWS HTTP server. The biggest drawback to this package is that it
 can only create and manage \emph{one} AWS server.
 
-
-\subsection{Yolk.Server.Create}
-
-Creating a server is done by calling the \emph{Create} function. This
-function accepts a set of parameters that should be fairly self-explanatory.
-
-\begin{minipage}[t]{1\columnwidth}%
-\begin{lstlisting}[basicstyle={\small\sffamily},frame=tblr,language=Ada,showstringspaces=false,tabsize=3,xleftmargin=1em,xrightmargin=1em]
-type Resource_Dispatchers is not null access 
-  procedure (RH : out AWS.Services.Dispatchers.URI.Handler);
-
-type HTTP is tagged limited private;
-
-function Create
-  (Set_Dispatchers : in Resource_Dispatchers;       
-   Unexpected      : in AWS.Exceptions.Unexpected_Exception_Handler)       
-   return HTTP;    
-\end{lstlisting}
-%
-\end{minipage}
-
-Worth noting is the \emph{Set\_Dispatchers} parameter. This parameter
-is access to a procedure which must handle adding \emph{all} the URI
-and WebSocket dispatchers the application needs. There's currently
-only support for URI dispatchers, so if your application needs any
-of the other AWS dispatchers (Method, Linker, Timer etc. etc.) then
-you will have to manage creating and starting/stopping the AWS component
-manually.
-
-Another potential manual operation is setting the \emph{Cache-Control}
-header. This can become necessary if you
+Note a potential manual operation when using the \emph{Yolk.Server
+}package : Setting the \emph{Cache-Control} header. This can become
+necessary if you
 \begin{enumerate}
-\item use \emph{Yolk.Server} to create and start your AWS server and
+\item use \emph{Yolk.Server} to create and start your AWS server AND
 \item use the \emph{Yolk.Handlers} package to register dispatchers for static
-content and
+content AND
 \item have the \emph{Compress\_Static\_Content} configuration parameter
-set to \emph{True}
+set to \emph{True }AND
 \item aren't content with the default \emph{Cache-Control} header
 \end{enumerate}
 In that case you can use the \emph{Yolk.Static\_Content.Set\_Cache\_Options}
@@ -1343,17 +1311,35 @@ sent to clients requesting static content. See the Yolk.Static\_Content
 chapter for more information.
 
 
+\subsection{Yolk.Server.Create}
+
+Creating a server is done by calling the \emph{Create} function. This
+function accepts one parameter that should be fairly self-explanatory.
+
+\begin{minipage}[t]{1\columnwidth}%
+\begin{lstlisting}[basicstyle={\small\sffamily},frame=tblr,language=Ada,showstringspaces=false,tabsize=3,xleftmargin=1em,xrightmargin=1em]
+type HTTP is tagged limited private;
+
+function Create
+  (Unexpected : in AWS.Exceptions.Unexpected_Exception_Handler)       
+   return HTTP;    
+\end{lstlisting}
+%
+\end{minipage}
+
+
 \subsection{Yolk.Server.Start}
 
 \begin{minipage}[t]{1\columnwidth}%
 \begin{lstlisting}[basicstyle={\small\sffamily},frame=tblr,language=Ada,showstringspaces=false,tabsize=3,xleftmargin=1em,xrightmargin=1em]
 procedure Start 
-  (WS : in out HTTP);
+  (WS          : in out HTTP;
+   Dispatchers : in     AWS.Dispatchers.Handler'Class);
 \end{lstlisting}
 %
 \end{minipage}
 
-This does as expected: Starts the server.
+This does as expected: Starts the server with\emph{ Dispatchers.}
 
 When calling \emph{Start} several things happen:
 \begin{enumerate}
@@ -1386,7 +1372,11 @@ procedure Stop
 \end{minipage}
 
 This does as expected: Stops everything that was started when the
-\emph{Yolk.Server.Start} call was made.
+\emph{Yolk.Server.Start} call was made. Note that if sessions support
+is turned on for the server, then the \emph{Dispatchers} are switched
+for a plain \emph{Not Found} dispatcher when \emph{Stop} is called.
+This is done to prevent session tampering while the server is shutting
+down.
 
 
 \section{Yolk.Static\_Content}
@@ -1665,8 +1655,8 @@ procedure Set_Cache_Options
 %
 \end{minipage}
 
-This should preferably be called after having called \emph{Yolk.Server.Create},
-since the call to \emph{Static\_Content\_Cache\_Setup} in \emph{Create}
+This MUST be called immediately after having called \emph{Yolk.Server.Start},
+since the call to \emph{Static\_Content\_Cache\_Setup} in \emph{Start}
 will overwrite the cache options.
 
 

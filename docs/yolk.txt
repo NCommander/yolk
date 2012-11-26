@@ -1,6 +1,6 @@
 Yolk Manual
 
-Revised October 19th. 2012
+Revised November 26th. 2012
 
 
 
@@ -84,10 +84,8 @@ root directory.
 When you read this document and the Yolk source code, you'll 
 notice that quite a few packages depend on various files being 
 available at specified locations. This is for example the case 
-with the Yolk.Configuration package, that must have a config.ini 
-file available in the configuration/ directory, or the 
-Yolk.Whoops package that expects its template file to be found at 
-the path templates/system/500.tmpl
+with the Yolk.Whoops package that expects its template file to be 
+found at the path templates/system/500.tmpl
 
 All such “dependencies” will of course be noted accordingly as we 
 go along, but instead of forgetting one or more in your own 
@@ -116,10 +114,12 @@ The Yolk Packages
 
 3 Yolk
 
-The Yolk main package currently only contain one thing: The Yolk 
-Version string. This is used in a few places, for example in the 
-directory.tmpl template file, but obviously it's not something 
-that's of vital importance to most applications.
+The Yolk main package currently only contain only a few things: 
+The Yolk Version string and a Config_File function to get the 
+location of the configuration file. These are used in a few 
+places, for example in the directory.tmpl template file (the 
+version string) and in the Yolk.Configuration package (the 
+Config_File function).
 
 4 Yolk.Cache.Discrete_Keys
 
@@ -540,16 +540,15 @@ Unbounded_String;
 
    Defaults    : in Defaults_Array_Type;    
 
-   Config_File : in String := "configuration/config.ini";
+   Config_File : in String;
 
 package Yolk.Config_File_Parser is
 
 ...
 
 
-Note that the Config_File parameter has a default value. This 
-path is actually where Yolk expects to find the configuration 
-file used by the Yolk.Configuration package.
+Config_File is of course the name and location of the 
+configuration file.
 
 6.2 Exceptions
 
@@ -560,8 +559,8 @@ Yolk.Config_File_Parser package. These are:
   the configuration file given when instantiating the package or 
   when Load_File is called.
 
-• Cannot_Open_Config_File. This is raised when a configuration 
-  file cannot be read.
+• Cannot_Open_Config_File. This is raised when Config_File cannot 
+  be read.
 
 • Conversion_Error. This is raised when a value cannot be 
   converted to the target type, ie. the value “42” to a Boolean.
@@ -681,50 +680,39 @@ The instantiation looks like this:
 
 package Config is new Config_File_Parser
 
-  (Key_Type => Keys,
+  (Key_Type            => Keys,
 
    Defaults_Array_Type => Defaults_Array,
 
-   Defaults => Default_Values,
+   Defaults            => Default_Values,
 
-   Config_File => "configuration/config.ini");
+   Config_File         => Config_File);
 
 
-As you can see, it is required that there's a configuration file 
-found in configuration/config.ini. This path is of course 
-relative to the application. There's a fully commented 
-config.ini.dist file available in the extras/ directory. The only 
-way to avoid having config.ini in the configuration/ directory is 
-if you manually change the path in the source file before 
-compiling Yolk.
+The Config_File function call return either the default Yolk 
+configuration file (configuration/config.ini) or a user specified 
+configuration file given by the --yolk-config-file command line 
+argument, so starting for example the Yolk demo like this:
 
-I recommend taking a look at the Yolk demo application to see how 
-the Yolk.Configuration package is used.
+./yolk_demo --yolk-config-file /etc/yolk-config.ini
+
+will force the demo to look for the /etc/yolk-config.ini 
+configuration file.
+
+There's a fully commented config.ini.dist file available in the 
+extras/ directory. I recommend taking a look at the Yolk demo 
+application to see how the Yolk.Configuration package is used.
 
 7.1 Get the AWS specific configuration settings
 
-When you start an AWS server, you need to give it an 
-AWS.Config.Object with all the necessary configuration settings. 
-This is already handled for you in Yolk.Configuration, all you 
-have to do is call the Get_AWS_Configuration function:
+On some occassions it might be necessary to get the AWS 
+configuration object. This can easily be accomplished by calling 
+the Get_AWS_Configuration function:
 
 AWS_Config : constant AWS.Config.Object := 
 
   Yolk.Configuration.Get_AWS_Configuration;
 
-AWS.Server.Start (Web_Server => Web_Server,
-
-                  Dispatcher => Resource_Handlers,
-
-                  Config     => AWS_Config);
-
-
-You're not forced to use this, if you don't want to. But even if 
-you don't, you'll still have to make a valid configuration file 
-available in the configuration directory defined in the Config 
-instantiation, so you might as well use this as the configuration 
-foundation for the AWS HTTP server component of your application. 
-Again, see the demo application for examples on how this is done.
 
 8 Yolk.Email
 
@@ -1219,25 +1207,26 @@ information.
 13 Yolk.Process_Control
 
 With Yolk.Process_Control you get the ability to control your 
-application using the SIGINT, SIGPWR and SIGTERM signals. You 
-also get a PID file placed next to your executable, which coupled 
-with the extras/rc.yolk script gives you a rather nice and simple 
-way of starting and stopping your application.
+application using the SIGINT, SIGPWR and SIGTERM signals. You can 
+also get a PID file placed next to your executable (see the 
+PID_File configuration parameter), which coupled with the 
+extras/rc.yolk script gives you a rather nice and simple way of 
+starting and stopping your application.
 
 13.1 Exceptions
 
 These are:
 
-• Cannot_Create_PID_File. Is raised if the PID file cannot be 
+• Cannot_Create_PID_File. Is raised if the PID_File cannot be 
   created, eg. if the application lacks permissions to write to 
-  the directory where the executable is located.
+  the directory where the PID_File is located.
 
-• Cannot_Delete_PID_File. Is raised if the PID file cannot be 
+• Cannot_Delete_PID_File. Is raised if the PID_file cannot be 
   deleted, eg. if the application lacks permissions to write to 
-  the directory where the executable is located, or to the PID 
-  file itself.
+  the directory where the PID_File is located, or to the PID_File 
+  itself.
 
-• PID_File_Exists. Is raised when the PID file already exists, 
+• PID_File_Exists. Is raised when the PID_File already exists, 
   ie. the application is already running or it was shutdown 
   incorrectly.
 
@@ -1270,7 +1259,7 @@ procedure Stop;
 procedure Wait;
 
 
-When you call the Wait procedure, you basically hang here until
+When you call the Wait procedure, you basically hang there until
 
 1. The Stop procedure is called
 
@@ -1361,50 +1350,17 @@ This is a convenience package to handle creating, starting and
 stopping an AWS HTTP server. The biggest drawback to this package 
 is that it can only create and manage one AWS server.
 
-15.1 Yolk.Server.Create
+Note a potential manual operation when using the Yolk.Server 
+package : Setting the Cache-Control header. This can become 
+necessary if you
 
-Creating a server is done by calling the Create function. This 
-function accepts a set of parameters that should be fairly 
-self-explanatory.
-
-type Resource_Dispatchers is not null access 
-
-  procedure (RH : out AWS.Services.Dispatchers.URI.Handler);
-
-
-
-type HTTP is tagged limited private;
-
-
-
-function Create
-
-  (Set_Dispatchers : in Resource_Dispatchers;       
-
-   Unexpected      : in 
-AWS.Exceptions.Unexpected_Exception_Handler)       
-
-   return HTTP;    
-
-
-Worth noting is the Set_Dispatchers parameter. This parameter is 
-access to a procedure which must handle adding all the URI and 
-WebSocket dispatchers the application needs. There's currently 
-only support for URI dispatchers, so if your application needs 
-any of the other AWS dispatchers (Method, Linker, Timer etc. 
-etc.) then you will have to manage creating and starting/stopping 
-the AWS component manually.
-
-Another potential manual operation is setting the Cache-Control 
-header. This can become necessary if you
-
-1. use Yolk.Server to create and start your AWS server and
+1. use Yolk.Server to create and start your AWS server AND
 
 2. use the Yolk.Handlers package to register dispatchers for 
-  static content and
+  static content AND
 
 3. have the Compress_Static_Content configuration parameter set 
-  to True
+  to True AND
 
 4. aren't content with the default Cache-Control header
 
@@ -1414,14 +1370,34 @@ magic on the Cache-Control header sent to clients requesting
 static content. See the Yolk.Static_Content chapter for more 
 information.
 
+15.1 Yolk.Server.Create
+
+Creating a server is done by calling the Create function. This 
+function accepts one parameter that should be fairly 
+self-explanatory.
+
+type HTTP is tagged limited private;
+
+
+
+function Create
+
+  (Unexpected : in AWS.Exceptions.Unexpected_Exception_Handler)   
+    
+
+   return HTTP;    
+
+
 15.2 Yolk.Server.Start
 
 procedure Start 
 
-  (WS : in out HTTP);
+  (WS          : in out HTTP;
+
+   Dispatchers : in     AWS.Dispatchers.Handler'Class);
 
 
-This does as expected: Starts the server.
+This does as expected: Starts the server with Dispatchers.
 
 When calling Start several things happen:
 
@@ -1456,7 +1432,10 @@ procedure Stop
 
 
 This does as expected: Stops everything that was started when the 
-Yolk.Server.Start call was made.
+Yolk.Server.Start call was made. Note that if sessions support is 
+turned on for the server, then the Dispatchers are switched for a 
+plain Not Found dispatcher when Stop is called. This is done to 
+prevent session tampering while the server is shutting down.
 
 16 Yolk.Static_Content
 
@@ -1737,9 +1716,9 @@ procedure Set_Cache_Options
    Proxy_Revalidate  : in Boolean := False);
 
 
-This should preferably be called after having called 
-Yolk.Server.Create, since the call to Static_Content_Cache_Setup 
-in Create will overwrite the cache options.
+This MUST be called immediately after having called 
+Yolk.Server.Start, since the call to Static_Content_Cache_Setup 
+in Start will overwrite the cache options.
 
 17 Yolk.Syndication
 
