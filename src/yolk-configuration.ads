@@ -357,7 +357,8 @@ package Yolk.Configuration is
    package Config is new Config_File_Parser
      (Key_Type            => Keys,
       Defaults_Array_Type => Defaults_Array,
-      Defaults            => Default_Values);
+      Defaults            => Default_Values,
+      Config_File         => Config_File);
 
    function Get_AWS_Configuration return AWS.Config.Object;
    --  Load the AWS relevant configuration settings from the config.ini file.

@@ -2,7 +2,7 @@
 --                                                                           --
 --                                  Yolk                                     --
 --                                                                           --
---                                  SPEC                                     --
+--                                  BODY                                     --
 --                                                                           --
 --                   Copyright (C) 2010-2012, Thomas Løcke                   --
 --                                                                           --
@@ -24,12 +24,28 @@
 --                                                                           --
 -------------------------------------------------------------------------------
 
-package Yolk is
+with Ada.Command_Line;
 
-   Version : constant String := "0.82";
+package body Yolk is
+
+   -------------------
+   --  Config_File  --
+   -------------------
 
    function Config_File
-     return String;
-   --  Return the name and location of the configuration file.
+     return String
+   is
+      use Ada.Command_Line;
+   begin
+      for k in 1 .. Argument_Count loop
+         if Argument (k) = "--yolk-config-file"
+           and then k < Argument_Count
+         then
+            return Argument (k + 1);
+         end if;
+      end loop;
+
+      return "configuration/config.ini";
+   end Config_File;
 
 end Yolk;
