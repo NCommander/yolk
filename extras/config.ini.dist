@@ -794,16 +794,23 @@ Max_WebSocket_Handler 5
 MIME_Types_File configuration/aws.mime
 # String
 # Default: configuration/aws.mime
-# Used by AWS: yes
+# AWS configuration option: yes
 #
 # The MIME type file. MIME types defined in this file are added to AWS if
 # Load_MIME_Types_File is True and Yolk.Server.Create is used to create the
 # AWS server.
 
+PID_File
+# String
+# Default: [no value]
+# AWS configuration option: no
+#
+# Path to the PID file. If this is empty, then no PID file is written.
+
 Protocol_Family Family_Unspec
 # String
 # Default: Family_Unspec
-# Used by AWS: yes
+# AWS configuration option: yes
 #
 # Set the server protocol family.
 #     Family_Inet for IPv4

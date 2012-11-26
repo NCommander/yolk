@@ -26,25 +26,23 @@
 --                                                                           --
 -------------------------------------------------------------------------------
 
-with Ada.Command_Line;
 with Ada.Directories;
 with Ada.Interrupts.Names;
 with Ada.Strings.Fixed;
 with Ada.Text_IO;
 with POSIX.Process_Identification;
+with Yolk.Configuration;
 
 package body Yolk.Process_Control is
 
-   use Ada.Command_Line;
    use Ada.Directories;
+   use Yolk.Configuration;
 
    type Controller_State is (Running, Shutdown, Stopped);
 
-   PID : constant String :=
-           Compose
-             (Containing_Directory => Current_Directory,
-              Name                 => Simple_Name (Command_Name & ".pid"));
-   --  Path to the PID file. Is set to /path/to/executable/<programname>.pid
+   PID : constant String := Config.Get (PID_File);
+   --  Path to the PID file. If this is empty, then no PID file is written. The
+   --  Yolk default is empty.
 
    Wait_Called : Boolean := False;
    --  Is set to True when Wait has been called. This is used to test if we've
@@ -52,9 +50,7 @@ package body Yolk.Process_Control is
 
    procedure Create_PID_File;
    procedure Delete_PID_File;
-   --  Create and delete the PID file. This file is per default placed in the
-   --  same directory as the server executable itself. This can be changed by
-   --  altering the PID constant.
+   --  Create and delete the PID file.
 
    ------------------
    --  Controller  --
@@ -62,8 +58,8 @@ package body Yolk.Process_Control is
 
    protected Controller is
       entry Check;
-      --  If Controller_State is Shutdown then Delete_PID_File is called and
-      --  the Wait procedure completes.
+      --  If Controller_State is Shutdown the Wait procedure completes. If PID
+      --  is non-empty then Delete_PID_File is called.
 
       procedure Handle_Kill;
       --  Set Controller.State to Shutdown.
@@ -76,7 +72,7 @@ package body Yolk.Process_Control is
 
       entry Start;
       --  Called by Wait. Set Controller.State to Running and calls
-      --  Create_PID_File.
+      --  Create_PID_File if PID is non-empty.
 
    private
       State : Controller_State := Stopped;
@@ -169,7 +165,10 @@ package body Yolk.Process_Control is
       entry Check when State = Shutdown
       is
       begin
-         Delete_PID_File;
+         if PID /= "" then
+            Delete_PID_File;
+         end if;
+
          State := Stopped;
       end Check;
 
@@ -181,7 +180,10 @@ package body Yolk.Process_Control is
       is
       begin
          State := Running;
-         Create_PID_File;
+
+         if PID /= "" then
+            Create_PID_File;
+         end if;
       end Start;
 
       -------------------

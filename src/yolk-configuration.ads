@@ -106,6 +106,7 @@ package Yolk.Configuration is
                  MIME_Types_File, --  AWS
                  Notice_Log_Activate,
                  Notice_Syslog_Facility_Level,
+                 PID_File,
                  Protocol_Family, --  AWS
                  Receive_Timeout, --  AWS
                  Reuse_Address, --  AWS
@@ -273,6 +274,8 @@ package Yolk.Configuration is
                        => U ("True"),
                        Notice_Syslog_Facility_Level
                        => U ("user:notice"),
+                       PID_File
+                       => U (""),
                        Protocol_Family
                        => U ("Family_Unspec"),
                        Receive_Timeout
