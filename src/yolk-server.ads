@@ -29,27 +29,19 @@
 with AWS.Config;
 with AWS.Exceptions;
 with AWS.Server;
-with AWS.Services.Dispatchers.URI;
+with AWS.Dispatchers;
 
 package Yolk.Server is
-
-   type Resource_Dispatchers is not null access
-     procedure (RH : out AWS.Services.Dispatchers.URI.Handler);
 
    type HTTP is tagged limited private;
 
    function Create
-     (Set_Dispatchers : in Resource_Dispatchers;
-      Unexpected      : in AWS.Exceptions.Unexpected_Exception_Handler)
+     (Unexpected : in AWS.Exceptions.Unexpected_Exception_Handler)
       return HTTP;
    --  Create a HTTP object. This contains an AWS HTTP server that is
    --  configured according to the configuration settings found in
    --  ./configuration/config.ini.
    --
-   --  Set_Dispatchers
-   --    Access to a procedure that set ALL the necessary URI dispatchers for
-   --    the HTTP server. This includes the default callback and whatever
-   --    WebSocket URI's that might need to be registered.
    --  Unexcpected
    --    Access to the unexpected exception handler.
    --
@@ -59,8 +51,12 @@ package Yolk.Server is
    --  point.
 
    procedure Start
-     (WS : in out HTTP);
+     (WS          : in out HTTP;
+      Dispatchers : in     AWS.Dispatchers.Handler'Class);
    --  Start the AWS HTTP(S) server.
+   --
+   --  Dispatchers
+   --    Dispatcher services for the server.
 
    procedure Stop
      (WS : in out HTTP);
@@ -71,7 +67,6 @@ private
    type HTTP is tagged limited
       record
          Handle_The_Unexpected : AWS.Exceptions.Unexpected_Exception_Handler;
-         URI_Handlers          : AWS.Services.Dispatchers.URI.Handler;
          Web_Server            : AWS.Server.HTTP;
          Web_Server_Config     : AWS.Config.Object;
       end record;

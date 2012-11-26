@@ -202,6 +202,10 @@ package body Websocket_Demo is
    procedure Start
    is
    begin
+      AWS.Net.WebSocket.Registry.Register
+        (URI     => "/websocket",
+         Factory => Websocket_Demo.Create'Access);
+
       Clocker.Start;
    end Start;
 

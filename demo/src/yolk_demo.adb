@@ -42,13 +42,12 @@ procedure Yolk_Demo is
    use Yolk.Server;
 
    Web_Server : HTTP := Create
-     (Set_Dispatchers => My_Handlers.Set'Access,
-      Unexpected      => Yolk.Whoops.Unexpected_Exception_Handler'Access);
+     (Unexpected => Yolk.Whoops.Unexpected_Exception_Handler'Access);
 begin
    Set_User (Username => Config.Get (Yolk_User));
    --  Switch user.
 
-   Web_Server.Start;
+   Web_Server.Start (Dispatchers => My_Handlers.Get);
    --  Start the HTTP server.
 
    Websocket_Demo.Start;

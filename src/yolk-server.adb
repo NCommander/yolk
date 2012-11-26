@@ -27,12 +27,15 @@
 -------------------------------------------------------------------------------
 
 with Ada.Directories;
+with AWS.Dispatchers.Callback;
 with AWS.MIME;
 with AWS.Net.WebSocket.Registry.Control;
 with AWS.Server.Log;
+with AWS.Services.Dispatchers.URI;
 with AWS.Session;
 with Yolk.Configuration;
 with Yolk.Log;
+with Yolk.Not_Found;
 with Yolk.Static_Content;
 
 package body Yolk.Server is
@@ -73,8 +76,7 @@ package body Yolk.Server is
    --------------
 
    function Create
-     (Set_Dispatchers : in Resource_Dispatchers;
-      Unexpected      : in AWS.Exceptions.Unexpected_Exception_Handler)
+     (Unexpected : in AWS.Exceptions.Unexpected_Exception_Handler)
       return HTTP
    is
       use Yolk.Configuration;
@@ -87,8 +89,6 @@ package body Yolk.Server is
 
          if State = Not_Initialized then
             WS.Web_Server_Config := Get_AWS_Configuration;
-
-            Set_Dispatchers (WS.URI_Handlers);
 
             WS.Handle_The_Unexpected := Unexpected;
          end if;
@@ -121,7 +121,8 @@ package body Yolk.Server is
    -------------
 
    procedure Start
-     (WS : in out HTTP)
+     (WS          : in out HTTP;
+      Dispatchers : in     AWS.Dispatchers.Handler'Class)
    is
       use Ada.Directories;
       use Yolk.Configuration;
@@ -153,7 +154,7 @@ package body Yolk.Server is
          end if;
 
          AWS.Server.Start (Web_Server => WS.Web_Server,
-                           Dispatcher => WS.URI_Handlers,
+                           Dispatcher => Dispatchers,
                            Config     => WS.Web_Server_Config);
 
          if Config.Get (Start_WebSocket_Servers) then
@@ -191,16 +192,30 @@ package body Yolk.Server is
    procedure Stop
      (WS : in out HTTP)
    is
+      use AWS.Dispatchers.Callback;
       use Yolk.Configuration;
       use Yolk.Log;
 
-      State : State_Type;
+      Shutdown_Dispatcher : AWS.Services.Dispatchers.URI.Handler;
+      State               : State_Type;
    begin
       State_Manager.Set (Current_State => State,
                          New_State     => Stopped);
 
       if State = Started then
          if AWS.Config.Session (WS.Web_Server_Config) then
+            AWS.Services.Dispatchers.URI.Register_Default_Callback
+              (Dispatcher => Shutdown_Dispatcher,
+               Action     => Create
+                 (Yolk.Not_Found.Generate'Access));
+
+            AWS.Server.Set (Web_Server => WS.Web_Server,
+                            Dispatcher => Shutdown_Dispatcher);
+            --  We're shutting down. Replace all dispatchers with a plain
+            --  not found, so no more changes can happen to the sessions
+            --  between saving them to file and actually shutting down the
+            --  HTTP server.
+
             AWS.Session.Save (Config.Get (Session_Data_File));
          end if;
 

@@ -27,8 +27,8 @@ with AWS.Services.Dispatchers.URI;
 
 package My_Handlers is
 
-   procedure Set
-     (RH : out AWS.Services.Dispatchers.URI.Handler);
+   function Get
+     return AWS.Services.Dispatchers.URI.Handler;
    --  Register content dispatchers for the server.
 
 end My_Handlers;
