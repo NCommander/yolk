@@ -78,8 +78,7 @@ a simple matter of:
     $ ./yolk_demo
     Using your browser, visit http://localhost:4242
 
-You can stop the server cleanly pressing CTRL+c. Or simply kill the PID found
-in the exe/yolk_demo.pid file.
+You can stop the server cleanly by pressing CTRL+c.
 
 Instead of starting/stopping the application by calling the yolk_demo executable
 directly, you can use the tools/rc.yolk script. Using this will enable you to
