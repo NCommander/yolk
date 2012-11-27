@@ -42,10 +42,7 @@ LOCATION=/home/thomas/Ada/yolk/demo/exe
 # Path to the config.ini file.
 CONFIG=configuration/config.ini
 
-# Path to the PID file. 
-# IMPORTANT: This script creates a PID file for the application, even if you have
-# configured Yolk to create its own PID file using the PID_File configuration 
-# parameter.
+# Path to the PID file.
 PID=`realpath ${LOCATION}`/${NAME}.pid
 
 ##############################################################
@@ -94,7 +91,7 @@ yolk_start() {
     if [ -f ${CONFIG} ]
     then
 	./${NAME} --yolk-config-file ${CONFIG} > /dev/null &
-	
+
         # Create the PID file
 	YOLK_PID=$!
 	echo $YOLK_PID > ${PID}
@@ -103,7 +100,7 @@ yolk_start() {
 	if [ -f ${PID} ]
 	then
             PROCESS=`cat ${PID}`
-	    
+
             if [ -d /proc/${PROCESS} ]
             then
 		echo "${NAME} is running with PID ${PROCESS}."
@@ -114,7 +111,7 @@ yolk_start() {
             echo "Cannot find PID file ${PID}."
             echo "Starting ${NAME} failed."
 	fi
-	
+
 	exit 1
     else
 	echo "Cannot open ${CONFIG}."
