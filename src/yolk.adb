@@ -28,26 +28,55 @@ with Ada.Command_Line;
 
 package body Yolk is
 
-   -------------------
-   --  Config_File  --
-   -------------------
+   function Get_Commandline_Value
+     (Parameter : in String)
+      return String;
+   --  Return the value associated with Parameter, ie. the value that follows
+   --  immediately after Parameter in the given commandline parameters. Return
+   --  empty string if Parameter doesn't exist.
 
-   function Config_File
-     return String
+   -----------------------------
+   --  Get_Commandline_Value  --
+   -----------------------------
+
+   function Get_Commandline_Value
+     (Parameter : in String)
+      return String
    is
       use Ada.Command_Line;
-
-      Config_File_Parameter : constant String := "--yolk-config-file";
    begin
-      for k in 1 .. Argument_Count loop
-         if Argument (k) = Config_File_Parameter
-           and then k < Argument_Count
+      for K in 1 .. Argument_Count loop
+         if Argument (K) = Parameter
+           and then K < Argument_Count
          then
-            return Argument (k + 1);
+            return Argument (K + 1);
          end if;
       end loop;
 
-      return Default_Config_File;
-   end Config_File;
+      return "";
+   end Get_Commandline_Value;
+
+   -------------------
+   --  PID_File  --
+   -------------------
+
+   function PID_File
+     return String
+   is
+   begin
+      return Get_Commandline_Value (Parameter => "--pid-file");
+   end PID_File;
+
+   ------------------------
+   --  Yolk_Config_File  --
+   ------------------------
+
+   function Yolk_Config_File
+     return String
+   is
+      Value : constant String := Get_Commandline_Value ("--yolk-config-file");
+   begin
+      return (if Value /= "" then Value else Default_Config_File);
+   end Yolk_Config_File;
 
 end Yolk;

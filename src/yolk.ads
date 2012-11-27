@@ -29,8 +29,16 @@ package Yolk is
    Default_Config_File : constant String := "configuration/config.ini";
    Version             : constant String := "0.82";
 
-   function Config_File
+   function PID_File
      return String;
-   --  Return the name and location of the configuration file.
+   --  Return the name and location of the application PID file given with the
+   --  --pid-file commandline parameter. If --pid-file is not set then return
+   --  an empty string.
+
+   function Yolk_Config_File
+     return String;
+   --  Return the name and location of the configuration file given with the
+   --  --yolk-config-file commandline parameter. If --yolk-config-file is not
+   --  set then return Default_Config_File.
 
 end Yolk;

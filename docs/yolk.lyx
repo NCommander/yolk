@@ -69,7 +69,7 @@ Yolk Manual
 \end_layout
 
 \begin_layout Date
-Revised November 26th.
+Revised November 27th.
  2012
 \end_layout
 
@@ -295,16 +295,20 @@ The Yolk main package currently only contain only a few things: The Yolk
 \emph on
 Version
 \emph default
- string and a 
+ string, a 
 \emph on
 Config_File
 \emph default
- function to get the location of the configuration file.
+ function to get the location of the configuration file and a 
+\emph on
+PID_File
+\emph default
+ function to get the location of the PID file.
  These are used in a few places, for example in the 
 \emph on
 directory.tmpl
 \emph default
- template file (the version string) and in the 
+ template file (the version string), in the 
 \emph on
 Yolk.Configuration
 \emph default
@@ -312,7 +316,46 @@ Yolk.Configuration
 \emph on
 Config_File
 \emph default
+ function) and in the 
+\emph on
+Yolk.Process_Control
+\emph default
+ package (the 
+\emph on
+PID_File
+\emph default
  function).
+\end_layout
+
+\begin_layout Standard
+All Yolk applications accepts two commandline arguments:
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+--yolk-config-file
+\emph default
+ : Defines the location of the configuration file.
+ If empty or not set, then use the default location 
+\emph on
+configuration/config.ini
+\emph default
+.
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+--pid-file
+\emph default
+ : Defines the location of the PID file.
+ If empty or not set, then don't write a PID file.
+ Note that if you use the 
+\emph on
+extras/rc.yolk
+\emph default
+ script to control your application, then this is handled for you transparently.
 \end_layout
 
 \begin_layout Section
@@ -4184,16 +4227,21 @@ Yolk.Process_Control
 \emph default
  you get the ability to control your application using the SIGINT, SIGPWR
  and SIGTERM signals.
- You can also get a PID file placed next to your executable (see the 
+ If you give your Yolk application the 
 \emph on
-PID_File
+--pid-file
 \emph default
- configuration parameter), which coupled with the 
+ commandline argument when starting it, 
+\emph on
+Yolk.Process_Control
+\emph default
+ will create a PID file on the given location, if it is allowed to do so.
+ This PID file will also be deleted when the application terminates.
+ Note that the 
 \emph on
 extras/rc.yolk
 \emph default
- script gives you a rather nice and simple way of starting and stopping
- your application.
+ script handles all this transparently.
 \end_layout
 
 \begin_layout Subsection

@@ -34,7 +34,7 @@
 \title{Yolk Manual}
 
 
-\date{Revised November 26th. 2012}
+\date{Revised November 27th. 2012}
 
 \maketitle
 \newpage{}
@@ -149,12 +149,23 @@ or take a look at the source for yourself.
 \section{Yolk}
 
 The Yolk main package currently only contain only a few things: The
-Yolk \emph{Version} string and a \emph{Config\_File} function to get
-the location of the configuration file. These are used in a few places,
+Yolk \emph{Version} string, a \emph{Config\_File} function to get
+the location of the configuration file and a \emph{PID\_File} function
+to get the location of the PID file. These are used in a few places,
 for example in the \emph{directory.tmpl} template file (the version
-string) and in the \emph{Yolk.Configuration} package (the \emph{Config\_File}
+string), in the \emph{Yolk.Configuration} package (the \emph{Config\_File}
+function) and in the \emph{Yolk.Process\_Control} package (the \emph{PID\_File}
 function).
 
+All Yolk applications accepts two commandline arguments:
+\begin{itemize}
+\item \emph{--yolk-config-file} : Defines the location of the configuration
+file. If empty or not set, then use the default location \emph{configuration/config.ini}.
+\item \emph{--pid-file} : Defines the location of the PID file. If empty
+or not set, then don't write a PID file. Note that if you use the
+\emph{extras/rc.yolk} script to control your application, then this
+is handled for you transparently.
+\end{itemize}
 
 \section{Yolk.Cache.Discrete\_Keys}
 
@@ -1151,11 +1162,12 @@ See the \emph{demo/src/my\_handlers.adb} file for more information.
 \section{Yolk.Process\_Control}
 
 With \emph{Yolk.Process\_Control} you get the ability to control your
-application using the SIGINT, SIGPWR and SIGTERM signals. You can
-also get a PID file placed next to your executable (see the \emph{PID\_File}
-configuration parameter), which coupled with the \emph{extras/rc.yolk}
-script gives you a rather nice and simple way of starting and stopping
-your application.
+application using the SIGINT, SIGPWR and SIGTERM signals. If you give
+your Yolk application the \emph{--pid-file} commandline argument when
+starting it, \emph{Yolk.Process\_Control} will create a PID file on
+the given location, if it is allowed to do so. This PID file will
+also be deleted when the application terminates. Note that the \emph{extras/rc.yolk}
+script handles all this transparently.
 
 
 \subsection{Exceptions}

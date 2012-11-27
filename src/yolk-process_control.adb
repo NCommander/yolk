@@ -31,18 +31,15 @@ with Ada.Interrupts.Names;
 with Ada.Strings.Fixed;
 with Ada.Text_IO;
 with POSIX.Process_Identification;
-with Yolk.Configuration;
 
 package body Yolk.Process_Control is
 
    use Ada.Directories;
-   use Yolk.Configuration;
 
    type Controller_State is (Running, Shutdown, Stopped);
 
-   PID : constant String := Config.Get (PID_File);
-   --  Path to the PID file. If this is empty, then no PID file is written. The
-   --  Yolk default is empty.
+   PID : constant String := PID_File;
+   --  Path to the PID file. If this is empty, then no PID file is written.
 
    Wait_Called : Boolean := False;
    --  Is set to True when Wait has been called. This is used to test if we've
