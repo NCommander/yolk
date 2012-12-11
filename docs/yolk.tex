@@ -34,7 +34,7 @@
 \title{Yolk Manual}
 
 
-\date{Revised November 27th. 2012}
+\date{Revised December 11th. 2012}
 
 \maketitle
 \newpage{}
@@ -49,10 +49,10 @@
 
 \section{Copyright and License}
 
-This document is copyright (C) 2010-2012, Thomas Løcke. You may copy
-this document, in whole or in part, in any form or by any means, as
-is or with alterations, provided that (1) alterations are clearly
-marked as alterations and (2) this copyright notice is included unmodified
+This document is copyright (C) 2010-, Thomas Løcke. You may copy this
+document, in whole or in part, in any form or by any means, as is
+or with alterations, provided that (1) alterations are clearly marked
+as alterations and (2) this copyright notice is included unmodified
 in any copy.
 
 Yolk is GPLv3 software. You should have received a copy of the GNU
@@ -541,6 +541,26 @@ end if;
 If you've set \emph{Cleanup\_On\_Write} to Boolean \emph{False} and
 the String keys are coming from outside sources, then you really should
 make sure you call \emph{Cleanup} on a regular basis.
+
+
+\section{Yolk.Command\_Line}
+
+This package enables you to fetch the value of a given commandline
+parameter using the \emph{Get} function:
+
+\begin{minipage}[t]{1\columnwidth}%
+\begin{lstlisting}[basicstyle={\small\sffamily},frame=tblr,language=Ada,showstringspaces=false,tabsize=3,xleftmargin=1em,xrightmargin=1em]
+function Get       
+  (Parameter : in String;       
+   Default   : in String := "")        
+   return String;
+\end{lstlisting}
+%
+\end{minipage}
+
+If \emph{Parameter} is found \emph{Get} will return the value immediately
+following \emph{Parameter.} If \emph{Parameter} isn't found \emph{Default}
+is returned. 
 
 
 \section{Yolk.Config\_File\_Parser}

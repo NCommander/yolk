@@ -69,7 +69,7 @@ Yolk Manual
 \end_layout
 
 \begin_layout Date
-Revised November 27th.
+Revised December 11th.
  2012
 \end_layout
 
@@ -105,7 +105,7 @@ Copyright and License
 \end_layout
 
 \begin_layout Standard
-This document is copyright (C) 2010-2012, Thomas Løcke.
+This document is copyright (C) 2010-, Thomas Løcke.
  You may copy this document, in whole or in part, in any form or by any
  means, as is or with alterations, provided that (1) alterations are clearly
  marked as alterations and (2) this copyright notice is included unmodified
@@ -1863,6 +1863,95 @@ False
 Cleanup
 \emph default
  on a regular basis.
+\end_layout
+
+\begin_layout Section
+Yolk.Command_Line
+\end_layout
+
+\begin_layout Standard
+This package enables you to fetch the value of a given commandline parameter
+ using the 
+\emph on
+Get
+\emph default
+ function:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Box Frameless
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "100col%"
+special "none"
+height "1in"
+height_special "totalheight"
+status open
+
+\begin_layout Plain Layout
+\begin_inset listings
+lstparams "basicstyle={\small\sffamily},frame=tblr,language=Ada,showstringspaces=false,tabsize=3,xleftmargin=1em,xrightmargin=1em"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+function Get       
+\end_layout
+
+\begin_layout Plain Layout
+
+  (Parameter : in String;       
+\end_layout
+
+\begin_layout Plain Layout
+
+   Default   : in String := "")        
+\end_layout
+
+\begin_layout Plain Layout
+
+   return String;
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+If 
+\emph on
+Parameter
+\emph default
+ is found 
+\emph on
+Get
+\emph default
+ will return the value immediately following 
+\emph on
+Parameter.
+
+\emph default
+ If 
+\emph on
+Parameter
+\emph default
+ isn't found 
+\emph on
+Default
+\emph default
+ is returned.
+ 
 \end_layout
 
 \begin_layout Section
