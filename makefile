@@ -36,7 +36,7 @@ distclean: clean
 	rm -rf $(prefix)/include/yolk
 	rm -f $(prefix)/lib/gnat/yolk.gpr
 
-install:
+install: all
 	mkdir -p $(prefix)/lib/gnat
 	mkdir -p $(prefix)/yolk
 	mkdir -p $(prefix)/include/yolk
