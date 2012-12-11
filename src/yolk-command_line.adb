@@ -24,31 +24,21 @@
 --                                                                           --
 -------------------------------------------------------------------------------
 
-with Yolk.Command_Line;
+with Ada.Command_Line;
 
-package body Yolk is
+package body Yolk.Command_Line is
 
-   -------------------
-   --  PID_File  --
-   -------------------
-
-   function PID_File
-     return String
-   is
+   function Get (Parameter : in String;
+                 Default   : in String := "") return String is
+      use Ada.Command_Line;
    begin
-      return Command_Line.Get (Parameter => "--pid-file");
-   end PID_File;
+      for K in 1 .. Argument_Count - 1 loop
+         if Argument (K) = Parameter then
+            return Argument (K + 1);
+         end if;
+      end loop;
 
-   ------------------------
-   --  Yolk_Config_File  --
-   ------------------------
+      return Default;
+   end Get;
 
-   function Yolk_Config_File
-     return String
-   is
-   begin
-      return Command_Line.Get (Parameter => "--yolk-config-file",
-                               Default   => Default_Config_File);
-   end Yolk_Config_File;
-
-end Yolk;
+end Yolk.Command_Line;

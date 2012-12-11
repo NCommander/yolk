@@ -1,9 +1,5 @@
 -------------------------------------------------------------------------------
 --                                                                           --
---                                  Yolk                                     --
---                                                                           --
---                                  BODY                                     --
---                                                                           --
 --                   Copyright (C) 2010-2012, Thomas Løcke                   --
 --                                                                           --
 --  This library is free software;  you can redistribute it and/or modify    --
@@ -24,31 +20,12 @@
 --                                                                           --
 -------------------------------------------------------------------------------
 
-with Yolk.Command_Line;
+package Yolk.Command_Line is
 
-package body Yolk is
+   function Get (Parameter : in String;
+                 Default   : in String := "") return String;
+   --  Return the value associated with Parameter, ie. the value that follows
+   --  immediately after Parameter in the given command line parameters. Return
+   --  Default if Parameter doesn't exist.
 
-   -------------------
-   --  PID_File  --
-   -------------------
-
-   function PID_File
-     return String
-   is
-   begin
-      return Command_Line.Get (Parameter => "--pid-file");
-   end PID_File;
-
-   ------------------------
-   --  Yolk_Config_File  --
-   ------------------------
-
-   function Yolk_Config_File
-     return String
-   is
-   begin
-      return Command_Line.Get (Parameter => "--yolk-config-file",
-                               Default   => Default_Config_File);
-   end Yolk_Config_File;
-
-end Yolk;
+end Yolk.Command_Line;
