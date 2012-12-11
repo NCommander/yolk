@@ -1,10 +1,6 @@
 -------------------------------------------------------------------------------
 --                                                                           --
---                                  Yolk                                     --
---                                                                           --
---                                  BODY                                     --
---                                                                           --
---                   Copyright (C) 2010-2012, Thomas Løcke                   --
+--                   Copyright (C) 2010-, Thomas Løcke                   --
 --                                                                           --
 --  This library is free software;  you can redistribute it and/or modify    --
 --  it under terms of the  GNU General Public License  as published by the   --
@@ -28,8 +24,11 @@ with Ada.Command_Line;
 
 package body Yolk.Command_Line is
 
-   function Get (Parameter : in String;
-                 Default   : in String := "") return String is
+   function Get
+     (Parameter : in String;
+      Default   : in String := "")
+      return String
+   is
       use Ada.Command_Line;
    begin
       for K in 1 .. Argument_Count - 1 loop

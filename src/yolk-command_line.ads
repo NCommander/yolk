@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------
 --                                                                           --
---                   Copyright (C) 2010-2012, Thomas Løcke                   --
+--                   Copyright (C) 2010-, Thomas Løcke                   --
 --                                                                           --
 --  This library is free software;  you can redistribute it and/or modify    --
 --  it under terms of the  GNU General Public License  as published by the   --
@@ -22,8 +22,10 @@
 
 package Yolk.Command_Line is
 
-   function Get (Parameter : in String;
-                 Default   : in String := "") return String;
+   function Get
+     (Parameter : in String;
+      Default   : in String := "")
+      return String;
    --  Return the value associated with Parameter, ie. the value that follows
    --  immediately after Parameter in the given command line parameters. Return
    --  Default if Parameter doesn't exist.

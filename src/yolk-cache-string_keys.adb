@@ -1,12 +1,6 @@
 -------------------------------------------------------------------------------
 --                                                                           --
---                                  Yolk                                     --
---                                                                           --
---                          Yolk.Cache.String_Keys                           --
---                                                                           --
---                                  BODY                                     --
---                                                                           --
---                   Copyright (C) 2010-2012, Thomas Løcke                   --
+--                   Copyright (C) 2010-, Thomas Løcke                   --
 --                                                                           --
 --  This library is free software;  you can redistribute it and/or modify    --
 --  it under terms of the  GNU General Public License  as published by the   --
