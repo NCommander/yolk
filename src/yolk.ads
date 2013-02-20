@@ -23,7 +23,7 @@
 package Yolk is
 
    Default_Config_File : constant String := "configuration/config.ini";
-   Version             : constant String := "0.82";
+   Version             : constant String := "0.83";
 
    function PID_File
      return String;
