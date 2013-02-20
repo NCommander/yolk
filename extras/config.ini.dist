@@ -370,7 +370,7 @@ Session True
 
 Session_Cleanup_Interval 300.0
 # Duration
-# Default: 300.0
+# Default: Inherits AWS default.
 # AWS configuration option: Yes
 #
 # Number of seconds between each run of the session cleanup task. This task
@@ -378,7 +378,7 @@ Session_Cleanup_Interval 300.0
 
 Session_Cleaner_Priority 48
 # Natural range 0 .. 98
-# Default: 48
+# Default: Inherits AWS default.
 # AWS configuration option: Yes
 #
 # Session cleaner task priority. See the RM:
@@ -400,14 +400,14 @@ Session_Data_File session/session.data
 
 Session_Id_Length 11
 # Positive
-# Default: 11
+# Default: Inherits AWS default.
 # AWS configuration option: Yes
 #
 # The length of the session id in characters.
 
-Session_Lifetime 1200.0
+Session_Lifetime 600.0
 # Duration
-# Default: 1200.0
+# Default: Inherits AWS default.
 # AWS configuration option: Yes
 #
 # Number of seconds to keep session information. After this period a session
@@ -565,33 +565,33 @@ Accept_Queue_Size 128
 
 Case_Sensitive_Parameters True
 # Boolean
-# Default: True
+# Default: Inherits AWS default.
 # AWS configuration option: Yes
 #
 # If set to True the HTTP parameters are case sensitive.
 
 Check_URL_Validity True
 # Boolean
-# Default: True
+# Default: Inherits AWS default.
 # AWS configuration option: Yes
 #
 # Server have to check URL for validity. For example it checks that an URL does not
 # reference a resource above the application root directory.
 
-Cleaner_Client_Data_Timeout 60.0
+Cleaner_Client_Data_Timeout 28800.0
 # Duration
-# Default: 60.0 (1 minute)
+# Default: Inherits AWS default.
 # AWS configuration option: Yes
 #
 # Number of seconds to wait for a client message body before timing out. If
 # your clients are expected to send large amounts of data, then set this higher.
 # If your clients are not supposed to send large amounts of data, then you can
-# safely keep or lower this a bit.
+# safely lower this.
 # This is a timeout for the regular cleaner task.
 
 Cleaner_Client_Header_Timeout 7.0
 # Duration
-# Default: 7.0
+# Default: Inherits AWS default.
 # AWS configuration option: Yes
 #
 # Number of seconds to wait for a client header before timing out. This value
@@ -599,19 +599,17 @@ Cleaner_Client_Header_Timeout 7.0
 # changing it.
 # This is a timeout for the regular cleaner task.
 
-Cleaner_Server_Response_Timeout 60.0
+Cleaner_Server_Response_Timeout 28800.0
 # Duration
-# Default: 60.0 (1 minute)
+# Default: Inherits AWS default.
 # AWS configuration option: Yes
 #
-# Number of seconds to wait for a client to answer before timing out. This value
-# should probably stay at its default, unless you have very specific reasons for
-# changing it.
+# Number of seconds to wait for a client to answer before timing out.
 # This is a timeout for the regular cleaner task.
 
-Cleaner_Wait_For_Client_Timeout 60.0
+Cleaner_Wait_For_Client_Timeout 80.0
 # Duration
-# Default: 60.0
+# Default: Inherits AWS default.
 # AWS configuration option: Yes
 #
 # Number of seconds to wait for a client request, before timing out. This value
@@ -674,15 +672,15 @@ Compressed_Static_Content_Max_Age 86400
 
 Context_Lifetime 28800.0
 # Duration
-# Default: 28800.0
+# Default: Inherits AWS default.
 # AWS configuration option: Yes
 #
 # Lifetime of a web block context. After this period the context data is obsoleted
 # and will be removed.
 
-Force_Client_Data_Timeout 30.0
+Force_Client_Data_Timeout 10800.0
 # Duration
-# Default: 30.0
+# Default: Inherits AWS default.
 # AWS configuration option: Yes
 #
 # Number of seconds to wait for a client message body before timing out when
@@ -692,7 +690,7 @@ Force_Client_Data_Timeout 30.0
 
 Force_Client_Header_Timeout 2.0
 # Duration
-# Default: 2.0
+# Default: Inherits AWS default.
 # AWS configuration option: Yes
 #
 # Number of seconds to wait for a client header before timing out when
@@ -700,9 +698,9 @@ Force_Client_Header_Timeout 2.0
 # This value should probably stay at its default, unless you have very specific
 # reasons for changing it.
 
-Force_Server_Response_Timeout 30.0
+Force_Server_Response_Timeout 10800.0
 # Duration
-# Default: 30.0
+# Default: Inherits AWS default.
 # AWS configuration option: Yes
 #
 # Number of seconds to wait for a client to answer before timing out when
@@ -712,7 +710,7 @@ Force_Server_Response_Timeout 30.0
 
 Force_Wait_For_Client_Timeout 2.0
 # Duration
-# Default: 2.0
+# Default: Inherits AWS default.
 # AWS configuration option: Yes
 #
 # Number of seconds to wait for a client request before timing out when
@@ -722,7 +720,7 @@ Force_Wait_For_Client_Timeout 2.0
 
 Free_Slots_Keep_Alive_Limit 1
 # Natural
-# Default: 1
+# Default: Inherits AWS default.
 # AWS configuration option: Yes
 #
 # This is the minimum number of remaining free slots to enable keep-alive HTTP
@@ -733,15 +731,25 @@ Free_Slots_Keep_Alive_Limit 1
 
 Hotplug_Port 8888
 # Positive
-# Default: 8888
+# Default: Inherits AWS default.
 # AWS configuration option: Yes
 #
 # This is the hotplug communication port needed to register and un-register a hotplug
 # module.
 
+Keep_Alive_Close_Limit 0
+# Natural
+# Default: Inherits AWS default.
+# AWS configuration option: Yes
+#
+# Defines the limit of keep-alive sockets. If the number of open sockets exceeds
+# this value, then the sockets that are nearest their timeout are closed.
+# If this parameter is commented or defined as 0, the value is calculated based
+# on Max_Connections * 4.
+
 Keep_Alive_Force_Limit 0
 # Natural
-# Default: 0
+# Default: Inherits AWS default.
 # AWS configuration option: Yes
 #
 # Defines the maximum number of keep-alive sockets that are processed with normal
@@ -776,7 +784,7 @@ Max_Concurrent_Download 25
 
 Max_Connection 5
 # Positive
-# Default: 5
+# Default: Inherits AWS default.
 # AWS configuration option: Yes
 #
 # The maximum number of simultaneous connections to the server. This is effectively
@@ -787,7 +795,7 @@ Max_Connection 5
 
 Max_POST_Parameters 100
 # Positive
-# Default: 100
+# Default: Inherits AWS default.
 # AWS configuration option: Yes
 #
 # The maximum amount of POST parameters the server will accept from any one
@@ -821,14 +829,14 @@ Protocol_Family Family_Unspec
 
 Receive_Timeout 30.0
 # Duration
-# Default: 30.0
+# Default: Inherits AWS default.
 # AWS configuration option: Yes
 #
 # Number of seconds before timing out when receiving data.
 
 Reuse_Address False
 # Boolean
-# Default: False
+# Default: Inherits AWS default.
 # AWS configuration option: Yes
 #
 # Set the socket reuse address policy. If set to True the server will be able
@@ -841,7 +849,7 @@ Reuse_Address False
 
 Send_Timeout 40.0
 # Duration
-# Default: 40.0
+# Default: Inherits AWS default.
 # AWS configuration option: Yes
 #
 # Number of seconds before timing out when sending data.
@@ -877,7 +885,7 @@ Server_Port 4242
 
 Server_Priority 48
 # Natural range 0 .. 98
-# Default: 48
+# Default: Inherits AWS default.
 # AWS configuration option: Yes
 #
 # Server task priority. See the RM:
@@ -886,7 +894,7 @@ Server_Priority 48
 
 Service_Priority 48
 # Natural range 0 .. 98
-# Default: 48
+# Default: Inherits AWS default.
 # AWS configuration option: Yes
 #
 # Service (Jabber, SMTP, push server and similar) task priority. See the RM:
@@ -903,14 +911,14 @@ Start_WebSocket_Servers True
 
 Transient_Cleanup_Interval 180.0
 # Duration
-# Default: 180.0
+# Default: Inherits AWS default.
 # AWS configuration option: Yes
 #
 # Time in seconds between each removal of obsolete transient pages.
 
 Transient_Lifetime 300.0
 # Duration
-# Default: 300.0
+# Default: Inherits AWS default.
 # AWS configuration option: Yes
 #
 # The amount of seconds to keep a transient page. After this time it is
@@ -936,7 +944,7 @@ Upload_Size_Limit 16#500_000#
 
 WebSocket_Message_Queue_Size 10
 # Positive
-# Default: 10
+# Default: Inherits AWS default.
 # AWS configuration option: Yes
 #
 # This is the size of the queue containing incoming messages waiting to be
@@ -955,7 +963,7 @@ WebSocket_Origin
 
 WebSocket_Priority 48
 # Natural range 0 .. 98
-# Default: 48
+# Default: Inherits AWS default.
 # AWS configuration option: Yes
 #
 # WebSocket task priority. See the RM:
@@ -994,7 +1002,7 @@ Certificate certificates/aws.pem
 
 Certificate_Required False
 # Boolean
-# Default: False
+# Default: Inherits AWS default.
 # AWS configuration option: Yes
 #
 # If True the server must abort the connection if the client does not provide a
@@ -1003,7 +1011,7 @@ Certificate_Required False
 
 CRL_File
 # String
-# Default: [no value]
+# Default: Inherits AWS default.
 # AWS configuration option: Yes
 #
 # A filename containing a CRL (Certificate Revocation List).
@@ -1018,14 +1026,14 @@ Exchange_Certificate False
 
 Key
 # String
-# Default: [no value]
+# Default: Inherits AWS default.
 # AWS configuration option: Yes
 #
 # Set the RSA key file to be used with a secure server.
 
 Security False
 # Boolean
-# Default: False
+# Default: Inherits AWS default.
 # AWS configuration option: Yes
 #
 # Whether or not to accept HTTPS connections. If set to True, the server will
@@ -1043,7 +1051,7 @@ Security False
 
 Security_Mode SSLv23
 # String
-# Default: SSLv23
+# Default: Inherits AWS default.
 # AWS configuration option: Yes
 #
 # The security mode to use for the secure connections. Available options are:
@@ -1055,7 +1063,7 @@ Security_Mode SSLv23
 
 Trusted_CA
 # String
-# Default: [no value]
+# Default: Inherits AWS default.
 # AWS configuration option: Yes
 #
 # This must point to the file containing the list of trusted Certificate

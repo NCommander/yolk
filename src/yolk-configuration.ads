@@ -24,6 +24,7 @@
 --  Keys postfixed with "--  AWS" are keys that are used specifically by AWS.
 --  Other keys are for Yolk specific configuration.
 
+with Ada.Strings;
 with Ada.Strings.Unbounded;
 with AWS.Config;
 with AWS.Default;
@@ -32,6 +33,7 @@ with Yolk.Config_File_Parser;
 
 package Yolk.Configuration is
 
+   use Ada.Strings;
    use Ada.Strings.Unbounded;
 
    function U
@@ -90,6 +92,7 @@ package Yolk.Configuration is
                  Immediate_Flush,
                  Info_Log_Activate,
                  Info_Syslog_Facility_Level,
+                 Keep_Alive_Close_Limit, --  AWS
                  Keep_Alive_Force_Limit, --  AWS
                  Key, --  AWS
                  Line_Stack_Size, --  AWS
@@ -166,21 +169,26 @@ package Yolk.Configuration is
                        AWS_Error_Syslog_Facility_Level
                        => U ("user:error"),
                        Case_Sensitive_Parameters
-                       => U ("True"),
+                       => U (Boolean'Image
+                         (AWS.Default.Case_Sensitive_Parameters)),
                        Certificate
                        => U ("certificates/aws.pem"),
                        Certificate_Required
-                       => U ("False"),
+                       => U (Boolean'Image (AWS.Default.Certificate_Required)),
                        Check_URL_Validity
-                       => U ("True"),
+                       => U (Boolean'Image (AWS.Default.Check_URL_Validity)),
                        Cleaner_Client_Data_Timeout
-                       => U ("60.0"),
+                       => Trim (U (Duration'Image
+                         (AWS.Default.Cleaner_Client_Data_Timeout)), Left),
                        Cleaner_Client_Header_Timeout
-                       => U ("7.0"),
+                       => Trim (U (Duration'Image
+                         (AWS.Default.Cleaner_Client_Header_Timeout)), Left),
                        Cleaner_Server_Response_Timeout
-                       => U ("60.0"),
+                       => Trim (U (Duration'Image
+                         (AWS.Default.Cleaner_Server_Response_Timeout)), Left),
                        Cleaner_Wait_For_Client_Timeout
-                       => U ("60.0"),
+                       => Trim (U (Duration'Image
+                         (AWS.Default.Cleaner_Wait_For_Client_Timeout)), Left),
                        Compress_Static_Content
                        => U ("False"),
                        Compress_Static_Content_Minimum_File_Size
@@ -190,13 +198,14 @@ package Yolk.Configuration is
                        Compressed_Static_Content_Max_Age
                        => U ("86400"),
                        Context_Lifetime
-                       => U ("28800.0"),
+                       => Trim (U (Duration'Image
+                         (AWS.Default.Context_Lifetime)), Left),
                        Critical_Log_Activate
                        => U ("True"),
                        Critical_Syslog_Facility_Level
                        => U ("user:critical"),
                        CRL_File
-                       => U (""),
+                       => U (AWS.Default.CRL_File),
                        Debug_Log_Activate
                        => U ("True"),
                        Debug_Syslog_Facility_Level
@@ -210,17 +219,22 @@ package Yolk.Configuration is
                        Error_Syslog_Facility_Level
                        => U ("user:error"),
                        Exchange_Certificate
-                       => U ("False"),
+                       => U (Boolean'Image (AWS.Default.Exchange_Certificate)),
                        Force_Client_Data_Timeout
-                       => U ("30.0"),
+                       => Trim (U (Duration'Image
+                         (AWS.Default.Force_Client_Data_Timeout)), Left),
                        Force_Client_Header_Timeout
-                       => U ("2.0"),
+                       => Trim (U (Duration'Image
+                         (AWS.Default.Force_Client_Header_Timeout)), Left),
                        Force_Server_Response_Timeout
-                       => U ("30.0"),
+                       => Trim (U (Duration'Image
+                         (AWS.Default.Force_Server_Response_Timeout)), Left),
                        Force_Wait_For_Client_Timeout
-                       => U ("2.0"),
+                       => Trim (U (Duration'Image
+                         (AWS.Default.Force_Wait_For_Client_Timeout)), Left),
                        Free_Slots_Keep_Alive_Limit
-                       => U ("1"),
+                       => Trim (U (Natural'Image
+                         (AWS.Default.Free_Slots_Keep_Alive_Limit)), Left),
                        Handler_CSS
                        => U (".*\.css$"),
                        Handler_GIF
@@ -242,17 +256,22 @@ package Yolk.Configuration is
                        Handler_XSL
                        => U (".*\.xsl$"),
                        Hotplug_Port
-                       => U ("8888"),
+                       => Trim (U (Positive'Image
+                         (AWS.Default.Hotplug_Port)), Left),
                        Immediate_Flush
                        => U ("False"),
                        Info_Log_Activate
                        => U ("True"),
                        Info_Syslog_Facility_Level
                        => U ("user:info"),
+                       Keep_Alive_Close_Limit
+                       => Trim (U (Natural'Image
+                         (AWS.Default.Keep_Alive_Close_Limit)), Left),
                        Keep_Alive_Force_Limit
-                       => U ("0"),
+                       => Trim (U (Natural'Image
+                         (AWS.Default.Keep_Alive_Force_Limit)), Left),
                        Key
-                       => U (""),
+                       => U (AWS.Default.Key),
                        Line_Stack_Size
                        => U ("16#150_000#"),
                        Load_MIME_Types_File
@@ -260,11 +279,14 @@ package Yolk.Configuration is
                        Log_Extended_Fields
                        => U (""),
                        Max_Concurrent_Download
-                       => U ("25"),
+                       => Trim (U (Positive'Image
+                         (AWS.Default.Max_Concurrent_Download)), Left),
                        Max_Connection
-                       => U ("5"),
+                       => Trim (U (Positive'Image
+                         (AWS.Default.Max_Connection)), Left),
                        Max_POST_Parameters
-                       => U ("100"),
+                       => Trim (U (Positive'Image
+                         (AWS.Default.Max_POST_Parameters)), Left),
                        Max_WebSocket_Handler
                        => U ("5"),
                        MIME_Types_File
@@ -276,15 +298,17 @@ package Yolk.Configuration is
                        Protocol_Family
                        => U ("Family_Unspec"),
                        Receive_Timeout
-                       => U ("30.0"),
+                       => Trim (U (Duration'Image
+                         (AWS.Default.Receive_Timeout)), Left),
                        Reuse_Address
-                       => U ("False"),
+                       => U (Boolean'Image (AWS.Default.Reuse_Address)),
                        Security
-                       => U ("False"),
+                       => U (Boolean'Image (AWS.Default.Security)),
                        Security_Mode
-                       => U ("SSLv23"),
+                       => U (AWS.Default.Security_Mode),
                        Send_Timeout
-                       => U ("40.0"),
+                       => Trim (U (Duration'Image
+                         (AWS.Default.Send_Timeout)), Left),
                        Server_Host
                        => U (""),
                        Server_Name
@@ -292,21 +316,27 @@ package Yolk.Configuration is
                        Server_Port
                        => U ("4242"),
                        Server_Priority
-                       => U (System.Priority'Image (System.Default_Priority)),
+                       => Trim (U (System.Priority'Image
+                         (AWS.Default.Server_Priority)), Left),
                        Service_Priority
-                       => U (System.Priority'Image (System.Default_Priority)),
+                       => Trim (U (System.Priority'Image
+                         (AWS.Default.Service_Priority)), Left),
                        Session
                        => U ("True"),
                        Session_Cleanup_Interval
-                       => U ("300.0"),
+                       => Trim (U (Duration'Image
+                         (AWS.Default.Session_Cleanup_Interval)), Left),
                        Session_Cleaner_Priority
-                       => U (System.Priority'Image (System.Default_Priority)),
+                       => Trim (U (System.Priority'Image
+                         (AWS.Default.Session_Cleaner_Priority)), Left),
                        Session_Data_File
                        => U ("session/session.data"),
                        Session_Id_Length
-                       => U ("11"),
+                       => Trim (U (Positive'Image
+                         (AWS.Default.Session_Id_Length)), Left),
                        Session_Lifetime
-                       => U ("1200.0"),
+                       => Trim (U (Duration'Image
+                         (AWS.Default.Session_Lifetime)), Left),
                        Session_Name
                        => U ("Yolk"),
                        SQL_Log_Activate
@@ -332,11 +362,13 @@ package Yolk.Configuration is
                        System_Templates_Path
                        => U ("templates/system"),
                        Transient_Cleanup_Interval
-                       => U ("180.0"),
+                       => Trim (U (Duration'Image
+                         (AWS.Default.Transient_Cleanup_Interval)), Left),
                        Transient_Lifetime
-                       => U ("300.0"),
+                       => Trim (U (Duration'Image
+                         (AWS.Default.Transient_Lifetime)), Left),
                        Trusted_CA
-                       => U (""),
+                       => U (AWS.Default.Trusted_CA),
                        Upload_Directory
                        => U ("uploads"),
                        Upload_Size_Limit
@@ -346,12 +378,13 @@ package Yolk.Configuration is
                        Warning_Syslog_Facility_Level
                        => U ("user:warning"),
                        WebSocket_Message_Queue_Size
-                       => U ("10"),
+                       => Trim (U (Positive'Image
+                         (AWS.Default.WebSocket_Message_Queue_Size)), Left),
                        WebSocket_Origin
                        => U (""),
                        WebSocket_Priority
-                       => U (System.Priority'Image
-                         (AWS.Default.WebSocket_Priority)),
+                       => Trim (U (System.Priority'Image
+                         (AWS.Default.WebSocket_Priority)), Left),
                        WWW_Root
                        => U ("static_content"),
                        Yolk_User
