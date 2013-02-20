@@ -19,11 +19,15 @@
 #                                                                             #
 ###############################################################################
 
+ifeq ($(PROCESSORS),)
+PROCESSORS=1
+endif
+
 all:
-	gnatmake -P yolk_demo
+	gnatmake -j${PROCESSORS} -P yolk_demo
 
 debug:
-	BUILDTYPE=Debug gnatmake -P yolk_demo
+	BUILDTYPE=Debug gnatmake -j${PROCESSORS} -P yolk_demo
 
 clean:
 	gnatclean -P yolk_demo

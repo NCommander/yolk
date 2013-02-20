@@ -57,21 +57,28 @@ project Yolk_Demo is
 
          when "Production" =>
             for Default_Switches ("Ada")
-              use ("-gnatwa",
-                   "-gnaty3abcdefhiklmnoprstux",
-                   "-Wall",
-                   "-O2",
-                   "-gnat2012");
+            use ("-fstack-check",
+                 "-gnata",
+                 "-gnatf",
+                 "-gnato",
+                 "-gnatwa",
+                 "-gnaty3abcdefhiklmnoprstux",
+                 "-Wall",
+                 "-O2",
+                 "-gnat2012");
+
          when "Debug" =>
             for Default_Switches ("Ada")
-              use ("-gnatwa",
-                   "-gnata",
-                   "-gnatVa",
-                   "-gnaty3abcdefhiklmnoprstux",
-                   "-Wall",
-                   "-O1",
-                   "-gnat2012",
-                   "-g");
+            use ("-fstack-check",
+                 "-gnata",
+                 "-gnatf",
+                 "-gnato",
+                 "-gnatwa",
+                 "-gnatVa",
+                 "-Wall",
+                 "-O1",
+                 "-gnat2012",
+                 "-g");
 
       end case;
 
