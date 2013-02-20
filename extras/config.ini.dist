@@ -376,6 +376,15 @@ Session_Cleanup_Interval 300.0
 # Number of seconds between each run of the session cleanup task. This task
 # will remove all session data that have been obsoleted.
 
+Session_Cleaner_Priority 48
+# Natural range 0 .. 98
+# Default: 48
+# AWS configuration option: Yes
+#
+# Session cleaner task priority. See the RM:
+#     http://www.ada-auth.org/standards/12rm/html/RM-D-1.html
+# If you do not know what this is, then you probably don't need to change it.
+
 Session_Data_File session/session.data
 # String
 # Default: session/session.data

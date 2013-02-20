@@ -114,6 +114,7 @@ package Yolk.Configuration is
                  Service_Priority, --  AWS
                  Session, --  AWS
                  Session_Cleanup_Interval, --  AWS
+                 Session_Cleaner_Priority, --  AWS
                  Session_Data_File,
                  Session_Id_Length, --  AWS
                  Session_Lifetime, --  AWS
@@ -296,6 +297,8 @@ package Yolk.Configuration is
                        => U ("True"),
                        Session_Cleanup_Interval
                        => U ("300.0"),
+                       Session_Cleaner_Priority
+                       => U (System.Priority'Image (System.Default_Priority)),
                        Session_Data_File
                        => U ("session/session.data"),
                        Session_Id_Length

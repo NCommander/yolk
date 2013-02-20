@@ -199,6 +199,9 @@ package body Yolk.Configuration is
       AWS.Config.Set.Session_Cleanup_Interval
         (Value => Config.Get (Session_Cleanup_Interval));
 
+      AWS.Config.Set.Session_Cleaner_Priority
+        (Value => Config.Get (Session_Cleaner_Priority));
+
       AWS.Config.Set.Session_Id_Length
         (Value => Config.Get (Session_Id_Length));
 
