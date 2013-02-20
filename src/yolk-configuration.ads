@@ -26,6 +26,7 @@
 
 with Ada.Strings.Unbounded;
 with AWS.Config;
+with AWS.Default;
 with System;
 with Yolk.Config_File_Parser;
 
@@ -139,6 +140,7 @@ package Yolk.Configuration is
                  Warning_Syslog_Facility_Level,
                  WebSocket_Message_Queue_Size, --  AWS
                  WebSocket_Origin, --  AWS
+                 WebSocket_Priority, --  AWS
                  WWW_Root, --  AWS
                  Yolk_User);
 
@@ -347,6 +349,9 @@ package Yolk.Configuration is
                        => U ("10"),
                        WebSocket_Origin
                        => U (""),
+                       WebSocket_Priority
+                       => U (System.Priority'Image
+                         (AWS.Default.WebSocket_Priority)),
                        WWW_Root
                        => U ("static_content"),
                        Yolk_User

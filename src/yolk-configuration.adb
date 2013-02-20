@@ -240,6 +240,9 @@ package body Yolk.Configuration is
       AWS.Config.Set.WebSocket_Origin
         (Value => Config.Get (WebSocket_Origin));
 
+      AWS.Config.Set.WebSocket_Priority
+        (Value => Config.Get (WebSocket_Priority));
+
       AWS.Config.Set.WWW_Root
         (O     => Object,
          Value => Config.Get (WWW_Root));
