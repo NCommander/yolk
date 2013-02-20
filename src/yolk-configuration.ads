@@ -111,6 +111,7 @@ package Yolk.Configuration is
                  Server_Name, --  AWS
                  Server_Port, --  AWS
                  Server_Priority, --  AWS
+                 Service_Priority, --  AWS
                  Session, --  AWS
                  Session_Cleanup_Interval, --  AWS
                  Session_Data_File,
@@ -288,6 +289,8 @@ package Yolk.Configuration is
                        Server_Port
                        => U ("4242"),
                        Server_Priority
+                       => U (System.Priority'Image (System.Default_Priority)),
+                       Service_Priority
                        => U (System.Priority'Image (System.Default_Priority)),
                        Session
                        => U ("True"),

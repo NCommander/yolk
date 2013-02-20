@@ -875,6 +875,15 @@ Server_Priority 48
 #     http://www.ada-auth.org/standards/12rm/html/RM-D-1.html
 # If you do not know what this is, then you probably don't need to change it.
 
+Service_Priority 48
+# Natural range 0 .. 98
+# Default: 48
+# AWS configuration option: Yes
+#
+# Service (Jabber, SMTP, push server and similar) task priority. See the RM:
+#     http://www.ada-auth.org/standards/12rm/html/RM-D-1.html
+# If you do not know what this is, then you probably don't need to change it.
+
 Start_WebSocket_Servers True
 # Boolean
 # Default: True

@@ -189,6 +189,9 @@ package body Yolk.Configuration is
         (O     => Object,
          Value => Config.Get (Server_Priority));
 
+      AWS.Config.Set.Service_Priority
+        (Value => Config.Get (Service_Priority));
+
       AWS.Config.Set.Session
         (O     => Object,
          Value => Config.Get (Session));
