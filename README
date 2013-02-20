@@ -13,7 +13,7 @@ Contents of this README:
 Yolk is an Ada based web-toolbox that sits on top of AWS[1], GNATcoll[2],
 Florist[3] and XML/Ada[4]. You will also need to compile GNATcoll
 with PostgreSQL[5] support in order to try the Yolk demo. If you don't want to
-muck about with the demo, and you have no need for PostgreSQL, then you can 
+muck about with the demo, and you have no need for PostgreSQL, then you can
 safely compile GNATcoll without support for PostgreSQL.
 
 It is important to understand that Yolk itself does very little that cannot be
@@ -166,32 +166,27 @@ probably use those instead.
 ------------------
 --  References  --
 ------------------
-[1]
-    Ada Web Server
+
+[1] Ada Web Server
     http://libre.adacore.com/libre/tools/aws/
     Git: git clone --recursive http://forge.open-do.org/anonscm/git/aws/aws.git
 
-[2]
-    GNAT Component Collection
+[2] GNAT Component Collection
     http://libre.adacore.com/libre/tools/gnat-component-collection/AA
     SVN: svn co http://svn.eu.adacore.com/anonsvn/Dev/trunk/gps/gnatlib/
 
-[3]
-    Florist
+[3] Florist
     http://libre.adacore.com/libre/download2
     I've not been able to track down an VCS repository for Florist yet, so you're
     going to have to just download the latest official package.
 
-[4]
-    XML/Ada
+[4] XML/Ada
     http://libre.adacore.com/tools/xmlada/
     SVN: svn co http://svn.eu.adacore.com/anonsvn/Dev/trunk/xmlada/
 
-[5]
-    PostgreSQL
+[5] PostgreSQL
     http://www.postgresql.org/
 
-[6]
-    I personally use the GNAT GPL compiler from AdaCore, but there's a good chance
+[6] I personally use the GNAT GPL compiler from AdaCore, but there's a good chance
     the latest GCC Ada compiler will work just fine.
     http://libre.adacore.com/libre/
