@@ -21,11 +21,15 @@
 
 include makefile.setup
 
+ifeq ($(PROCESSORS),)
+PROCESSORS=1
+endif
+
 all:
-	gnatmake -P yolk_build
+	gnatmake -j${PROCESSORS} -P yolk_build
 
 debug:
-	BUILDTYPE=Debug gnatmake -P yolk_build
+	BUILDTYPE=Debug gnatmake -j${PROCESSORS} -P yolk_build
 
 clean:
 	gnatclean -P yolk_build
