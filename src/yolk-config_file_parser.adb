@@ -183,7 +183,8 @@ package body Yolk.Config_File_Parser is
       is
       begin
          if Key /= Line then
-            return To_Unbounded_String (Line (Key'Last + 2 .. Line'Last));
+            return Trim
+              (To_Unbounded_String (Line (Key'Last + 2 .. Line'Last)), Left);
          end if;
 
          return Null_Unbounded_String;

@@ -866,6 +866,15 @@ Server_Port 4242
 # ports < 1024, so this value should be higher than 1024, or else you'll
 # have to run the server as root, which is _not_ recommended.
 
+Server_Priority 48
+# Natural range 0 .. 98
+# Default: 48
+# AWS configuration option: Yes
+#
+# Server task priority. See the RM:
+#     http://www.ada-auth.org/standards/12rm/html/RM-D-1.html
+# If you do not know what this is, then you probably don't need to change it.
+
 Start_WebSocket_Servers True
 # Boolean
 # Default: True

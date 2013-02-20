@@ -26,6 +26,7 @@
 
 with Ada.Strings.Unbounded;
 with AWS.Config;
+with System;
 with Yolk.Config_File_Parser;
 
 package Yolk.Configuration is
@@ -109,6 +110,7 @@ package Yolk.Configuration is
                  Server_Host, --  AWS
                  Server_Name, --  AWS
                  Server_Port, --  AWS
+                 Server_Priority, --  AWS
                  Session, --  AWS
                  Session_Cleanup_Interval, --  AWS
                  Session_Data_File,
@@ -285,6 +287,8 @@ package Yolk.Configuration is
                        => U ("Yolk"),
                        Server_Port
                        => U ("4242"),
+                       Server_Priority
+                       => U (System.Priority'Image (System.Default_Priority)),
                        Session
                        => U ("True"),
                        Session_Cleanup_Interval

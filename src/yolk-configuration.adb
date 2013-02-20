@@ -185,6 +185,10 @@ package body Yolk.Configuration is
         (O     => Object,
          Value => Config.Get (Server_Port));
 
+      AWS.Config.Set.Server_Priority
+        (O     => Object,
+         Value => Config.Get (Server_Priority));
+
       AWS.Config.Set.Session
         (O     => Object,
          Value => Config.Get (Session));
