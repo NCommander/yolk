@@ -152,7 +152,7 @@ package Yolk.Configuration is
                        Admin_Password
                        => U ("0ac9c9d0c0b1ee058b65ae70c9aeb3a7"),
                        Admin_URI
-                       => U ("/staU"),
+                       => U ("/status"),
                        Alert_Log_Activate
                        => U ("True"),
                        Alert_Syslog_Facility_Level
