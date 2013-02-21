@@ -12,9 +12,10 @@ Contents of this README:
 
 Yolk is an Ada based web-toolbox that sits on top of AWS[1], GNATcoll[2],
 Florist[3] and XML/Ada[4]. You will also need to compile GNATcoll
-with PostgreSQL[5] support in order to try the Yolk demo. If you don't want to
-muck about with the demo, and you have no need for PostgreSQL, then you can
-safely compile GNATcoll without support for PostgreSQL.
+with SQLite and/or PostgreSQL[5] support in order to try the Yolk demo. If you
+don't want to muck about with the demo, and you have no need for PostgreSQL or
+SQLite, then you can safely compile GNATcoll without support for these two
+databases.
 
 It is important to understand that Yolk itself does very little that cannot be
 accomplished using plain AWS, GNATcoll, XML/Ada and Florist. It is, for lack of
@@ -24,7 +25,6 @@ a better term, a convenience. Some of things that Yolk offers are:
     * Loading configuration files
     * Handling the most common static content types (HTML, PNG, ICO and so on)
     * Easy Atom RSS feed generation
-    * Connecting to one or more PostgreSQL databases
     * Switching to an un-privileged user.
     * Start/stop as a "regular" daemon using an rc script.
     * Easy logging to syslogd.
@@ -46,11 +46,11 @@ Yolk is GPLv3, see COPYING3 and COPYING.RUNTIME.
 Yolk depends on 6 things out of the box. All of these are required:
 
     1. An Ada 2012 compiler[6]
-    2. AWS (version >= 2012, commit 30281b522ed43782c8f9e7fd1f0fd912510b48f0)
-    3. GNATcoll (version >= 2012, SVN revision 191286)
+    2. AWS (version >= 2012, commit 7df50cc4a0a72b53aee34e9c1e836de520f2145f)
+    3. GNATcoll (version >= 2012, SVN revision 202472)
     4. Florist (version >= florist-gpl-2012)
     5. XML/Ada (version >= 4.3)
-    6. PostgreSQL (compile GNATcoll with PostgreSQL to try the Yolk demo)
+    6. PostgreSQL (compile GNATcoll with PostgreSQL/SQLite to try the Yolk demo)
 
 Yolk might work with other versions of the above software, but those are the
 versions I've tested it with.
@@ -92,7 +92,7 @@ My usual modus operandi for setting up these 6 things goes something like this:
 
     3.  Install GNATcoll in /usr/gnat:
 
-            $ ./configure --prefix=/usr/gnat
+            $ ./configure --prefix=/usr/gnat --disable-projects
 
         You should of course adjust the above configuration options to fit your
         needs, just make sure PostgreSQL and SQLite support is enabled, as both
