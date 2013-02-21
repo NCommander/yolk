@@ -40,6 +40,7 @@ package My_Configuration is
                  Handler_Session_Test,
                  Handler_Syndication,
                  Handler_Websocket,
+                 SQLite_Database,
                  SMTP_Host,
                  SMTP_Port,
                  Template_DB_Test,
@@ -74,6 +75,8 @@ package My_Configuration is
                        => U ("/syndication"),
                        Handler_Websocket
                        => U ("/websocket"),
+                       SQLite_Database
+                       => U ("yolk.db"),
                        SMTP_Host
                        => U ("localhost"),
                        SMTP_Port

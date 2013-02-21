@@ -25,6 +25,7 @@ with AWS.Response;
 with AWS.Templates;
 with GNATCOLL.SQL.Exec;
 with GNATCOLL.SQL.Postgres;
+with GNATCOLL.SQL.Sqlite;
 with My_Configuration;
 with Yolk.Cache.Discrete_Keys;
 
@@ -37,14 +38,19 @@ package View is
    package My renames My_Configuration;
    --  Easier to write, easier to read.
 
-   DB_Description : GNATCOLL.SQL.Exec.Database_Description :=
-                      GNATCOLL.SQL.Postgres.Setup
-                        (Database => My.Config.Get (My.DB_Name),
-                         User     => My.Config.Get (My.DB_User),
-                         Host     => My.Config.Get (My.DB_Host),
-                         Password => My.Config.Get (My.DB_Password),
-                         SSL      => GNATCOLL.SQL.Postgres.Disable);
-   --  A GNATColl database description object.
+   PostgreSQL_Description : GNATCOLL.SQL.Exec.Database_Description :=
+                              GNATCOLL.SQL.Postgres.Setup
+                                (Database => My.Config.Get (My.DB_Name),
+                                 User     => My.Config.Get (My.DB_User),
+                                 Host     => My.Config.Get (My.DB_Host),
+                                 Password => My.Config.Get (My.DB_Password),
+                                 SSL      => GNATCOLL.SQL.Postgres.Disable);
+   --  A GNATColl PostgreSQL database description object.
+
+   SQLite_Description : GNATCOLL.SQL.Exec.Database_Description :=
+                          GNATCOLL.SQL.Sqlite.Setup
+                            (Database => My.Config.Get (My.SQLite_Database));
+   --  A GNATColl SQLite database description object.
 
    type Cache_Keys is (Feed_Data);
 

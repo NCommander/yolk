@@ -21,6 +21,7 @@
 
 with "aws";
 with "gnatcoll_postgres";
+with "gnatcoll_sqlite";
 with "yolk";
 
 project Yolk_Demo is
