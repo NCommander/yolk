@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------
 --                                                                           --
---                   Copyright (C) 2010-, Thomas Løcke                   --
+--                   Copyright (C) 2010-, Thomas Løcke                       --
 --               Copyright (C) 2013-, Jacob Sparre Andersen                  --
 --                                                                           --
 --  This library is free software;  you can redistribute it and/or modify    --
@@ -21,10 +21,14 @@
 --                                                                           --
 -------------------------------------------------------------------------------
 
-with Ada.Command_Line,
-     Ada.Strings.Fixed;
+with Ada.Command_Line;
+with Ada.Strings.Fixed;
 
 package body Yolk.Command_Line is
+
+   -----------
+   --  Get  --
+   -----------
 
    function Get
      (Parameter : in String;
@@ -42,13 +46,18 @@ package body Yolk.Command_Line is
       return Default;
    end Get;
 
+   -----------
+   --  Get  --
+   -----------
+
    function Get
      (Parameter : in String;
       Prefix    : in String := "--")
       return String_Vectors.Vector
    is
-      use Ada.Command_Line,
-          Ada.Strings.Fixed;
+      use Ada.Command_Line;
+      use Ada.Strings.Fixed;
+
       Collecting : Boolean := False;
    begin
       return Arguments : String_Vectors.Vector do
