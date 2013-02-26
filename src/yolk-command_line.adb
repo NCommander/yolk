@@ -1,6 +1,7 @@
 -------------------------------------------------------------------------------
 --                                                                           --
 --                   Copyright (C) 2010-, Thomas Løcke                   --
+--               Copyright (C) 2013-, Jacob Sparre Andersen                  --
 --                                                                           --
 --  This library is free software;  you can redistribute it and/or modify    --
 --  it under terms of the  GNU General Public License  as published by the   --
@@ -20,7 +21,8 @@
 --                                                                           --
 -------------------------------------------------------------------------------
 
-with Ada.Command_Line;
+with Ada.Command_Line,
+     Ada.Strings.Fixed;
 
 package body Yolk.Command_Line is
 
@@ -38,6 +40,28 @@ package body Yolk.Command_Line is
       end loop;
 
       return Default;
+   end Get;
+
+   function Get
+     (Parameter : in String;
+      Prefix    : in String := "--")
+      return String_Vectors.Vector
+   is
+      use Ada.Command_Line,
+          Ada.Strings.Fixed;
+      Collecting : Boolean := False;
+   begin
+      return Arguments : String_Vectors.Vector do
+         for Position in 1 .. Argument_Count loop
+            if Argument (Position) = Parameter then
+               Collecting := True;
+            elsif Head (Argument (Position), Prefix'Length) = Prefix then
+               Collecting := False;
+            elsif Collecting then
+               Arguments.Append (Argument (Position));
+            end if;
+         end loop;
+      end return;
    end Get;
 
 end Yolk.Command_Line;

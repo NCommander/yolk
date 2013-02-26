@@ -1,6 +1,7 @@
 -------------------------------------------------------------------------------
 --                                                                           --
 --                   Copyright (C) 2010-, Thomas Løcke                   --
+--               Copyright (C) 2013-, Jacob Sparre Andersen                  --
 --                                                                           --
 --  This library is free software;  you can redistribute it and/or modify    --
 --  it under terms of the  GNU General Public License  as published by the   --
@@ -20,7 +21,12 @@
 --                                                                           --
 -------------------------------------------------------------------------------
 
+with Ada.Containers.Indefinite_Vectors;
+
 package Yolk.Command_Line is
+
+   package String_Vectors is
+     new Ada.Containers.Indefinite_Vectors (Positive, String);
 
    function Get
      (Parameter : in String;
@@ -29,5 +35,13 @@ package Yolk.Command_Line is
    --  Return the value associated with Parameter, ie. the value that follows
    --  immediately after Parameter in the given command line parameters. Return
    --  Default if Parameter doesn't exist.
+
+   function Get
+     (Parameter : in String;
+      Prefix    : in String := "--")
+      return String_Vectors.Vector;
+   --  Return the values associated with Parameter, ie. the values that follow
+   --  after Parameter in the given command line parameters.  If Parameter is
+   --  not specified on the command line an empty vector is returned.
 
 end Yolk.Command_Line;
