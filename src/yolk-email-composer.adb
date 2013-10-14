@@ -348,7 +348,6 @@ package body Yolk.Email.Composer is
    begin
       Encode (Str     => Part,
               Charset => Get_Charset (Charset => Charset),
-              Header  => False,
               Result  => US);
 
       ES.HTML_Part.Content := US;
@@ -402,7 +401,6 @@ package body Yolk.Email.Composer is
    begin
       Encode (Str     => Part,
               Charset => Get_Charset (Charset => Charset),
-              Header  => False,
               Result  => US);
 
       ES.Text_Part.Content := US;
