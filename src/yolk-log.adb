@@ -65,6 +65,7 @@ package body Yolk.Log is
    is
       use Yolk.Configuration;
    begin
+      GNATCOLL.Traces.Parse_Config_File;
       GNATCOLL.Traces.Syslog.Register_Syslog_Stream;
 
       --  Alert log

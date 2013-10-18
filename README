@@ -47,7 +47,7 @@ Yolk depends on 6 things out of the box. All of these are required:
 
     1. An Ada 2012 compiler[6]
     2. AWS (version >= 2012, commit 7df50cc4a0a72b53aee34e9c1e836de520f2145f)
-    3. GNATcoll (version >= 2012, SVN revision 202472)
+    3. GNATcoll (version >= 2013, SVN revision 217516)
     4. Florist (version >= florist-gpl-2012)
     5. XML/Ada (version >= 4.3)
     6. PostgreSQL (compile GNATcoll with PostgreSQL/SQLite to try the Yolk demo)
