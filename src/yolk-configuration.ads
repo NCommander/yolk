@@ -358,7 +358,7 @@ package Yolk.Configuration is
                        Start_WebSocket_Servers
                        => U ("True"),
                        Status_Page
-                       => U ("templates/system/aws_staU.thtml"),
+                       => U ("templates/system/aws_status.thtml"),
                        System_Templates_Path
                        => U ("templates/system"),
                        Transient_Cleanup_Interval
